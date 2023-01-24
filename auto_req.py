@@ -8,7 +8,7 @@ import logging.handlers
 from dotenv import load_dotenv
 
 
-class lg:
+class Logger:
     def __init__(self):
         self.logger = logging.getLogger('auto_req')
         self.logger.setLevel(logging.DEBUG)
@@ -18,7 +18,7 @@ class lg:
             'adsb_main.log', maxBytes=1000000, mode='w', backupCount=5)
         self.file_handler.setFormatter(self.formatter)
         self.logger.addHandler(self.file_handler)
-        
+
 
 current_time = datetime.datetime.now().time()
 
@@ -33,11 +33,10 @@ else:
 
 load_dotenv()
 
-LG_MAIN = lg().logger
+LG_MAIN = Logger().logger
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
-
 
 url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
 headers = {
@@ -45,7 +44,8 @@ headers = {
     "X-RapidAPI-Host": API_HOST
 }
 
-def dependenies():
+
+def dependencies():
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     elif not os.path.exists(DEP_DEPENDENCY + 'adsb.json'):
@@ -89,6 +89,7 @@ def man_req():
         except Exception as e:
             LG_MAIN.error(e)
 
+
 def api_check():
     data = get_data()
     if API_HOST or API_KEY is None:
@@ -105,9 +106,8 @@ def api_check():
 
 if __name__ == "__main__":
     if api_check():
-        dependenies()
+        dependencies()
         Thread(target=auto_req).start()
         Thread(target=man_req).start()
     else:
         exit()
-
