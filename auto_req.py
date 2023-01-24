@@ -15,10 +15,10 @@ class lg:
         self.formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         self.file_handler = logging.handlers.RotatingFileHandler(
-            f'adsb_main.log', maxBytes=1000000, backupCount=5)
+            'adsb_main.log', maxBytes=1000000, mode='w', backupCount=5)
         self.file_handler.setFormatter(self.formatter)
         self.logger.addHandler(self.file_handler)
-
+        
 
 current_time = datetime.datetime.now().time()
 
@@ -45,7 +45,6 @@ headers = {
     "X-RapidAPI-Host": API_HOST
 }
 
-
 def dependenies():
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
@@ -60,22 +59,6 @@ def get_data():
         return response.text
     except Exception as e:
         LG_MAIN.error(e)
-
-
-def check_api():
-    data = get_data()
-    if API_KEY is None or API_HOST is None:
-        LG_MAIN.error(
-            "API_KEY or API_HOST is not set or is invalid")
-        print("API_KEY or API_HOST is not set or is invalid")
-        exit()
-    elif data == '"message":"You are not subscribed to this API."':
-        LG_MAIN.error(
-            "API_KEY is invalid")
-        exit()
-    else:
-        LG_MAIN.info("API_KEY and API_HOST are valid")
-        return True
 
 
 def auto_req():
@@ -106,10 +89,25 @@ def man_req():
         except Exception as e:
             LG_MAIN.error(e)
 
+def api_check():
+    data = get_data()
+    if API_HOST or API_KEY is None:
+        LG_MAIN.error('Invalid API_KEY or API_HOST')
+        return False
+    elif data == '{"message":"You are not subscribed to this API."}':
+        LG_MAIN.error('Invalid API_KEY or API_HOST')
+        return False
+    else:
+        time.sleep(3)
+        LG_MAIN.debug('API fetch successful')
+        return True
+
 
 if __name__ == "__main__":
-    check_api()
-    while True:
+    if api_check():
         dependenies()
         Thread(target=auto_req).start()
         Thread(target=man_req).start()
+    else:
+        exit()
+
