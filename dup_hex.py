@@ -2,7 +2,7 @@ import json
 import os
 
 # Read the json file
-with open(os.path.join("data", "manual_proccessed.json"), 'r') as file:
+with open(os.path.join("data", "test2.json"), 'r') as file:
     data = json.load(file)
 
 # Remove duplicates from the data
