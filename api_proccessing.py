@@ -8,13 +8,9 @@ import logging.handlers
 import json
 from dotenv import load_dotenv
 
-
-load_dotenv()
-current_time = datetime.datetime.now().time()
-
 class Logger:
     def __init__(self):
-        self.logger = logging.getLogger('auto_req')
+        self.logger = logging.getLogger('api_proccessing')
         self.logger.setLevel(logging.DEBUG)
         self.formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -23,6 +19,7 @@ class Logger:
         self.file_handler.setFormatter(self.formatter)
         self.logger.addHandler(self.file_handler)
 
+current_time = datetime.datetime.now().time()
 
 if datetime.time(4, 0) <= current_time <= datetime.time(19, 0):
     time_var = 350
@@ -32,6 +29,8 @@ elif datetime.time(0, 1) < current_time <= datetime.time(3, 59):
     time_var = 450
 else:
     time_var = 550
+
+load_dotenv()
 
 
 LG_MAIN = Logger().logger
@@ -91,7 +90,7 @@ def auto_req():
             with open(DEP_DEPENDENCY + 'adsb.json', 'w') as file:
                 file.write(str(data))
                 LG_MAIN.info("Data written to database automatically")     
-                data_format()            
+                data_format()
             time.sleep(time_var)
         except Exception as e:
             LG_MAIN.error(e)
@@ -117,11 +116,14 @@ def man_req():
 
 def api_check():
     data = get_data()
-    if API_HOST or API_KEY is None:
-        LG_MAIN.error('Invalid API_KEY or API_HOST')
+    if API_KEY is None or API_HOST is None:
+        LG_MAIN.error('Invalid API_KEY or API_HOST | Code 1')
         return False
     elif data == '{"message":"You are not subscribed to this API."}':
-        LG_MAIN.error('Invalid API_KEY or API_HOST')
+        LG_MAIN.error('Invalid API_KEY or API_HOST | Code 2')
+        return False
+    elif not os.path.exists(".env"):
+        LG_MAIN.error('No .env file found')
         return False
     else:
         time.sleep(3)
@@ -141,7 +143,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-# --TODO--
+# --todo--
 
 # -Remove duplicates from "final_adsb.json"
 
