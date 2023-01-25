@@ -37,7 +37,7 @@ LG_MAIN = Logger().logger
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
-
+day = datetime.date.today()
 
 url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
 headers = {
@@ -56,9 +56,10 @@ def dependencies():
 
 
 def proccessed_data_setup():
-    if not os.path.exists(DEP_DEPENDENCY + 'final_adsb.json'):
-        with open(DEP_DEPENDENCY + 'final_adsb.json', 'w') as file_data:
-            file_data.write('{"mil_data":[\n')
+    while True:
+        if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}.json'):
+            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as file_data:
+                file_data.write('{"mil_data":[\n')
 
 
 def data_format():
@@ -68,7 +69,7 @@ def data_format():
         
         
     for v in DB['ac']:
-        with open (DEP_DEPENDENCY + 'final_adsb.json', 'a') as f:
+        with open (DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
             mil_data = json.dumps(v, separators=(',', ': '))
             mil_data += ",\n"
             f.write(mil_data)
@@ -113,6 +114,14 @@ def man_req():
         except Exception as e:
             LG_MAIN.error(e)
 
+def rollover():
+    while True:
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
+            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
+                    f.write('{"end": "end"}\n]}')
+            time.sleep(1)
+        else:
+            pass
 
 def api_check():
     data = get_data()
@@ -129,12 +138,12 @@ def api_check():
         time.sleep(3)
         LG_MAIN.debug('API fetch successful')
         return True
-    
 
 def main():
     if api_check():
         dependencies()
-        proccessed_data_setup()
+        Thread(target=proccessed_data_setup).start()
+        Thread(target=rollover).start()
         Thread(target=auto_req).start()
         Thread(target=man_req).start()
     else:
@@ -148,8 +157,6 @@ if __name__ == "__main__":
 # -Remove duplicates from "final_adsb.json"
 
 # -Remove all dictionaries containing the callsign "TEST1234"
-
-# -Automatically add "]}" to the end of "final_adsb.json"
 
 # -Send proccessed data to MongoDB
 
