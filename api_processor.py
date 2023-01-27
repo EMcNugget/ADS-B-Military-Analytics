@@ -2,24 +2,13 @@ import time
 import requests
 import datetime
 import os
-from threading import Thread
-import logging
-import logging.handlers
 import json
 from dotenv import load_dotenv
+from loggerConfig import log_app
 
-class Logger:
-    def __init__(self):
-        self.logger = logging.getLogger('api_proccessing')
-        self.logger.setLevel(logging.DEBUG)
-        self.formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.file_handler = logging.handlers.RotatingFileHandler(
-            'adsb_main.log', maxBytes=1000000, mode='w', backupCount=5)
-        self.file_handler.setFormatter(self.formatter)
-        self.logger.addHandler(self.file_handler)
 
 current_time = datetime.datetime.now().time()
+
 
 if datetime.time(4, 0) <= current_time <= datetime.time(19, 0):
     time_var = 350
@@ -30,10 +19,11 @@ elif datetime.time(0, 1) < current_time <= datetime.time(3, 59):
 else:
     time_var = 550
 
+
 load_dotenv()
 
 
-LG_MAIN = Logger().logger
+LG_MAIN = log_app('api_processor')
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
@@ -45,7 +35,10 @@ headers = {
     "X-RapidAPI-Host": API_HOST
 }
 
-# file system setup and formatting
+
+# file system setup and formatting. The reason these 3 functions are in this file verus data_processor.py is because they are directly integrated with the API calling functions-
+# It would be slower to import those functions here. 
+
 
 def dependencies():
     if not os.path.exists(DEP_DEPENDENCY):
@@ -74,7 +67,9 @@ def data_format():
             mil_data += ",\n"
             f.write(mil_data)
 
+
 # API requests and proccessing
+
 
 def get_data():
     try:
@@ -114,6 +109,7 @@ def man_req():
         except Exception as e:
             LG_MAIN.error(e)
 
+
 def rollover():
     while True:
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
@@ -122,6 +118,7 @@ def rollover():
             time.sleep(1)
         else:
             pass
+
 
 def api_check():
     data = get_data()
@@ -138,32 +135,3 @@ def api_check():
         time.sleep(3)
         LG_MAIN.debug('API fetch successful')
         return True
-
-def main():
-    if api_check():
-        dependencies()
-        Thread(target=proccessed_data_setup).start()
-        Thread(target=rollover).start()
-        Thread(target=auto_req).start()
-        Thread(target=man_req).start()
-    else:
-        exit()
-
-if __name__ == "__main__":
-    main()
-
-# --todo--
-
-# -Remove duplicates from "final_adsb.json"
-
-# -Remove all dictionaries containing the callsign "TEST1234"
-
-# -Send proccessed data to MongoDB
-
-
-# --Future--
-
-
-# -Create front end with CustomTkinter or PyPQt6
-
-# -Web version?
