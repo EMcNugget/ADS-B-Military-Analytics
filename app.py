@@ -7,7 +7,6 @@ LG_MAIN = loggerConfig.log_app('main_app')
 
 
 def main():
-    loggerConfig.rotator()
     if ap.api_check():
         try:
             ap.dependencies()

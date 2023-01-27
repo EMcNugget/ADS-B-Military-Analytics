@@ -1,9 +1,6 @@
 import logging
 import logging.handlers
-import os
-import time 
-
-
+import os 
 class Logger:
     def __init__(self, app_name):
         self.logger = logging.getLogger(f'{app_name}')
@@ -19,13 +16,3 @@ class Logger:
 def log_app(app_name):
     logger = Logger(app_name)
     return logger.logger
-
-
-def rotator():
-    try:
-        if os.path.exists('adsb_main.log'):
-            os.rename(f'adsb_main_{int(time.time())}.log')
-        else:
-            pass
-    except OSError as e:
-        Logger('logging').logger.error(e)
