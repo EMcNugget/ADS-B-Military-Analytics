@@ -9,7 +9,7 @@ Run app.py
 
 
 
-ATTENTION: All information here is public. If there is a national security concern bring it up with ADBExchange not me.
+ATTENTION: All information here is public. If there is a national security concern bring it up with ADBExchange not me. And yes I plan to update the file system soon.
 
 If you somehow found this repo and wish to contribute to this atrocious code I based this on functional programming and the file system as of 1/26/23 is as follows:
 api_proccessor.py: Conducts calls to the API, checks if API key and host are valid, and first round of data formatting. Status: Complete for now.

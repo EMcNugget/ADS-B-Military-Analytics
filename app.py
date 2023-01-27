@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
 # Fix loggerConfig.py log rollover funtion
 
-
+# Update file system to be more organized
 
 # Intergrate data_proccessor.py logic into app.py
 
