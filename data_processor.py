@@ -2,7 +2,7 @@ import os
 import json
 import datetime
 from collections import defaultdict
-from bin.loggerConfig import log_app
+from loggerConfig import log_app
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
