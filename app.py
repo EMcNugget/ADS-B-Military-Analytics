@@ -30,6 +30,10 @@ if __name__ == "__main__":
 
 # Update naming conventions
 
+# Fix loggerConfig.py log rollover funtion
+
+
+
 # Intergrate data_proccessor.py logic into app.py
 
 # -Send proccessed data to database (Possibly MongoDB or Firebase as they are NoSQL databases and are free to use for the scale that this project is at)

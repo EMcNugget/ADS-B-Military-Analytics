@@ -14,7 +14,7 @@ ATTENTION: All information here is public. If there is a national security conce
 If you somehow found this repo and wish to contribute to this atrocious code I based this on functional programming and the file system as of 1/26/23 is as follows:
 api_proccessor.py: Conducts calls to the API, checks if API key and host are valid, and first round of data formatting. Status: Complete for now.
 
-data_proccesor.py: Does the majority of the data processing, at the moment it removes objects that contain duplicate hex codes, objects containing the flight "TEST1234" as they are static VOR calibration beacons used by the FAA, and removes objects containing "GNDTEST". Status: Limited functionality and I'm still debating on the stats aspect of the project with the farthest I know being I want to use numpy.
+data_proccesor.py: Does the majority of the data processing, at the moment it removes objects that contain duplicate hex codes, objects containing the flight "TEST1234" as they are static VOR calibration beacons used by the FAA, and removes objects containing "GNDTEST". Status: Limited functionality, current priority with this module is ending the file that'll eventually be sent to a database, its most likely a quick fix. More details under the todo list in app.py. I'm still debating on the stats aspect of the project with the farthest I know being I want to use numpy.
 
 test.py: As the name implies test.py is for testing and it's setup to allow the user to test individual functions within the aformentioned modules. Status: will scale as the project scales. Complete for now.
 
