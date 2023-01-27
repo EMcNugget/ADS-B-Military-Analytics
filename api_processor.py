@@ -1,5 +1,5 @@
 import time
-import requests
+import http.client
 import datetime
 import os
 import json
@@ -29,7 +29,8 @@ API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
 day = datetime.date.today()
 
-url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
+conn = http.client.HTTPSConnection("adsbexchange-com1.p.rapidapi.com")
+
 headers = {
     "X-RapidAPI-Key": API_KEY,
     "X-RapidAPI-Host": API_HOST
@@ -73,11 +74,12 @@ def data_format():
 
 def get_data():
     try:
-        response = requests.request("GET", url, headers=headers)
-        return response.text
+        conn.request("GET", "/v2/mil/", headers=headers)
+        res = conn.getresponse()
+        data = res.read()
+        return data.decode("utf-8")
     except Exception as e:
         LG_MAIN.error(e)
-
 
 def auto_req():
     while True:

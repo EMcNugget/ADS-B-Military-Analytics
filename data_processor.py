@@ -1,16 +1,16 @@
 import os
 import json
 import datetime
+import threading
 from collections import defaultdict
 from loggerConfig import log_app
-
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
 day = datetime.date.today()
 
 
-def data_format():
+def remove_dup():
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
         try:
             data = json.load(file)
@@ -26,12 +26,12 @@ def data_format():
         unique_flights[flight.get("hex")] = flight
 
 
-    with open(DEP_DEPENDENCY + 'output.json', 'w') as data2:
+    with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as data2:
         json.dump(unique_flights, data2, indent=2)
 
 
 def remove_test1234():
-    with open(DEP_DEPENDENCY + 'output.json', 'r') as file:
+    with open(DEP_DEPENDENCY + f'final_adsb{day}.json' , 'r') as file:
         data = json.load(file)
 
 
@@ -43,5 +43,5 @@ def remove_test1234():
             pass
 
 
-    with open(DEP_DEPENDENCY + 'output.json', 'w') as data2:
+    with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as data2:
         json.dump(data, data2, indent=2)
