@@ -1,6 +1,6 @@
-import api_processor as ap
-import data_processor as dp
-import loggerConfig
+import bin.api_processor as ap
+import bin.data_processor as dp
+import bin.loggerConfig as loggerConfig
 from threading import Thread
 
 
