@@ -1,7 +1,6 @@
 import os
 import json
 import datetime
-import threading
 from collections import defaultdict
 from loggerConfig import log_app
 

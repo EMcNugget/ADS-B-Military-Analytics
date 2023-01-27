@@ -9,6 +9,7 @@ LG_MAIN = loggerConfig.log_app('main_app')
 
 def main():
     user = input("Enter 'select ' to start the app: ")
+    loggerConfig.log_file_system()
     if user == 'api':
         if ap.api_check():
             try:
@@ -20,12 +21,22 @@ def main():
                 LG_MAIN.info('All threads started, app running')
             except Exception as e:
                 LG_MAIN.error(e)
+                exit()
     elif user == 'data':
-            Thread(target=dp.remove_dup).start()
-            Thread(target=dp.remove_test1234).start()
+        try:
+            dp.remove_dup()
+            dp.remove_test1234()
             LG_MAIN.info('Data processor threads started')
-    else:
+        except Exception as e:
+            LG_MAIN.error(e)
+            exit()
+    elif user == 'exit':
         exit()
+
+    else:
+        print("Invalid input")
+        LG_MAIN.warning("Invalid input")
+
 
 
 if __name__ == "__main__":
