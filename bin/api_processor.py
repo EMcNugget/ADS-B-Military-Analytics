@@ -4,8 +4,7 @@ import datetime
 import os
 import json
 from dotenv import load_dotenv
-from loggerConfig import log_app
-
+from bin.loggerConfig import log_app
 
 current_time = datetime.datetime.now().time()
 
@@ -22,12 +21,12 @@ else:
 
 load_dotenv()
 
-
 LG_MAIN = log_app('api_processor')
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
-DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
-day = datetime.date.today()
+DEP_DEPENDENCY = os.getcwd() + '\\data\\'
+day = datetime.date.today().strftime('%d-%m-%Y')
+
 
 conn = http.client.HTTPSConnection("adsbexchange-com1.p.rapidapi.com")
 

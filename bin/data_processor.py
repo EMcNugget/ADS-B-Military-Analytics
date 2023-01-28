@@ -2,12 +2,11 @@ import os
 import json
 import datetime
 from collections import defaultdict
-from loggerConfig import log_app
+from bin.loggerConfig import log_app
 
 LG_MAIN = log_app('data_processor')
-DEP_DEPENDENCY = os.path.join(os.path.dirname(__file__), 'data\\')
-day = datetime.date.today()
-
+DEP_DEPENDENCY = os.getcwd() + '\\data\\'
+day = datetime.date.today().strftime('%d-%m-%Y')
 
 def remove_dup():
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:

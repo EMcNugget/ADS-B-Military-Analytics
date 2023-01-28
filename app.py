@@ -1,6 +1,6 @@
-import api_processor as ap
-import data_processor as dp
-import loggerConfig as loggerConfig
+import bin.api_processor as ap
+import bin.data_processor as dp
+import bin.loggerConfig as loggerConfig
 from threading import Thread
 
 
@@ -36,8 +36,7 @@ def main():
     else:
         print("Invalid input")
         LG_MAIN.warning("Invalid input")
-
-
+        return main()
 
 if __name__ == "__main__":
     main()
