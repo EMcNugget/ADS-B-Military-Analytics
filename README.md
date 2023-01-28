@@ -4,10 +4,9 @@ Creating a database for military aircraft. A GUI is in development and the end g
 
 How to use: 
 
+run "pip install python-dotenv"
 Create a ".env" file in the main directory with the format seen in ".env-sample"
 Run app.py
-
-
 
 ATTENTION: All information here is public. If there is a national security concern bring it up with ADBExchange not me. And yes I plan to update the file system soon.
 
