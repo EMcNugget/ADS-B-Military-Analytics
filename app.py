@@ -6,9 +6,8 @@ from threading import Thread
 
 LG_MAIN = loggerConfig.log_app('main_app')
 
-
 def main():
-    user = input("Enter 'select ' to start the app: ")
+    user = input("Enter 'api' to start the API proccessor, 'data' to start the data processor, or 'exit' to exit: ")
     loggerConfig.log_file_system()
     if user == 'api':
         if ap.api_check():
@@ -44,6 +43,8 @@ if __name__ == "__main__":
 
 # --todo--
 
+# Work on Docker, Still learning how to use it
+
 # Update naming conventions
 
 # Fix loggerConfig.py log rollover funtion
@@ -51,8 +52,6 @@ if __name__ == "__main__":
 # Update file system to be more organized
 
 # Intergrate data_proccessor.py logic into app.py
-
-# -Send proccessed data to database (Possibly MongoDB or Firebase as they are NoSQL databases and are free to use for the scale that this project is at)
 
 # -Intergrate data analytics with NumPy and Matplotlib (Perhaps Pandas, still working on which one would be better for this project) 
 

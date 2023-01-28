@@ -3,7 +3,7 @@ import logging.handlers
 import os 
 import datetime
     
-DEP_DEPENDENCY = os.getcwd() + '\\Logs\\'
+DEP_DEPENDENCY = os.getcwd() + '/Logs/'
 
 class Logger:
     def __init__(self, app_name):

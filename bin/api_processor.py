@@ -5,6 +5,7 @@ import os
 import json
 from dotenv import load_dotenv
 from bin.loggerConfig import log_app
+from bin.mongo_db import get_mdb_data
 
 current_time = datetime.datetime.now().time()
 
@@ -25,7 +26,7 @@ LG_MAIN = log_app('api_processor')
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
-day = datetime.date.today().strftime('%d-%m-%Y')
+day = datetime.date.today().strftime('%Y-%m-%d')
 
 
 conn = http.client.HTTPSConnection("adsbexchange-com1.p.rapidapi.com")
@@ -116,6 +117,10 @@ def rollover():
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
                     f.write('{"end": "end"}\n]}')
+                    get_mdb_data(f'{day}')
+                    LG_MAIN.info("Data written to database")
+                    del f
+
             time.sleep(1)
         else:
             pass
