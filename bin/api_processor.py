@@ -1,11 +1,10 @@
-import time
+from time import sleep
 import http.client
 import datetime
 import os
 import json
 from dotenv import load_dotenv
 from bin.loggerConfig import log_app
-from bin.mongo_db import get_mdb_data
 
 current_time = datetime.datetime.now().time()
 
@@ -89,10 +88,10 @@ def auto_req():
                 file.write(str(data))
                 LG_MAIN.info("Data written to database automatically")     
                 data_format()
-            time.sleep(time_var)
+            sleep(time_var)
         except Exception as e:
             LG_MAIN.error(e)
-        time.sleep(time_var)
+        sleep(time_var)
 
 
 def man_req():
@@ -112,20 +111,6 @@ def man_req():
             LG_MAIN.error(e)
 
 
-def rollover():
-    while True:
-        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
-            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
-                    f.write('{"end": "end"}\n]}')
-                    get_mdb_data(f'{day}')
-                    LG_MAIN.info("Data written to database")
-                    del f
-
-            time.sleep(1)
-        else:
-            pass
-
-
 def api_check():
     data = get_data()
     if API_KEY is None or API_HOST is None:
@@ -138,6 +123,6 @@ def api_check():
         LG_MAIN.error('No .env file found')
         return False
     else:
-        time.sleep(3)
+        sleep(3)
         LG_MAIN.debug('API fetch successful')
         return True

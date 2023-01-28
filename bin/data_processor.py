@@ -3,6 +3,8 @@ import json
 import datetime
 from collections import defaultdict
 from bin.loggerConfig import log_app
+import time
+from bin.mongo_db import get_mdb_data
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
@@ -43,3 +45,16 @@ def remove_test1234():
 
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as data2:
         json.dump(data, data2, indent=2)
+
+def rollover():
+    while True:
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
+            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
+                    f.write('{"end": "end"}\n]}')
+                    get_mdb_data(f'{day}')
+                    LG_MAIN.info("Data written to database")
+                    del f
+
+            time.sleep(1)
+        else:
+            pass

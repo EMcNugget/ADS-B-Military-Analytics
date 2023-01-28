@@ -14,7 +14,7 @@ def main():
             try:
                 ap.dependencies()
                 Thread(target=ap.proccessed_data_setup).start() # removes API logging and renames dict
-                Thread(target=ap.rollover).start() # starts a new proccessed data file every day
+                Thread(target=dp.rollover).start() # starts a new proccessed data file every day
                 Thread(target=ap.auto_req).start() # automatically fetches data from API
                 Thread(target=ap.man_req).start() # manual option to fetch data from API
                 LG_MAIN.info('All threads started, app running')
