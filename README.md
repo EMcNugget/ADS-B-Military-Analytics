@@ -9,6 +9,7 @@ Create a ".env" file in the main directory with the format seen in ".env-sample"
 Run app.py
 
 ATTENTION: All information here is public. If there is a national security concern bring it up with ADBExchange not me. And yes I plan to update the file system soon.
+And you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
 
 If you somehow found this repo and wish to contribute to this atrocious code I based this on functional programming and the file system as of 1/26/23 is as follows:
 api_proccessor.py: Conducts calls to the API, checks if API key and host are valid, and first round of data formatting. Status: Complete for now.
