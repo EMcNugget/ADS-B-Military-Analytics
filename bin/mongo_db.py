@@ -22,3 +22,4 @@ def get_mdb_data(date):
     results = collection.find_one({"_id": f"{date}"})
     with open(DEP_DEPENDENCY + f'final_adsb{date}.json', 'w') as file:
         json.dump(results['data'], file, indent=2)
+        

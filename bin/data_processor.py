@@ -2,8 +2,9 @@ import os
 import json
 import datetime
 from collections import defaultdict
-from bin.loggerConfig import log_app
 import time
+import numpy as np
+from bin.loggerConfig import log_app
 from bin.mongo_db import get_mdb_data
 
 LG_MAIN = log_app('data_processor')
@@ -58,3 +59,4 @@ def rollover():
             time.sleep(1)
         else:
             pass
+
