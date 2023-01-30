@@ -3,9 +3,8 @@ import json
 import datetime
 from collections import defaultdict
 import time
-import numpy as np
-from bin.loggerConfig import log_app
-from bin.mongo_db import get_mdb_data
+from src.loggerConfig import log_app
+from src.mongo_db import insert_data
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
@@ -52,7 +51,7 @@ def rollover():
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
                     f.write('{"end": "end"}\n]}')
-                    get_mdb_data(f'{day}')
+                    insert_data()
                     LG_MAIN.info("Data written to database")
                     del f
 

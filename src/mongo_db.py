@@ -14,8 +14,7 @@ collection = db["historicalData"]
 
 def insert_data():
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
-        data = file.read()
-        json.loads(data)
+        data = json.load(file)
         collection.insert_one({"_id": f"{day}", "data": data})
 
 def get_mdb_data(date):

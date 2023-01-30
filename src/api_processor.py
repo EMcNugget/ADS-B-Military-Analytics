@@ -4,7 +4,7 @@ import datetime
 import os
 import json
 from dotenv import load_dotenv
-from bin.loggerConfig import log_app
+from src.loggerConfig import log_app
 
 current_time = datetime.datetime.now().time()
 
