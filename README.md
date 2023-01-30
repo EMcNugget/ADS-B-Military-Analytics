@@ -1,5 +1,12 @@
 # adsb_mil_data
  
+CURRENT VERSION IS BROKEN
+-.env file is not being recognized
+-logging directory not being created
+
+Bugfix coming soon.
+
+
 Creating a database for military aircraft. A GUI is in development and the end goal is an analytics application for military aircraft with both a realtime and historical datebase.
 
 How to use: 
