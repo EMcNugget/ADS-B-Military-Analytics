@@ -61,11 +61,14 @@ def rollover():
                         LG_MAIN.critical(f"File 'final_adsb{day}.json' not found")
             time.sleep(1)
 
-def remove_dup_pd(): # WIP
+def load_pd_data(): # WIP
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
         d = json.load(file)
         data = pd.DataFrame(d['mil_data'])
         LG_MAIN.info(f"Data loaded from 'final_adsb{day}.json'")
-        fd = data.drop_duplicates(subset=['hex'], keep='first')
-        fd.to_json(orient='records', indent=2) 
+        df = data.value_counts('flight')
+        print(df)
+
+
+
 
