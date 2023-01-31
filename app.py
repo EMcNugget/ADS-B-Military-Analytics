@@ -1,10 +1,10 @@
 import src.api_processor as ap
 import src.data_processor as dp
-import src.loggerConfig as loggerConfig
+import src.logger_config as logger_config
 from threading import Thread
 
 def main():
-    LG_MAIN = loggerConfig.log_app('main_app')
+    LG_MAIN = logger_config.log_app('main_app')
     user = input("Enter 'api' to start the API proccessor, 'data' to start the data processor, or 'exit' to exit: ")
     if user == 'api':
         if ap.api_check():
@@ -40,17 +40,11 @@ if __name__ == "__main__":
 
 # --todo--
 
-# Work on Docker, Still learning how to use it
-
-# Update naming conventions
-
-# Fix loggerConfig.py log rollover funtion
-
-# Update file system to be more organized
-
 # Intergrate data_proccessor.py logic into app.py
 
-# -Intergrate data analytics with NumPy and Matplotlib (Perhaps Pandas, still working on which one would be better for this project) 
+# -Intergrate data analytics with Pandas
+
+# -Refactor data processing with Pandas, still exploring the possibilities of this
 
 # --Future--
 

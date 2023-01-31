@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 import datetime
-from src.loggerConfig import log_app
+from src.logger_config import log_app
 
 load_dotenv()
 MDB_URL = os.getenv("MONGO_DB_URL")
@@ -19,7 +19,7 @@ def insert_data():
         data = json.load(file)
         collection.insert_one({"_id": f"{day}", "data": data})
 
-def get_mdb_data(date):
+def get_mdb_data(date) -> dict: 
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     results = collection.find_one({"_id": f"{date}"})

@@ -3,8 +3,9 @@ import json
 import datetime
 from collections import defaultdict
 import time
-from src.loggerConfig import log_app
+import pandas as pd
 from src.mongo_db import insert_data
+from src.logger_config import log_app
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
@@ -59,3 +60,12 @@ def rollover():
                     except FileNotFoundError:
                         LG_MAIN.critical(f"File 'final_adsb{day}.json' not found")
             time.sleep(1)
+
+def remove_dup_pd(): # WIP
+    with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
+        d = json.load(file)
+        data = pd.DataFrame(d['mil_data'])
+        LG_MAIN.info(f"Data loaded from 'final_adsb{day}.json'")
+        fd = data.drop_duplicates(subset=['hex'], keep='first')
+        fd.to_json(orient='records', indent=2) 
+
