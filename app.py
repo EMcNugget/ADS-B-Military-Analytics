@@ -3,12 +3,9 @@ import src.data_processor as dp
 import src.loggerConfig as loggerConfig
 from threading import Thread
 
-
-LG_MAIN = loggerConfig.log_app('main_app')
-
 def main():
+    LG_MAIN = loggerConfig.log_app('main_app')
     user = input("Enter 'api' to start the API proccessor, 'data' to start the data processor, or 'exit' to exit: ")
-    loggerConfig.log_file_system()
     if user == 'api':
         if ap.api_check():
             try:

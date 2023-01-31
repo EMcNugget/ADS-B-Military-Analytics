@@ -130,6 +130,5 @@ dmypy.json
 
 /.idea
 /.vscode
-cred.py
 data/
-adsb.json
+logs/

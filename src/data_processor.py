@@ -8,7 +8,7 @@ from src.mongo_db import insert_data
 
 LG_MAIN = log_app('data_processor')
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
-day = datetime.date.today().strftime('%d-%m-%Y')
+day = datetime.date.today().strftime('%Y-%m-%d')
 
 def remove_dup():
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
@@ -51,11 +51,11 @@ def rollover():
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
                     f.write('{"end": "end"}\n]}')
-                    insert_data()
-                    LG_MAIN.info("Data written to database")
-                    del f
-
+                    try:
+                        insert_data()
+                        LG_MAIN.info("Data written to database")
+                        os.remove(DEP_DEPENDENCY + f'final_adsb{day}.json')
+                        LG_MAIN.info(f"File 'final_adsb{day}.json' removed")
+                    except FileNotFoundError:
+                        LG_MAIN.critical(f"File 'final_adsb{day}.json' not found")
             time.sleep(1)
-        else:
-            pass
-

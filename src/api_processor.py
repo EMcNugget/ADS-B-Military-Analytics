@@ -86,7 +86,7 @@ def auto_req():
             data = get_data()
             with open(DEP_DEPENDENCY + 'adsb.json', 'w') as file:
                 file.write(str(data))
-                LG_MAIN.info("Data written to database automatically")     
+                LG_MAIN.info("Data written locally")     
                 data_format()
             sleep(time_var)
         except Exception as e:
@@ -102,7 +102,7 @@ def man_req():
                 data = get_data()
                 with open(DEP_DEPENDENCY + 'adsb.json', 'w') as file:
                     file.write(str(data))
-                    LG_MAIN.info("Data written to database manually")
+                    LG_MAIN.info("Data written locally")
                     data_format()
             else:
                 print("Invalid input")
