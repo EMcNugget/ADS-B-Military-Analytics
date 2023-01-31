@@ -18,8 +18,10 @@ And you need a valid API key for the ADSB Exchange API at the moment while every
 Current stack is Python, MongoDB, and Google Cloud(WIP)
 
 Current tasks:
+
 -Migrating to Pandas for data processing versus vanillia python
 -Docker, makefile, etc to prevent the "It works on my machine" issue
 
 Known bugs:
+
 -DNS issue when connecting to MongoDB from some machines
