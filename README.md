@@ -12,8 +12,8 @@ $ pip install -r requirements.txt
 $ python -c app.py
 ```
 
-ATTENTION: All information here is public. If there is a national security concern bring it up with ADBExchange not me. And yes I plan to update the file system soon.
-And you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
+ATTENTION: All information here is public.
+All you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
 
 Current stack is Python, MongoDB, and Google Cloud(WIP)
 
