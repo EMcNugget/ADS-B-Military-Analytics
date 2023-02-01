@@ -1,7 +1,6 @@
 import logging
 import logging.handlers
-import os 
-    
+import os
 class Logger:
     def __init__(self, app_name):
         if not os.path.exists(os.path.join(os.getcwd(), "logs")):
