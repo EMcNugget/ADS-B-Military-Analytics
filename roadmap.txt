@@ -6,4 +6,4 @@ and then uploads that data to MongoDB every day at midnight.
 Thats the server side that I hope to run on Google Cloud eventually or AWS.
 Then with a function you can call that array from that day and store it into a "cache" (just stores it locally for the desktop version) for later usage.
 
-My current plan right now to create a desktop app with electron? Why not a dedicated python tool? Because I want to learn JS, HTML, and CSS simple as that plus that'll make developing a webversion easier.
+My current plan right now to create a desktop app then move to a web version later.
