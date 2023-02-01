@@ -12,20 +12,16 @@ DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 day = datetime.date.today().strftime('%Y-%m-%d')
 
 def remove_dup():
+    unique_flights = defaultdict(dict)
+
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r') as file:
         try:
             data = json.load(file)
             LG_MAIN.info(f"Data loaded from 'final_adsb{day}.json'")
+            for flight in data['mil_data']:
+                unique_flights[flight.get("hex")] = flight
         except json.decoder.JSONDecodeError:
             LG_MAIN.critical(f"Error loading data from 'final_adsb{day}.json'")
-        
-
-    unique_flights = defaultdict(dict)
-
-
-    for flight in data['mil_data']:
-        unique_flights[flight.get("hex")] = flight
-
 
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as data2:
         json.dump(unique_flights, data2, indent=2)

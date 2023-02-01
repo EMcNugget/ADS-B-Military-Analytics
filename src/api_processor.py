@@ -1,5 +1,5 @@
 from time import sleep
-import http.client
+import requests
 import datetime
 import os
 import json
@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from src.logger_config import log_app
 
 current_time = datetime.datetime.now().time()
-
 
 if datetime.time(4, 0) <= current_time <= datetime.time(19, 0):
     time_var = 350
@@ -18,7 +17,6 @@ elif datetime.time(0, 1) < current_time <= datetime.time(3, 59):
 else:
     time_var = 550
 
-
 load_dotenv()
 
 LG_MAIN = log_app('api_processor')
@@ -27,18 +25,8 @@ API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 day = datetime.date.today().strftime('%Y-%m-%d')
 
-
-conn = http.client.HTTPSConnection("adsbexchange-com1.p.rapidapi.com")
-
-headers = {
-    "X-RapidAPI-Key": API_KEY,
-    "X-RapidAPI-Host": API_HOST
-}
-
-
 # file system setup and formatting. The reason these 3 functions are in this file verus data_processor.py is because they are directly integrated with the API calling functions-
 # It would be slower to import those functions here. 
-
 
 def dependencies():
     if not os.path.exists(DEP_DEPENDENCY):
@@ -47,36 +35,38 @@ def dependencies():
         with open(DEP_DEPENDENCY + 'adsb.json', 'w') as data:
             data.write('')
 
-
 def proccessed_data_setup():
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}.json'):
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w') as file_data:
                 file_data.write('{"mil_data":[\n')
 
-
 def data_format():
     with open(DEP_DEPENDENCY + 'adsb.json', 'r') as file:
         data = file.read()
         DB = json.loads(data)
-        
-        
+
     for v in DB['ac']:
         with open (DEP_DEPENDENCY + f'final_adsb{day}.json', 'a') as f:
             mil_data = json.dumps(v, separators=(',', ': '))
             mil_data += ",\n"
             f.write(mil_data)
 
-
 # API requests and proccessing
 
-
 def get_data():
+    
+    url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
+
+    headers = {
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": API_HOST
+    }
+
     try:
-        conn.request("GET", "/v2/mil/", headers=headers)
-        res = conn.getresponse()
-        data = res.read()
-        return data.decode("utf-8")
+        response = requests.request("GET", url, headers=headers) # Type error for headers may occur if API_KEY or API_HOST are not set in .env, however this is dealt with in the API check function
+        LG_MAIN.info("Data received from API")
+        return response.text
     except Exception as e:
         LG_MAIN.error(e)
 
@@ -93,7 +83,6 @@ def auto_req():
             LG_MAIN.error(e)
         sleep(time_var)
 
-
 def man_req():
     while True:
         user = input("Enter 'req' to request")
@@ -109,7 +98,6 @@ def man_req():
                 LG_MAIN.warning("Invalid input")
         except Exception as e:
             LG_MAIN.error(e)
-
 
 def api_check():
     data = get_data()

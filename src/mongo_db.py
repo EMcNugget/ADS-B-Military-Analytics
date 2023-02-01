@@ -19,12 +19,16 @@ def insert_data():
         data = json.load(file)
         collection.insert_one({"_id": f"{day}", "data": data})
 
-def get_mdb_data(date) -> dict: 
+def get_mdb_data(date): 
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     results = collection.find_one({"_id": f"{date}"})
     with open(DEP_DEPENDENCY + f'final_adsb{date}.json', 'w') as file:
         try:
-            json.dump(results['data'], file, indent=2)
+            if results == None:
+                LG_MAIN.critical(f"Data for {date} not found in database")
+                return
+            else:
+                json.dump(results['data'], file, indent=2)
         except TypeError:
-            LG_MAIN.critical(f"Data for {date} not found in database")
+            LG_MAIN.critical('Invalid date format. Please use YYYY-MM-DD format.')
