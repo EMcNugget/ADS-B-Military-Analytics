@@ -1,7 +1,7 @@
-import datetime # datetime is used to determine the time of day and set the delay time accordingly
-import os # os is used to create the file system and check for the .env file
+import datetime
+import os
 import json
-from time import sleep # sleep is used to delay the API calls to prevent overloading the API
+from time import sleep
 import requests
 from dotenv import load_dotenv
 from .logger_config import log_app
@@ -24,10 +24,6 @@ API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
-
-# file system setup and formatting. The reason these 3 functions are in this file
-# verus data_processor.py is because they are directly integrated with the API calling functions
-# It would be slower to import those functions here.
 
 def dependencies():
     if not os.path.exists(DEP_DEPENDENCY):
