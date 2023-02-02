@@ -65,4 +65,4 @@ class Analytics:
             except KeyError as error:
                 log_main.critical(error)
                 return
-Analytics.inter_ac()
+ 
