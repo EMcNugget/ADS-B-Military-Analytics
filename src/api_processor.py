@@ -19,10 +19,10 @@ else:
 
 load_dotenv()
 
-log_main = log_app('api_processor')
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
+log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
 
 # file system setup and formatting. The reason these 3 functions are in this file
@@ -39,7 +39,7 @@ def dependencies()-> None:
 def proccessed_data_setup():
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}.json'):
-            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w', encoding='UTF-8') as file_data:
+            with open(DEP_DEPENDENCY + 'final_adsb{day}.json', 'w', encoding='UTF-8') as file_data:
                 file_data.write('{"mil_data":[\n')
 
 def data_format():
@@ -75,45 +75,38 @@ def get_data():
 
 def auto_req():
     while True:
-        try:
+        data = get_data()
+        with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as file:
+            file.write(str(data))
+            log_main.info("Data written locally")
+            data_format()
+        sleep(DELAY)
+
+
+def man_req():
+    while True:
+        user = input("Enter 'req' to request")
+        if user == "req":
             data = get_data()
             with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as file:
                 file.write(str(data))
                 log_main.info("Data written locally")
                 data_format()
-            sleep(DELAY)
-        except Exception as error:
-            log_main.error(error)
-        sleep(DELAY)
-
-def man_req():
-    while True:
-        user = input("Enter 'req' to request")
-        try:
-            if user == "req":
-                data = get_data()
-                with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as file:
-                    file.write(str(data))
-                    log_main.info("Data written locally")
-                    data_format()
-            else:
-                print("Invalid input")
-                log_main.warning("Invalid input")
-        except Exception as error:
-            log_main.error(error)
+        else:
+            print("Invalid input")
+            log_main.warning("Invalid input")
 
 def api_check():
     data = get_data()
     if API_KEY is None or API_HOST is None:
         log_main.error('Invalid API_KEY or API_HOST | Code 1')
         return False
-    elif data == '{"message":"You are not subscribed to this API."}':
+    if data == '{"message":"You are not subscribed to this API."}':
         log_main.error('Invalid API_KEY or API_HOST | Code 2')
         return False
-    elif not os.path.exists(".env"):
+    if not os.path.exists(".env"):
         log_main.error('No .env file found')
         return False
-    else:
-        sleep(3)
-        log_main.debug('API fetch successful')
-        return True
+    sleep(3)
+    log_main.debug('API fetch successful')
+    return True
