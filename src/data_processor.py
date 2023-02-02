@@ -29,7 +29,8 @@ def remove_dup():
 
 
 def remove_test1234():
-    """Because TEST1234 is a VOR calibration becon, it is irrelevant"""
+    """Because TEST1234 is a VOR calibration beacon, it is irrelevant
+with the same going for GNDTEST"""
 
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json' , 'r', encoding='UTF-8') as file:
         data = json.load(file)
