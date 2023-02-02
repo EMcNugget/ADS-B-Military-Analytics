@@ -29,7 +29,7 @@ day = datetime.date.today().strftime('%Y-%m-%d')
 # verus data_processor.py is because they are directly integrated with the API calling functions
 # It would be slower to import those functions here.
 
-def dependencies()-> None:
+def dependencies():
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     elif not os.path.exists(DEP_DEPENDENCY + 'adsb.json'):
@@ -56,15 +56,15 @@ def data_format():
 # API requests and proccessing
 
 def get_data():
+    """Gets data from the API and returns it as a string 
+    due to the API already formatting it to JSON"""
+
     url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
 
     headers = {
         "X-RapidAPI-Key": API_KEY,
         "X-RapidAPI-Host": API_HOST
     }
-
-# Type error for headers may occur
-# if API_KEY or API_HOST are not set in .env, however this is dealt with in the API check function
     try:
         response = requests.request("GET", url, headers=headers, timeout=3)
         log_main.info("Data received from API")
@@ -74,6 +74,9 @@ def get_data():
 
 
 def auto_req():
+    """Automatically requests data from the API and writes it to a JSON file
+    at a specified interval as defined by the DELAY variable"""
+
     while True:
         data = get_data()
         with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as file:
@@ -84,6 +87,8 @@ def auto_req():
 
 
 def man_req():
+    """Ability to manually request data from the API and write it to a JSON file"""
+
     while True:
         user = input("Enter 'req' to request")
         if user == "req":
@@ -97,6 +102,8 @@ def man_req():
             log_main.warning("Invalid input")
 
 def api_check():
+    """Checks the API key and host to ensure they are valid and that there is a .env file"""
+
     data = get_data()
     if API_KEY is None or API_HOST is None:
         log_main.error('Invalid API_KEY or API_HOST | Code 1')

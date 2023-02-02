@@ -11,6 +11,8 @@ log_main = log_app('data_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
 
 def remove_dup():
+    """Removes duplicate hex codes"""
+
     unique_flights = defaultdict(dict)
 
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r', encoding='UTF-8') as file:
@@ -27,6 +29,8 @@ def remove_dup():
 
 
 def remove_test1234():
+    """Because TEST1234 is a VOR calibration becon, it is irrelevant"""
+
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json' , 'r', encoding='UTF-8') as file:
         data = json.load(file)
 
@@ -43,6 +47,8 @@ def remove_test1234():
         json.dump(data, data2, indent=2)
 
 def rollover():
+    """Rollover function, runs every 24 hours"""
+
     while True:
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as file:
