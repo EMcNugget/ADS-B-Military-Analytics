@@ -1,20 +1,20 @@
 import sys
 from threading import Thread
-from src import api_processor as ap
-from src import data_processor as dp
+from src import parse_api as api
+from src import analytics as an
 from src import logger_config
 
 def main():
     log_main = logger_config.log_app('main_app')
     user = input("Enter 'api' to start the API proccessor, 'data' to start the data processor, or 'exit' to exit: ")
     if user == 'api':
-        if ap.api_check():
+        if api.api_check():
             try:
-                ap.dependencies()
-                Thread(target=ap.proccessed_data_setup).start()
-                Thread(target=dp.rollover).start()
-                Thread(target=ap.auto_req).start()
-                Thread(target=ap.man_req).start()
+                api.dependencies()
+                Thread(target=api.proccessed_data_setup).start()
+                Thread(target=an.rollover).start()
+                Thread(target=api.auto_req).start()
+                Thread(target=api.man_req).start()
                 log_main.info('All threads started, app running')
             except KeyError as error:
                 log_main.error(error)

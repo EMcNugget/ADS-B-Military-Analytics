@@ -11,7 +11,7 @@ from .logger_config import log_app
 load_dotenv()
 MDB_URL = os.getenv("MONGO_DB_URL")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
-log_main = log_app('mongo_db')
+log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
