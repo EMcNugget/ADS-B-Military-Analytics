@@ -6,8 +6,7 @@ from src import logger_config
 
 def main():
     log_main = logger_config.log_app('main_app')
-    user = input("""Enter 'api' to start the API proccessor,
-    'data' to start the data processor, or 'exit' to exit: """)
+    user = input("Enter 'api' to start the API proccessor, 'data' to start the data processor, or 'exit' to exit: ")
     if user == 'api':
         if ap.api_check():
             try:
@@ -22,8 +21,7 @@ def main():
                 sys.exit()
     elif user == 'data':
         try:
-            dp.remove_dup()
-            dp.remove_test1234()
+            # WIP
             log_main.info('Data processor threads started')
         except KeyError as error:
             log_main.error(error)
@@ -42,9 +40,9 @@ if __name__ == "__main__":
 
 # --todo--
 
-# Intergrate data_proccessor.py logic into app.py
+# Intergrate timing logic to utilize data_processor.py
 
-# -Intergrate data analytics with Pandas
+# -Intergrate data analytics with Pandas UPDATE 2/3/2023: Halfway done
 
 # --Future--
 

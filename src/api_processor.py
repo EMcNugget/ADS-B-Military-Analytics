@@ -35,7 +35,7 @@ def dependencies():
 def proccessed_data_setup():
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}.json'):
-            with open(DEP_DEPENDENCY + 'final_adsb{day}.json', 'w', encoding='UTF-8') as file_data:
+            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w', encoding='UTF-8') as file_data:
                 file_data.write('{"mil_data":[\n')
 
 def data_format():
@@ -52,7 +52,7 @@ def data_format():
 # API requests and proccessing
 
 def get_data():
-    """Gets data from the API and returns it as a string 
+    """Gets data from the API and returns it as a string
     due to the API already formatting it to JSON"""
 
     url = "https://adsbexchange-com1.p.rapidapi.com/v2/mil/"
