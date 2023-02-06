@@ -31,14 +31,11 @@ class MainClass:
     def type_func(cls):
         data, data2 = input("Enter date in YYYY-MM-DD format, and the requested type: ").split()
         return an.Analytics.for_data(date=data, info_req=data2)
-        
+
     @classmethod
     def int_func(cls):
         data2 = input("Enter date in YYYY-MM-DD format: ")
         return an.Analytics.inter_ac(date=data2)
-        
-        
-
 
 def main():
     api.dependencies()
@@ -53,16 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# --todo--
-
-# Intergrate timing logic to utilize data_processor.py
-
-# -Intergrate data analytics with Pandas UPDATE 2/3/2023: Halfway done
-
-# --Future--
-
-# -Create front end with PyPQt6
-
-# -Web version? Probably Django or Flask for the backend,
-# I'm out of the loop when it comes to web development so I'm not sure what would be best for the front end
