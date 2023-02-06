@@ -2,6 +2,7 @@ import datetime
 import os
 import json
 from time import sleep
+import time
 import requests
 from dotenv import load_dotenv
 from .logger_config import log_app
@@ -96,6 +97,21 @@ def man_req():
         else:
             print("Invalid input")
             log_main.warning("Invalid input")
+def rollover():
+    """Rollover function, runs every 24 hours"""
+
+    while True:
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
+            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as rollover_file:
+                rollover_file.write('{"end": "end"}\n]}')
+                try:
+                    # insert_data()  # Keep this as commented out while testing items
+                    log_main.info("Data written to database")
+                    os.remove(DEP_DEPENDENCY + f'final_adsb{day}.json')
+                    log_main.info("File 'final_adsb%s.json' removed", day)
+                except FileNotFoundError:
+                    log_main.critical("File 'final_adsb%s.json' not found", day)
+            time.sleep(1)
 
 def api_check():
     """Checks the API key and host to ensure they are valid and that there is a .env file"""
