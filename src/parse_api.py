@@ -63,7 +63,7 @@ def get_data():
         "X-RapidAPI-Host": API_HOST
     }
     try:
-        response = requests.request("GET", url, headers=headers, timeout=3)
+        response = requests.request("GET", url, headers=headers, timeout=3) # type: ignore
         log_main.info("Data received from API")
         return response.text
     except TypeError as error:
