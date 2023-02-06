@@ -4,6 +4,11 @@ python -m ensurepip --upgrade
 
 pip install -r requirements.txt
 
+npm install react
+
+npm install typescript
+
+npm install electron --savedev
 if [ $? -eq 0 ]; then
     echo "Started, check log for more info on runtime events"
 else
