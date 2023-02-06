@@ -1,9 +1,0 @@
-This is a road map for how this app will be deployed. 
-
-Right now at the time of writing which is 1/28/23 the backend is essentially complete. It fetchs data from the ADSB Exchange API, formats it, removes dupilcates and irrelevant data
-and then uploads that data to MongoDB every day at midnight. 
-
-Thats the server side that I hope to run on Google Cloud eventually or AWS.
-Then with a function you can call that array from that day and store it into a "cache" (just stores it locally for the desktop version) for later usage.
-
-My current plan right now to create a desktop app then move to a web version later.
