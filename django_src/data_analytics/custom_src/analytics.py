@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import pandas as pd
-from src.logger_config import log_app
+from .logger_config import log_app
 
 load_dotenv()
 MDB_URL = os.getenv("MONGO_DB_URL")

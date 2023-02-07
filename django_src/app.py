@@ -7,7 +7,7 @@ from .custom_src import analytics as an
 
 @dataclass
 class MainClass:
-    user: str = input("Enter 'api' to run the API, 'data' to run the data processor, or 'exit' to exit: ")
+    user: str = input("Enter 'api' to run the API, 'data' to run the data processor, or 'exit' to exit: ") # pylint: disable=line-too-long
     log_main = logger_config.log_app('main')
 
     @classmethod
