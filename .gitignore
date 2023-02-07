@@ -13,9 +13,8 @@ __pypackages__/
 /.idea
 /.vscode
 data/
-<<<<<<< HEAD
 logs/
-node_modules/
-=======
-logs/
->>>>>>> parent of be4b090 (Updated dx)
+app.ts
+test.ts
+app.html
+test.html

@@ -4,15 +4,11 @@ python -m ensurepip --upgrade
 
 pip install -r requirements.txt
 
-<<<<<<< HEAD
-npm install -D tailwindcss
+npm install react
 
-npx tailwindcss init
+npm install typescript
 
-npm install -D postcss postcss-cli autoprefixer
-
-=======
->>>>>>> parent of be4b090 (Updated dx)
+npm install electron --savedev
 if [ $? -eq 0 ]; then
     echo "Started, check log for more info on runtime events"
 else
