@@ -72,6 +72,13 @@ class Analytics:
         """Used for special aircraft based on logic below"""
         t_data_frame = load_pd_data(date)
 
+        if data == 'ac_type':
+            data = cls.ac_type
+        elif data == 'callsign':
+            data = cls.callsign
+        elif data == 'er_flags':
+            data = cls.er_flags
+
         try:
             place_holder = []
             d_file = t_data_frame[t_data_frame[row].isin(data)].to_dict(orient='records')
