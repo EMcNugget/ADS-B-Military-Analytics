@@ -5,7 +5,9 @@ Creating a database for military aircraft. A GUI is in development and the end g
 **Requirements**
 
 NodeJS
+
 Python
+
 A valid ADSBExchange v2 API Key
 
 **How to use:**
@@ -35,6 +37,7 @@ $ python -c app.py
 Windows: Used the same way as linux (Make sure you have Git or a Unix emulator installed, or use the manual method)
 
 Current stack is Django, and MongoDB
+
 Planned additions to stack: Google Cloud, React.js, TailwindCSS, and PostCSS
 
 **Current tasks:**
