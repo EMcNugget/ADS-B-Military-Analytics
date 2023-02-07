@@ -31,7 +31,8 @@ Windows: Used the same way as linux (Make sure you have Git or a Unix emulator i
 ATTENTION: All information here is public.
 All you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
 
-Current stack is Python, MongoDB, and Google Cloud(WIP)
+Current stack is Django, and MongoDB
+Planned additions to stack: Google Cloud, React.js, TailwindCSS, and PostCSS
 
 **Current tasks:**
 
