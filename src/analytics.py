@@ -34,8 +34,10 @@ def load_pd_data(date=day):
 def insert_data():
     with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'r', encoding='UTF-8') as mdb_i_file:
         data = json.load(mdb_i_file)
-        collection.insert_one({"_id": f"{day}", "data": data})
-
+    with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'r', encoding='UTF-8') as mdb_o_file:
+        stats = json.load(mdb_o_file)
+    collection.insert_many({"_id": f"{day}", "data": data, "stats": stats})
+    
 def get_mdb_data(date):
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
@@ -71,7 +73,15 @@ class Analytics:
     @classmethod
     def inter_ac(cls, date, row='t', data=ac_type):
         """Used for special aircraft based on logic below"""
+        
         t_data_frame = load_pd_data(date)
+        
+        if data == 'ac_type':
+            data = cls.ac_type
+        elif data == 'callsign':
+            data = cls.callsign
+        elif data == 'er_flags':
+            data = cls.er_flags
 
         try:
             place_holder = []

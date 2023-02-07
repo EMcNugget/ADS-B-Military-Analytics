@@ -5,6 +5,7 @@ from time import sleep
 import time
 import requests
 from dotenv import load_dotenv
+from src import analytics as an
 from .logger_config import log_app
 
 current_time = datetime.datetime.now().time()
@@ -101,16 +102,40 @@ def rollover():
     """Rollover function, runs every 24 hours"""
 
     while True:
-        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:45":
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:15":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as rollover_file:
-                rollover_file.write('{"end": "end"}\n]}')
                 try:
-                    # insert_data()  # Keep this as commented out while testing items
+                    rollover_file.write('{"end": "end"}\n]}')
                     log_main.info("Data written to database")
-                    os.remove(DEP_DEPENDENCY + f'final_adsb{day}.json')
                     log_main.info("File 'final_adsb%s.json' removed", day)
                 except FileNotFoundError:
                     log_main.critical("File 'final_adsb%s.json' not found", day)
+            
+            with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'w', encoding='UTF-8') as roll_data:
+                try:
+                    roll_data.write('{"data":[\n')
+                    json_data = an.Analytics.for_data(day, 't')
+                    json.dump(json_data, roll_data, indent=2)
+                    roll_data.write('{"end": "end"}\n]}')
+                except FileNotFoundError:
+                    log_main.critical("File 'final_adsb%s_stats.json' not found", day)
+
+            with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'a', encoding='UTF-8') as inter_data:
+                roll_data.write('{"end": "end"}\n]}')
+                try:
+                    inter_data.write('{"data":[\n')
+                    json_stats = an.Analytics.inter_ac(day, 't')
+                    json.dump(json_stats, inter_data, indent=2)
+                    inter_data.write('{"end": "end"}\n]}')
+                except FileNotFoundError:
+                    log_main.critical("File 'final_adsb%s_inter.json' not found", day)
+            an.insert_data()
+            try:
+                os.remove(DEP_DEPENDENCY + f'final_adsb{day}.json')
+                os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
+                os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
+            except PermissionError:
+                log_main.critical("File 'final_adsb%s.json' is currently in use", day)
             time.sleep(1)
 
 def api_check():
