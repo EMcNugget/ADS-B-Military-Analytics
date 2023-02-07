@@ -101,7 +101,7 @@ def rollover():
     """Rollover function, runs every 24 hours"""
 
     while True:
-        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:00":
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:45":
             with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as rollover_file:
                 rollover_file.write('{"end": "end"}\n]}')
                 try:

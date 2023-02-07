@@ -8,11 +8,12 @@ import pandas as pd
 from src.logger_config import log_app
 
 load_dotenv()
-MDB_URL = os.getenv("MONGO_DB_URL")
+PASSWORD = os.getenv("PASSWORD")
+USERNAME = os.getenv("USERNAME")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
-cluster = MongoClient(MDB_URL)
+cluster = MongoClient(f'mongodb+srv://{USERNAME}:{PASSWORD}@mildata.oyy7jmp.mongodb.net/?retryWrites=true&w=majority')
 db = cluster["milData"]
 collection = db["historicalData"]
 pd.options.mode.chained_assignment = None # type: ignore
