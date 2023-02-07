@@ -14,7 +14,4 @@ __pypackages__/
 /.vscode
 data/
 logs/
-app.ts
-test.ts
-app.html
-test.html
+node_modules/
