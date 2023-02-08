@@ -35,10 +35,12 @@ Current stack is Python, MongoDB, and Google Cloud(WIP)
 
 **Current tasks:**
 
--Migrating to Pandas for data processing versus vanillia python
+-Migrating to Pandas for data processing versus vanillia python **DONE**
 
 -Docker, makefile, etc to prevent the "It works on my machine" issue
 
+-Flask REST API
+
 **Known bugs:**
 
--DNS issue when connecting to MongoDB from some machines
+No known bugs that don't have to do with incompletion of a piece of code.
