@@ -36,8 +36,8 @@ def dependencies():
 
 def proccessed_data_setup():
     while True:
-        if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}.json'):
-            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'w', encoding='UTF-8') as file_data:
+        if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}_main.json'):
+            with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'w', encoding='UTF-8') as file_data:
                 file_data.write('{"mil_data":[\n')
 
 def data_format():
@@ -46,12 +46,10 @@ def data_format():
         database = json.loads(data)
 
     for aircraft in database['ac']:
-        with open (DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as file:
+        with open (DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as file:
             mil_data = json.dumps(aircraft, separators=(',', ': '))
             mil_data += ",\n"
             file.write(mil_data)
-
-# API requests and proccessing
 
 def get_data():
     """Gets data from the API and returns it as a string
@@ -64,7 +62,7 @@ def get_data():
         "X-RapidAPI-Host": API_HOST
     }
     try:
-        response = requests.request("GET", url, headers=headers, timeout=3)
+        response = requests.request("GET", url, headers=headers, timeout=3)  # type: ignore
         log_main.info("Data received from API")
         return response.text
     except TypeError as error:
@@ -98,40 +96,42 @@ def man_req():
         else:
             print("Invalid input")
             log_main.warning("Invalid input")
+
+def interesting_data(data_type):
+    with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'w', encoding='UTF-8') as inter_data:
+        try:
+            json_stats = an.Analytics.inter_ac(day, 't', data_type)
+            if json_stats == []:
+                return 'No data exists within the selected criteria'
+            json.dump(json_stats, inter_data, indent=2)
+        except FileNotFoundError:
+            log_main.critical("File 'final_adsb%s_inter.json' not found", day)
+
+def ac_count():
+    with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'w', encoding='UTF-8') as roll_data:
+        try:
+            json_data = an.Analytics.for_data(day, 't')
+            json.dump(json_data, roll_data, indent=2)
+        except FileNotFoundError:
+            log_main.critical("File 'final_adsb%s_stats.json' not found", day)
+
 def rollover():
     """Rollover function, runs every 24 hours"""
 
     while True:
-        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:15":
-            with open(DEP_DEPENDENCY + f'final_adsb{day}.json', 'a', encoding='UTF-8') as rollover_file:
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:30":
+            with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as rollover_file:
                 try:
                     rollover_file.write('{"end": "end"}\n]}')
                     log_main.info("Data written to database")
                     log_main.info("File 'final_adsb%s.json' removed", day)
                 except FileNotFoundError:
                     log_main.critical("File 'final_adsb%s.json' not found", day)
-            
-            with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'w', encoding='UTF-8') as roll_data:
-                try:
-                    roll_data.write('{"data":[\n')
-                    json_data = an.Analytics.for_data(day, 't')
-                    json.dump(json_data, roll_data, indent=2)
-                    roll_data.write('{"end": "end"}\n]}')
-                except FileNotFoundError:
-                    log_main.critical("File 'final_adsb%s_stats.json' not found", day)
-
-            with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'a', encoding='UTF-8') as inter_data:
-                roll_data.write('{"end": "end"}\n]}')
-                try:
-                    inter_data.write('{"data":[\n')
-                    json_stats = an.Analytics.inter_ac(day, 't')
-                    json.dump(json_stats, inter_data, indent=2)
-                    inter_data.write('{"end": "end"}\n]}')
-                except FileNotFoundError:
-                    log_main.critical("File 'final_adsb%s_inter.json' not found", day)
+            ac_count()
+            interesting_data(data_type='ac_type') # See changelog for 2/8/2023 for more info
             an.insert_data()
             try:
-                os.remove(DEP_DEPENDENCY + f'final_adsb{day}.json')
+                os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
             except PermissionError:
