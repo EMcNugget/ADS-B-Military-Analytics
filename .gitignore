@@ -15,3 +15,5 @@ __pypackages__/
 data/
 logs/
 node_modules/
+dist
+nx-cloud.env

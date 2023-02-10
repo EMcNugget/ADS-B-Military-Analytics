@@ -1,16 +1,31 @@
-<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>AdsbMilData</title>
-    <base href="/" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="/src/styles.css" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>ADSB Military Analytics</title>
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="styles.css"> 
+            <script src="src/app/date.ts"></script>
+          </head>
+          <body>
+            <div class=e15_5>
+              <div class=e1_2>
+                <div class="e0_3"></div>
+                <div class="e2_2"></div><span  class="e1_5">ADSB Military Analytics</span>
+                <div class="e15_3">
+                  <input type="date" style="width:100%;height:100%;" class="input" id="date_input"/>
+                  <script>
+                    let date_input = document.getElementById('date_input');
+                    date_input.addEventListener('change', function() {
+                      let date = date_input.value;
+                      let fs = require('fs');
+                      fs.writeFile('date.txt', date, function (err) {
+                        if (err) throw err;
+                        console.log('Saved!');
+                      });
+                    });
+                  </script>
+              </div>
+            </div>
+          </body>
+          </html>
