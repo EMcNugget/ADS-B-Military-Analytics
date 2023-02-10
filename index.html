@@ -1,31 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Military ADSB Database</title>
-    <style>
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+    <meta charset="utf-8" />
+    <title>AdsbMilData</title>
+    <base href="/" />
 
-      .box {
-        width: 33%;
-        height: 300px;
-        background-color: darkgray;
-        text-align: center;
-        padding: 10px;
-        box-sizing: border-box;
-        margin: 10px;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="box">IntAC</div>
-      <div class="box">ACCount</div>
-      <div class="box">Misc</div>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
