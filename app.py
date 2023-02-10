@@ -1,8 +1,8 @@
 import sys
 from threading import Thread
 from dataclasses import dataclass
-from src.server import parse_api as api
-from src.server import logger_config
+from src import parse_api as api
+from src import logger_config
 
 @dataclass
 class MainClass:
