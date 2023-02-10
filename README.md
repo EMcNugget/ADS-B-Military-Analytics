@@ -11,6 +11,7 @@ Manual way:
 ```
 $ python -m ensurepip --upgrade
 $ pip install -r requirements.txt
+$ python -c app.py
 ```
 
 Linux:
@@ -18,13 +19,6 @@ Linux:
 ```
 ./adsb_main.sh
 ````
-
-**Then:**
-
-```
-$ python -c app.py
-```
-
 
 Windows: Used the same way as linux (Make sure you have Git or a Unix emulator installed, or use the manual method)
 
