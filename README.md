@@ -2,6 +2,8 @@
 
 Creating a database for military aircraft. A GUI is in development and the end goal is an analytics application for military aircraft with both a realtime and historical datebase.
 
+**Placeholder website at www.adsbmilanalytics.com**
+
 **How to use:**
 
 Create a .env file with the requirements as set in .env-sample. A further argument is require for the mongodb interaction. Please contact me via the discussions if you wish to obtain this otherwise it'll be kept private.
