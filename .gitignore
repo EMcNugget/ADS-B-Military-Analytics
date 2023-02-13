@@ -17,3 +17,4 @@ logs/
 node_modules/
 dist
 nx-cloud.env
+.firebase
