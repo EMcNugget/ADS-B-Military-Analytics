@@ -1,3 +1,4 @@
+"""All pre and post data proccessing"""
 import datetime
 import os
 import json
@@ -5,7 +6,9 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import pandas as pd
-from src.logger_config import log_app
+from flask import Flask, jsonify, Response
+from flask_caching import Cache
+from .logger_config import log_app
 
 load_dotenv()
 PASSWORD = os.getenv("PASSWORD")
@@ -19,8 +22,17 @@ db = cluster["milData"]
 collection = db["historicalData"]
 pd.options.mode.chained_assignment = None  # type: ignore
 
+config = {
+    "DEBUG": True,
+    "CACHE_TYPE": "SimpleCache",
+    "CACHE_DEFAULT_TIMEOUT": 300
+}
+app = Flask(__name__)
+app.config.from_mapping(config)
+cache = Cache(app)
 
-def load_pd_data(date=day):
+def load_pd_data(date: str=day):
+    """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
     with open(DEP_DEPENDENCY + f'final_adsb{date}_main.json', 'r', encoding='UTF-8') as data_file:
         ac_df = json.load(data_file)
         data = pd.DataFrame(ac_df['mil_data'])
@@ -38,6 +50,8 @@ def load_pd_data(date=day):
 
 
 def insert_data():
+    """Inserts data into the database, and creates a cache file"""
+
     with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'r', encoding='UTF-8') as mdb_i_file:
         data = json.load(mdb_i_file)
     with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'r', encoding='UTF-8') as mdb_o_file:
@@ -46,26 +60,42 @@ def insert_data():
         inter = json.load(mdb_int_file)
     collection.insert_many(
         {"_id": f"{day}", "data": data, "stats": stats, "inter": inter})
+    os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
+    os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
+    os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
 
-
+@app.route('/<date>/<specifed_file>', methods=['GET']) # type: ignore
+@cache.cached(timeout=50)
 def get_mdb_data(date, specifed_file):
-    if not os.path.exists(DEP_DEPENDENCY):
-        os.makedirs(DEP_DEPENDENCY)
+    """Date will be in YYYY-MM-DD format, provided by the UI, then
+    the file will be pulled from the database or cache, and returned to the UI"""
+
     results = collection.find_one({"_id": f"{date}"})
-    with open(DEP_DEPENDENCY + f'final_adsb{date}_{specifed_file}.json', 'w', encoding='UTF-8') as mdb_file:
+    if cache.get(results) is None:
         try:
             if results is None:
                 log_main.critical("Data for %s not found in database", date)
-                return
-            json.dump(results[f'{specifed_file}'], mdb_file, indent=2)
+                return Response(status=404)
+            else:
+                log_main.info("Data for %s fowarded to UI", date)
+                cache.set(results)
+                return jsonify(results[specifed_file], indent=2)
         except TypeError:
             log_main.critical(
                 'Invalid date format. Please use YYYY-MM-DD format.')
-            return
+            return Response(status=404)
+    else:
+        cache.get(results[specifed_file]) # type: ignore
+        return jsonify(results[specifed_file], indent=2) # type: ignore
 
+@app.route('/')
+def default():
+    """Default route"""
+    return Response(status=404)
 
 @dataclass
 class Analytics:
+    """Dataclass for analytics, used to return data to the UI"""
     date: str = day
 
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
@@ -75,7 +105,7 @@ class Analytics:
                          'minfuel', 'nordo', 'unlawful', 'downed', 'reserved'])
 
     @classmethod
-    def for_data(cls, date, info_req):
+    def for_data(cls, date: str, info_req: str):
         """Date will be in YYYY-MM-DD format, provided by the UI"""
         t_data_frame = load_pd_data(date)
 
@@ -86,7 +116,7 @@ class Analytics:
             pass
 
     @classmethod
-    def inter_ac(cls, date, row='t', data='ac_type'):
+    def inter_ac(cls, date: str, row: str='t', data: str='ac_type'):
         """Used for special aircraft based on logic below"""
 
         t_data_frame = load_pd_data(date)
@@ -99,7 +129,7 @@ class Analytics:
             elif data == 'er_flags':
                 interesting_data = cls.er_flags
             else:
-                return 'Invalid data'
+                return Response(status=404)
 
             d_file = t_data_frame[t_data_frame[row].isin(
                 interesting_data)].to_dict(orient='records')
@@ -108,4 +138,4 @@ class Analytics:
         except KeyError:
             log_main.critical(
                 'Invalid data type. Please use ac_type, callsign or er_flags.')
-            return
+            return Response(status=404)

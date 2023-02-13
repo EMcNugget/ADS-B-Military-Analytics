@@ -1,15 +1,19 @@
+"""Main app file for the project."""
 import sys
 from threading import Thread
 from dataclasses import dataclass
-from src import parse_api as api
-from src import logger_config
+from src.backend import parse_api as api
+from src.backend import logger_config
+from src.backend import analytics as an
 
 @dataclass
 class MainClass:
+    """Main class for the project."""
     log_main = logger_config.log_app('main')
 
     @classmethod
     def api_func(cls):
+        """Main function for the project."""
         api.dependencies()
         if api.api_check():
             try:
@@ -28,3 +32,4 @@ class MainClass:
 
 if __name__ == '__main__':
     MainClass.api_func()
+    an.app.run(debug=True, port=5000, host="0.0.0.0")

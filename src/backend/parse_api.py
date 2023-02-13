@@ -5,7 +5,7 @@ from time import sleep
 import time
 import requests
 from dotenv import load_dotenv
-from src import analytics as an
+from src.backend import analytics as an
 from .logger_config import log_app
 
 current_time = datetime.datetime.now().time()
@@ -28,6 +28,7 @@ log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
 
 def dependencies():
+    """Creates the necessary directories and files for the program to run"""
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     elif not os.path.exists(DEP_DEPENDENCY + 'adsb.json'):
@@ -128,7 +129,7 @@ def rollover():
                 except FileNotFoundError:
                     log_main.critical("File 'final_adsb%s.json' not found", day)
             ac_count()
-            interesting_data(data_type='ac_type') # See changelog for 2/8/2023 for more info
+            interesting_data(data_type='ac_type')
             an.insert_data()
             try:
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
