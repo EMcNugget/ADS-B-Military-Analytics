@@ -4,7 +4,6 @@ from threading import Thread
 from dataclasses import dataclass
 from src.backend import parse_api as api
 from src.backend import logger_config
-from src.backend import analytics as an
 
 @dataclass
 class MainClass:
@@ -29,7 +28,3 @@ class MainClass:
             except KeyError as error:
                 cls.log_main.error(error)
                 sys.exit()
-
-if __name__ == '__main__':
-    MainClass.api_func()
-    an.app.run(debug=True)
