@@ -58,10 +58,10 @@ def insert_data():
         data = json.load(mdb_i_file)
     with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'r', encoding='UTF-8') as mdb_o_file:
         stats = json.load(mdb_o_file)
-    with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'w', encoding='UTF-8') as mdb_int_file:
+    with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'r', encoding='UTF-8') as mdb_int_file:
         inter = json.load(mdb_int_file)
-    collection.insert_many(
-        {"_id": f"{day}", "data": data, "stats": stats, "inter": inter})
+    doc = {"_id": f"{day}", "data": data, "stats": stats, "inter": inter}
+    collection.insert_one(doc)
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')

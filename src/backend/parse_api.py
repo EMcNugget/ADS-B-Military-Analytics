@@ -124,8 +124,6 @@ def rollover():
             with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as rollover_file:
                 try:
                     rollover_file.write('{"end": "end"}\n]}')
-                    log_main.info("Data written to database")
-                    log_main.info("File 'final_adsb%s.json' removed", day)
                 except FileNotFoundError:
                     log_main.critical("File 'final_adsb%s.json' not found", day)
             ac_count()
@@ -137,6 +135,7 @@ def rollover():
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
             except PermissionError:
                 log_main.critical("File 'final_adsb%s.json' is currently in use", day)
+            log_main.info("Data written to database")
             time.sleep(1)
 
 def api_check():
