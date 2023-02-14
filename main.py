@@ -2,8 +2,8 @@
 import sys
 from threading import Thread
 from dataclasses import dataclass
-from src.backend import parse_api as api
-from src.backend import logger_config
+from src.server import parse_api as api
+from src.server import logger_config
 
 @dataclass
 class MainClass:

@@ -1,3 +1,4 @@
+"""Logging for ADSB Server"""""
 import logging
 import logging.handlers
 import os

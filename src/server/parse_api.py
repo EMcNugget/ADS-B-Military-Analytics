@@ -1,3 +1,4 @@
+"""Parses and checks ADSBExchange API, first round of pre-processing, and database insertion"""
 import datetime
 import os
 import json
@@ -5,7 +6,7 @@ from time import sleep
 import time
 import requests
 from dotenv import load_dotenv
-from src.backend import analytics as an
+from . import analytics as an
 from .logger_config import log_app
 
 current_time = datetime.datetime.now().time()

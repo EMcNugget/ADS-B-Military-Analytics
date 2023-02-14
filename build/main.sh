@@ -10,7 +10,11 @@ pipreqs ./ --encoding=utf-8 --ignore .venv --force
 
 pip install -r requirements.txt
 
+npm install
+
 waitress-serve --host 127.0.0.1 --call main:MainClass.api_func
+
+npm run dev
 
 if [ $? -eq 0 ]; then
     echo "Started, check log for more info on runtime events"
