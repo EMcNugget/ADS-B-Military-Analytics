@@ -8,6 +8,7 @@ from pymongo import MongoClient
 import pandas as pd
 from flask import Flask, jsonify, Response
 from flask_caching import Cache
+from flask_admin import Admin
 from .logger_config import log_app
 
 load_dotenv()
@@ -30,6 +31,7 @@ config = {
 app = Flask(__name__)
 app.config.from_mapping(config)
 cache = Cache(app)
+admin = Admin(name='adsbmilanalytics', url='/')
 
 def load_pd_data(date: str=day):
     """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
