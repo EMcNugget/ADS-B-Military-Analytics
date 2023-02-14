@@ -12,8 +12,8 @@ from flask_admin import Admin
 from .logger_config import log_app
 
 load_dotenv()
-PASSWORD = os.getenv("PASSWORD")
-USERNAME = os.getenv("USERNAME")
+PASSWORD = os.environ['PASSWORD']
+USERNAME = os.environ['USERNAME']
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")

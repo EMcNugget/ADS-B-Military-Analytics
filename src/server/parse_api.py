@@ -22,8 +22,8 @@ else:
 
 load_dotenv()
 
-API_KEY = os.getenv("API_KEY")
-API_HOST = os.getenv("API_HOST")
+API_KEY = os.environ['API_KEY']
+API_HOST = os.environ['API_HOST']
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
