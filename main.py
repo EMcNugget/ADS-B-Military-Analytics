@@ -25,4 +25,7 @@ class MainClass:
                 sys.exit()
 
 if __name__ == '__main__':
-    MainClass.api_func()
+    try:
+        MainClass.api_func()
+    except KeyboardInterrupt:
+        sys.exit()
