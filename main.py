@@ -9,7 +9,7 @@ from src.server import logger_config
 class MainClass:
     """Main class for the project."""
     log_main = logger_config.log_app('main')
-
+    
     @classmethod
     def api_func(cls):
         """Main function for the project."""
@@ -19,13 +19,8 @@ class MainClass:
                 Thread(target=api.proccessed_data_setup).start()
                 Thread(target=api.rollover).start()
                 Thread(target=api.auto_req).start()
-                Thread(target=api.man_req).start()
                 cls.log_main.info('All threads started, app running')
-                while True:
-                    user = input("Enter 'exit' to exit: ")
-                    if user == 'exit':
-                        return cls.api_func()
-            except KeyError as error:
+            except [KeyError, KeyboardInterrupt] as error:
                 cls.log_main.error(error)
                 sys.exit()
 

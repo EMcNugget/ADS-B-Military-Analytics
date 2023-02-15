@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import pandas as pd
 from flask import Flask, jsonify, Response
-from flask_caching import Cache
-from flask_admin import Admin
 from .logger_config import log_app
 
 load_dotenv()
@@ -18,7 +16,7 @@ DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
 cluster = MongoClient(
-    f'mongodb+srv://{USERNAME}:{PASSWORD}@mildata.oyy7jmp.mongodb.net/?retryWrites=true&w=majority')
+    'mongodb+srv://mcnugget:Train2007@mildata.oyy7jmp.mongodb.net/?retryWrites=true&w=majority')
 db = cluster["milData"]
 collection = db["historicalData"]
 pd.options.mode.chained_assignment = None  # type: ignore
@@ -30,8 +28,6 @@ config = {
 }
 app = Flask(__name__)
 app.config.from_mapping(config)
-cache = Cache(app)
-admin = Admin(name='adsbmilanalytics', url='/')
 
 def load_pd_data(date: str=day):
     """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
@@ -60,40 +56,33 @@ def insert_data():
         stats = json.load(mdb_o_file)
     with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'r', encoding='UTF-8') as mdb_int_file:
         inter = json.load(mdb_int_file)
-    doc = {"_id": f"{day}", "data": data, "stats": stats, "inter": inter}
+    doc = {"_id": f"{day}", "data": data['mil_data'], "stats": stats, "inter": inter}
     collection.insert_one(doc)
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
 
 @app.route('/<date>/<specifed_file>', methods=['GET']) # type: ignore
-@cache.cached(timeout=50)
 def get_mdb_data(date, specifed_file):
     """Date will be in YYYY-MM-DD format, provided by the UI, then
     the file will be pulled from the database or cache, and returned to the UI"""
 
-    results = collection.find_one({"_id": f"{date}"})
-    if cache.get(results) is None:
-        try:
-            if results is None:
-                log_main.critical("Data for %s not found in database", date)
-                return Response(status=404)
-            else:
-                log_main.info("Data for %s fowarded to UI", date)
-                cache.set(results)
-                return jsonify(results[specifed_file], indent=2)
-        except TypeError:
-            log_main.critical(
-                'Invalid date format. Please use YYYY-MM-DD format.')
-            return Response(status=404)
-    else:
-        cache.get(results[specifed_file]) # type: ignore
-        return jsonify(results[specifed_file], indent=2) # type: ignore
+    results = collection.find_one({"_id": date})
+    try:
+        if results is None:
+            log_main.critical("Data for %s not found in database", date)
+            return Response(status=404, response=f'Data for {date} not found in database')
+        else:
+            log_main.info("Data for %s fowarded to UI", date)
+            return jsonify(results[specifed_file])
+    except TypeError as error:
+        log_main.critical(error)
+        return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')
 
 @app.route('/')
 def default():
     """Default route"""
-    return Response(status=404)
+    return jsonify({'message': 'Welcome to the API!'})
 
 @dataclass
 class Analytics:
