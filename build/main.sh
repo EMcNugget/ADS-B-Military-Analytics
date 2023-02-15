@@ -4,17 +4,15 @@ cd ..
 
 python -m ensurepip --upgrade
 
-if [ -f requirements.txt ]; then
-    echo "requirements.txt found, skipping pipreqs"
-else
-    echo "requirements.txt not found, running pipreqs"
-    pip install pipreqs
-    pipreqs ./ --encoding=utf-8 --ignore .venv --force
-fi
+pip install pipreqs
+
+pipreqs ./ --encoding=utf-8 --ignore .venv --force
 
 pip install -r requirements.txt
 
 npm install
+
+waitress-serve --host 127.0.0.1 --call main:MainClass.api_func
 
 npm run dev
 
