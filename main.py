@@ -28,5 +28,3 @@ class MainClass:
             except KeyError as error:
                 cls.log_main.error(error)
                 sys.exit()
-
-server = MainClass.api_func()
