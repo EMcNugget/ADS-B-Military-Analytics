@@ -1,0 +1,9 @@
+{
+    "app_id": "adsbmildata-uaxmz",
+    "config_version": 20210101,
+    "name": "adsbmildata",
+    "location": "US-VA",
+    "provider_region": "gcp-us-central1",
+    "deployment_model": "LOCAL",
+    "environment": "testing"
+}
