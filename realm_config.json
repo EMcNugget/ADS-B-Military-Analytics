@@ -4,5 +4,6 @@
     "name": "adsbmildata",
     "location": "US-VA",
     "provider_region": "gcp-us-central1",
-    "deployment_model": "LOCAL"
+    "deployment_model": "LOCAL",
+    "environment": "testing"
 }
