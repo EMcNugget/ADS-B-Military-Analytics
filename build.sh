@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ..
-
 python -m ensurepip --upgrade
 
 if [ -f requirements.txt ]; then
@@ -15,8 +13,6 @@ fi
 pip install -r requirements.txt
 
 npm install
-
-npm run dev
 
 if [ $? -eq 0 ]; then
     echo "Started, check log for more info on runtime events"

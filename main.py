@@ -28,3 +28,6 @@ class MainClass:
             except KeyError as error:
                 cls.log_main.error(error)
                 sys.exit()
+
+if __name__ == '__main__':
+    MainClass.api_func()
