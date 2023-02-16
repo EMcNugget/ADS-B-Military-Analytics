@@ -10,11 +10,8 @@ __pypackages__/
 .env
 .venv
 .venv/
-/.idea
 /.vscode
 data/
 logs/
 node_modules/
 dist
-nx-cloud.env
-.firebase

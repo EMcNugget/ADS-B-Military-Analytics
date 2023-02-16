@@ -4,6 +4,7 @@ import os
 import json
 from time import sleep
 import time
+import re
 import requests
 from dotenv import load_dotenv
 from . import analytics as an
@@ -40,18 +41,20 @@ def proccessed_data_setup():
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}_main.json'):
             with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'w', encoding='UTF-8') as file_data:
-                file_data.write('{"mil_data":[\n')
+                file_data.write('[\n')
 
 def data_format():
     with open(DEP_DEPENDENCY + 'adsb.json', 'r', encoding='UTF-8') as file:
         data = file.read()
         database = json.loads(data)
+    with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as file:
+        json_array = database['ac']
+        json_array_str = json.dumps(json_array, indent=2)
+        data2 = re.sub(r'^\s*\[\s*|\s*\]\s*$', '', json_array_str, flags=re.DOTALL)
+        data3 = re.sub(r'}(?=\s*?({|$))', '},', data2)
+        file.write(data3)
+        file.write('\n')
 
-    for aircraft in database['ac']:
-        with open (DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as file:
-            mil_data = json.dumps(aircraft, separators=(',', ': '))
-            mil_data += ",\n"
-            file.write(mil_data)
 
 def get_data():
     """Gets data from the API and returns it as a string
@@ -83,22 +86,6 @@ def auto_req():
             data_format()
         sleep(DELAY)
 
-
-def man_req():
-    """Ability to manually request data from the API and write it to a JSON file"""
-
-    while True:
-        user = input("Enter 'req' to request")
-        if user == "req":
-            data = get_data()
-            with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as file:
-                file.write(str(data))
-                log_main.info("Data written locally")
-                data_format()
-        else:
-            print("Invalid input")
-            log_main.warning("Invalid input")
-
 def interesting_data(data_type):
     with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'w', encoding='UTF-8') as inter_data:
         try:
@@ -124,7 +111,9 @@ def rollover():
         if time.strftime("%H:%M:%S", time.localtime()) == "23:59:30":
             with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as rollover_file:
                 try:
-                    rollover_file.write('{"end": "end"}\n]}')
+                    final_array_data = json.load(rollover_file)
+                    final_array = re.sub(r',\s*?]', ']', final_array_data)
+                    rollover_file.write(final_array)
                 except FileNotFoundError:
                     log_main.critical("File 'final_adsb%s.json' not found", day)
             ac_count()

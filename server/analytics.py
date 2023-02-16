@@ -2,6 +2,7 @@
 import datetime
 import os
 import json
+import yaml
 from dataclasses import dataclass
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -26,13 +27,12 @@ config = {
 }
 app = Flask(__name__)
 app.config.from_mapping(config)
-app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
 def load_pd_data(date: str=day):
     """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
     with open(DEP_DEPENDENCY + f'final_adsb{date}_main.json', 'r', encoding='UTF-8') as data_file:
-        ac_df = json.load(data_file)
-        data = pd.DataFrame(ac_df['mil_data'])
+        ac_df = yaml.load(data_file, Loader=yaml.FullLoader)
+        data = pd.DataFrame(ac_df)
         log_main.info("Data loaded from 'final_adsb%s.json'", date)
         ac_data_frame = data.drop_duplicates('hex')
         ac_data_frame.drop(
@@ -55,7 +55,7 @@ def insert_data():
         stats = json.load(mdb_o_file)
     with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'r', encoding='UTF-8') as mdb_int_file:
         inter = json.load(mdb_int_file)
-    doc = {"_id": f"{day}", "data": data['mil_data'], "stats": stats, "inter": inter}
+    doc = {"_id": f"{day}", "data": data, "stats": stats, "inter": inter}
     collection.insert_one(doc)
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
