@@ -2,7 +2,6 @@
 import datetime
 import os
 import json
-import yaml
 from dataclasses import dataclass
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -31,7 +30,7 @@ app.config.from_mapping(config)
 def load_pd_data(date: str=day):
     """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
     with open(DEP_DEPENDENCY + f'final_adsb{date}_main.json', 'r', encoding='UTF-8') as data_file:
-        ac_df = yaml.load(data_file, Loader=yaml.FullLoader)
+        ac_df = json.load(data_file)
         data = pd.DataFrame(ac_df)
         log_main.info("Data loaded from 'final_adsb%s.json'", date)
         ac_data_frame = data.drop_duplicates('hex')
@@ -62,7 +61,7 @@ def insert_data():
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
 
 @app.route('/<date>/<specifed_file>', methods=['GET']) # type: ignore
-def get_mdb_data(date, specifed_file):
+def get_mdb_data(date: str, specifed_file: str):
     """Date will be in YYYY-MM-DD format, provided by the UI, then
     the file will be pulled from the database or cache, and returned to the UI"""
 
@@ -73,7 +72,7 @@ def get_mdb_data(date, specifed_file):
             return Response(status=404, response=f'Data for {date} not found in database')
         else:
             log_main.info("Data for %s fowarded to UI", date)
-            return jsonify(results[specifed_file])
+            return results[specifed_file]
     except TypeError as error:
         log_main.critical(error)
         return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')

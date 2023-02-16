@@ -12,7 +12,16 @@ fi
 
 pip install -r requirements.txt
 
-npm install
+cd client 
+
+if [ -d "node_modules" ]; then
+    echo "node_modules exists"
+else
+    echo "node_modules does not exist"
+    npm install
+fi
+
+cd ..
 
 if [ $? -eq 0 ]; then
     echo "Started, check log for more info on runtime events"
