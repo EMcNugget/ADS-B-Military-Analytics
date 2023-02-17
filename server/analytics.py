@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import pandas as pd
 from flask import Flask, jsonify, Response
+from flask_cors import CORS
 from .logger_config import log_app
 
 load_dotenv()
@@ -25,6 +26,7 @@ config = {
     "CACHE_DEFAULT_TIMEOUT": 300
 }
 app = Flask(__name__)
+CORS(app)
 app.config.from_mapping(config)
 
 def load_pd_data(date: str=day):
@@ -71,8 +73,8 @@ def get_mdb_data(date: str, specifed_file: str):
             log_main.critical("Data for %s not found in database", date)
             return Response(status=404, response=f'Data for {date} not found in database')
         else:
-            log_main.info("Data for %s fowarded to UI", date)
-            return results[specifed_file]
+            log_main.info("Data for %s forwarded to UI", date)
+            return Response(json.dumps(results[specifed_file], indent=2), content_type='application/json')
     except TypeError as error:
         log_main.critical(error)
         return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')

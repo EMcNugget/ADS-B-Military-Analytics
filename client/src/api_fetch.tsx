@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactJson from 'react-json-view';
 import axios from 'axios';
 import './css/api.css';
 
@@ -8,11 +9,41 @@ function Api() {
   const [specified_file, setSpecifiedFile] = useState('');
   const [output, setOutput] = useState('')
 
-  const url = `http://127.0.0.1:8000/${date}/${specified_file}`
+  const url = `http://127.0.0.1:5000/${date}/${specified_file}`
 
   const fetchData = async () => {
-    const result: string = await axios.get(url)
-    setOutput(result)
+    const result = await axios.get(url);
+    setOutput(result.data);
+  };
+  
+  const outputTheme = {
+    base00: 'white',
+    base01: '#ddd',
+    base02: '#ddd',
+    base03: '#444',
+    base04: 'purple',
+    base05: '#444',
+    base06: '#444',
+    base07: 'black',
+    base08: '#cc6600',
+    base09: '#ff9900',
+    base0A: '#ffcc00',
+    base0B: '#99cc00',
+    base0C: '#3399cc',
+    base0D: '#339999',
+    base0E: '#cc99cc',
+    base0F: '#666699',
+    defaultValue: {
+      string: '""',
+      null: 'null',
+      number: '0',
+      boolean: 'false',
+      array: '[]',
+      object: '{}',
+    },
+    types: {
+      number: ({ displayValue }: { displayValue: string }) => <span>{displayValue}</span>,
+    },
   };
   
   return (
@@ -23,7 +54,11 @@ function Api() {
         <input className="input" type="text" placeholder='Enter a file' value={specified_file} onChange={e => setSpecifiedFile(e.target.value)} />
         <button className="button" onClick={fetchData}>Fetch Data</button>
       </div>
-      {output && <p className="output">{output}</p>}
+      {output && (
+        <div className="output">
+           <ReactJson src={output} className="output_param" theme={outputTheme} />
+        </div>
+      )}
     </div>
   );
 };

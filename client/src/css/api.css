@@ -54,5 +54,17 @@
   .output {
     font-size: 1rem;
     margin-top: 1rem;
+    overflow: scroll;
+    max-height: 300px;
+    width: 50%;
+    border: 1.6px solid #b8b8b8;
+    border-radius: 5px;
+    padding: 0.5rem;
+  }
+
+  .output_param {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
   }
   
