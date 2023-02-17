@@ -18,7 +18,7 @@ if [ -d "node_modules" ]; then
     echo "node_modules exists"
 else
     echo "node_modules does not exist"
-    npm install
+    npm install --force
 fi
 
 cd ..

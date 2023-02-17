@@ -7,7 +7,7 @@ import './css/api.css';
 function Api() {
   const [date, setDate] = useState('');
   const [specified_file, setSpecifiedFile] = useState('');
-  const [output, setOutput] = useState('')
+  const [output, setOutput] = useState(null);
 
   const url = `http://127.0.0.1:5000/${date}/${specified_file}`
 
@@ -15,7 +15,7 @@ function Api() {
     const result = await axios.get(url);
     setOutput(result.data);
   };
-  
+
   const outputTheme = {
     base00: 'white',
     base01: '#ddd',
@@ -45,7 +45,7 @@ function Api() {
       number: ({ displayValue }: { displayValue: string }) => <span>{displayValue}</span>,
     },
   };
-  
+
   return (
     <div className="container">
       <h1 className="title">ADSB Military Analytics</h1>
@@ -56,7 +56,7 @@ function Api() {
       </div>
       {output && (
         <div className="output">
-           <ReactJson src={output} className="output_param" theme={outputTheme} />
+          <ReactJson src={output} theme={outputTheme} />
         </div>
       )}
     </div>
