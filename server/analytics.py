@@ -3,15 +3,13 @@ import datetime
 import os
 import json
 from dataclasses import dataclass
-from dotenv import load_dotenv
 from pymongo import MongoClient
 import pandas as pd
 from flask import Flask, jsonify, Response
 from flask_cors import CORS
 from .logger_config import log_app
 
-load_dotenv()
-MDB_URL = os.getenv("MDB_URL")
+MDB_URL = os.environ["MDB_URL"]
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
