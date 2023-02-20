@@ -7,7 +7,7 @@
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
   transition: box-shadow 0.3s ease;
-} 
+}
 
 .dropdown:focus {
   outline: none;
