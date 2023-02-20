@@ -76,7 +76,7 @@ function Api() {
     <div className="container">
       <h1 className="title">ADS-B Military Analytics</h1>
       <div className="form">
-        <input className="input" type="text" placeholder='Enter a date...' value={date} onChange={e => setDate(e.target.value)} />
+        <input className="input" type="text" placeholder='Enter a date...eg 2023-02-13' value={date} onChange={e => setDate(e.target.value)} />
         <select style={{color: color}} className="dropdown" value={specified_file} onChange={handleChange}>
           <option>Select an option...</option>
           <option value="stats">Aircraft Count</option>
