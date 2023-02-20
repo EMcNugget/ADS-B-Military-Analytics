@@ -5,11 +5,14 @@ import json
 from dataclasses import dataclass
 from pymongo import MongoClient
 import pandas as pd
+from dotenv import load_dotenv
 from flask import Flask, jsonify, Response
 from flask_cors import CORS
 from .logger_config import log_app
 
-MDB_URL = os.environ["MDB_URL"]
+load_dotenv()
+
+MDB_URL = os.getenv("MDB_URL")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")

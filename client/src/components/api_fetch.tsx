@@ -10,7 +10,7 @@ function Api() {
   const [output, setOutput] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState('gray');
-  const url = `http://api.adsbmilanalytics.com/${date}/${specified_file}`
+  const url = `http://127.0.0.1:5000/${date}/${specified_file}`
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
