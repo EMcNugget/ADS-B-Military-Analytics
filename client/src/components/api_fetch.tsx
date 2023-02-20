@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import ReactJson from 'react-json-view';
 import axios from 'axios';
 import '../css/api.css';
 import '../css/dropdown.css';
@@ -8,7 +7,7 @@ import '../css/dropdown.css';
 function Api() {
   const [date, setDate] = useState('');
   const [specified_file, setSpecifiedFile] = useState('');
-  const [output, setOutput] = useState(null);
+  const [output, setOutput] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState('gray');
   const url = `http://api.adsbmilanalytics.com/${date}/${specified_file}`
@@ -22,41 +21,79 @@ function Api() {
     }
   };
 
+  const inter = () => {
+    return (
+      <table className="output">
+        <thead>
+          <tr>
+            <th>Hex</th>
+            <th>Flight</th>
+            <th>Reg</th>
+            <th>Aircraft</th>
+            <th>Squawk</th>
+          </tr>
+        </thead>
+        <tbody>
+          {output.map((item, index) => (
+            <tr key={index}>
+              <td>{item.hex}</td>
+              <td>{item.flight}</td>
+              <td>{item.r}</td>
+              <td>{item.t}</td>
+              <td>{item.squawk}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  const ac_count = () => {
+    return (
+      <table className="output">
+        <thead>
+          <tr>
+            <th>Aircraft</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {output.map((item, index) => (
+            <tr key={index}>
+              <td>{item.aircraft}</td>
+              <td>{item.count}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  const tableSelect = () => {
+    if (specified_file === 'inter') {
+      return inter();
+    } else if (specified_file === 'stats') {
+      return ac_count();
+    }
+    else {
+      return null;
+    }
+  };
+
   const fetchData = async () => {
     const result = await axios.get(url);
-    setOutput(result.data);
+    setOutput(
+      result.data.map((item: any) => {
+        return {
+          hex: item.hex,
+          flight: item.flight,
+          r: item.reg,
+          t: item.aircraft,
+          squawk: item.squawk,
+        }
+      })
+    );
   };
-
-  const outputTheme = {
-    base00: 'white',
-    base01: '#ddd',
-    base02: '#ddd',
-    base03: '#444',
-    base04: 'purple',
-    base05: '#444',
-    base06: '#444',
-    base07: 'black',
-    base08: '#cc6600',
-    base09: '#ff9900',
-    base0A: '#ffcc00',
-    base0B: '#99cc00',
-    base0C: '#3399cc',
-    base0D: '#339999',
-    base0E: '#cc99cc',
-    base0F: '#666699',
-    defaultValue: {
-      string: '""',
-      null: 'null',
-      number: '0',
-      boolean: 'false',
-      array: '[]',
-      object: '{}',
-    },
-    types: {
-      number: ({ displayValue }: { displayValue: string }) => <span>{displayValue}</span>,
-    },
-  };
-
 
   const handleClick = () => {
     const currentTime = Date.now();
@@ -77,18 +114,14 @@ function Api() {
       <h1 className="title">ADS-B Military Analytics</h1>
       <div className="form">
         <input className="input" type="text" placeholder='Enter a date...eg 2023-02-13' value={date} onChange={e => setDate(e.target.value)} />
-        <select style={{color: color}} className="dropdown" value={specified_file} onChange={handleChange}>
+        <select style={{ color: color }} className="dropdown" value={specified_file} onChange={handleChange}>
           <option>Select an option...</option>
           <option value="stats">Aircraft Count</option>
           <option value="inter">Interesting Aircraft</option>
         </select>
         <button className="button" onClick={handleClick}>Fetch Data</button>
       </div>
-      {output && (
-        <div className="output">
-          <ReactJson src={output} theme={outputTheme} />
-        </div>
-      )}
+      {tableSelect()}
     </div>
   );
 };
