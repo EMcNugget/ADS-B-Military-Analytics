@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { FaGithub } from 'react-icons/fa';
+import { Footer } from './footer';
 import '../css/api.css';
+import '../css/footer.css';
 import '../css/dropdown.css';
 
 type InterestingAircraft = {
@@ -153,64 +154,58 @@ function Api() {
           <option value="stats">Aircraft Count</option>
           <option value="inter">Interesting Aircraft</option>
         </select>
-        <button className="button" onClick={handleClick}>Fetch Data</button>
+        <button className="button_data  " onClick={handleClick}>Fetch Data</button>
       </div>
-      <div className="output">
-        {tableVar.length > 2 && (
-        <table className='table' onChange={handleChange}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className='td'>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            {table.getFooterGroups().map(footerGroup => (
-              <tr key={footerGroup.id}>
-                {footerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </tfoot>
-        </table>
-        )}
-      </div>
-      <div className="footer">
-        <a href="https://github.com/EMcNugget/adsb_mil_data" target="_blank" rel="noopener noreferrer">
-          <FaGithub className="icon" />
-          GitHub
-        </a>
-        <p className="copy">&copy;2023 ADSB-Military-Analytics.</p>
-      </div>
+      {output.length > 2 && (
+        <div className="output">
+          <table className='table' onChange={handleChange}>
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className='td'>
+              {table.getRowModel().rows.map(row => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map(footerGroup => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map(header => (
+                    <th key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </tfoot>
+          </table>
+        </div>
+      )}
+      <Footer />
     </div>
   );
 }

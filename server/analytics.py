@@ -7,6 +7,7 @@ from pymongo import MongoClient
 import pandas as pd
 from dotenv import load_dotenv
 from flask import Flask, jsonify, Response
+from markupsafe import escape
 from flask_cors import CORS
 from .logger_config import log_app
 
@@ -73,12 +74,13 @@ def get_mdb_data(date: str, specifed_file: str):
     results = collection.find_one({"_id": date})
     try:
         if results is None:
-            try: 
+            try:
                 datetime.date.fromisoformat(date)
-                log_main.critical("Data for %s not found in database", date)
-                return Response(status=404, response=f'Data for {date} not found in database')
+                log_main.critical("Data for %s not found in database", escape(date))
+                return Response(status=404, response=f'Data for {escape(date)} not found in database')
             except ValueError:
-                log_main.critical("Invalid date format. Please use YYYY-MM-DD format.")
+                log_main.critical(
+                    "Invalid date format. Please use YYYY-MM-DD format.")
                 return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')
         else:
             log_main.info("Data for %s forwarded to UI", date)
