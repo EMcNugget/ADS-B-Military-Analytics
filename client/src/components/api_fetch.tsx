@@ -156,6 +156,7 @@ function Api() {
         <button className="button" onClick={handleClick}>Fetch Data</button>
       </div>
       <div className="output">
+        {tableVar.length > 2 && (
         <table className='table' onChange={handleChange}>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
@@ -201,6 +202,7 @@ function Api() {
             ))}
           </tfoot>
         </table>
+        )}
       </div>
       <div className="footer">
         <a href="https://github.com/EMcNugget/adsb_mil_data" target="_blank" rel="noopener noreferrer">
