@@ -1,28 +1,28 @@
 .footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 3px;
-    font-size: 0.8rem;
-    border-top: 2px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #282c34;
-    color: white;
-  }
-  
-  .footer a {
-    display: flex;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-  }
-  
-  .icon {
-    margin-right: 5px;
-  }
-  
-  .copy {
-    margin-left: 15px;
-  }
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 3px;
+  font-size: 0.8rem;
+  border-top: 2px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
+  color: white;
+}
+
+.footer a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.copy {
+  margin-left: 15px;
+}

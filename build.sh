@@ -2,6 +2,8 @@
 
 python -m ensurepip --upgrade
 
+find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
+
 if [ -f requirements.txt ]; then
     echo "requirements.txt found, skipping pipreqs"
 else

@@ -84,25 +84,25 @@ td {
 
 @media (prefers-color-scheme: dark) {
   .container_dark {
-  background-color: #333;
-  color: #fff;
+    background-color: #333;
+    color: #fff;
   }
-  
+
   .input {
-  background-color: #444;
-  color: #fff;
+    background-color: #444;
+    color: #fff;
   }
-  
+
   .output_dark {
-  background-color: #444;
-  color: #fff;
+    background-color: #444;
+    color: #fff;
   }
-  
+
   .footer_dark {
-  background-color: #3a3a3a;
+    background-color: #3a3a3a;
   }
-  
+
   .footer_dark a {
-  color: #fff;
+    color: #fff;
   }
-  }
+}
