@@ -2,7 +2,7 @@
 
 cd client
 
-npm build
+npm run build
 
 cd ..
 
