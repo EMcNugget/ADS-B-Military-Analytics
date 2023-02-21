@@ -1,6 +1,6 @@
 # adsb_mil_data
 
-Creating a database for military aircraft.
+Analytics for military aircraft over ADSB.
 
 **Placeholder website at www.adsbmilanalytics.com**
 
@@ -30,5 +30,7 @@ Typescript, React, Vite, Firebase, vanilla CSS for now, I'm not too sure about u
 **Current tasks**
 
 Working on deployment and fixing bugs
+
+More features
 
 Creating an Electron app
