@@ -1,6 +1,6 @@
 # adsb_mil_data
 
-Creating a database for military aircraft. A GUI is in development and the end goal is an analytics application for military aircraft with both a realtime and historical datebase.
+Creating a database for military aircraft.
 
 **Placeholder website at www.adsbmilanalytics.com**
 
@@ -8,18 +8,10 @@ Creating a database for military aircraft. A GUI is in development and the end g
 
 Create a .env file with the requirements as set in .env-sample. A further argument is require for the mongodb interaction. Please contact me via the discussions if you wish to obtain this otherwise it'll be kept private.
 
-Manual way:
-
-```
-$ python -m ensurepip --upgrade
-$ pip install -r requirements.txt
-$ python -c app.py
-```
-
 Linux:
 
 ```
-./adsb_main.sh
+./build.sh
 ````
 
 Windows: Used the same way as linux (Make sure you have Git or a Unix emulator installed, or use the manual method)
@@ -27,16 +19,16 @@ Windows: Used the same way as linux (Make sure you have Git or a Unix emulator i
 ATTENTION: All information here is public.
 All you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
 
-Current stack is Python, MongoDB, and Google Cloud(WIP)
+FOR DEVELOPERS
 
-**Current tasks:**
+The current stack is as follows:
 
--Migrating to Pandas for data processing versus vanillia python **DONE**
+Python(Flask), MongoDB, Google Cloud(WIP)
 
--Docker, makefile, etc to prevent the "It works on my machine" issue
+Typescript, React, Vite, Firebase, vanilla CSS for now, I'm not too sure about using Tailwind or PostCSS, may or may not use it in the future
 
--Flask REST API
+**Current tasks**
 
-**Known bugs:**
+Working on deployment and fixing bugs
 
-No known bugs that don't have to do with incompletion of a piece of code.
+Creating an Electron app
