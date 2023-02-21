@@ -2,7 +2,6 @@
 import datetime
 import os
 import json
-from time import sleep
 import time
 import re
 import requests
@@ -29,6 +28,7 @@ DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')
 
+
 def dependencies():
     """Creates the necessary directories and files for the program to run"""
     if not os.path.exists(DEP_DEPENDENCY):
@@ -37,11 +37,13 @@ def dependencies():
         with open(DEP_DEPENDENCY + 'adsb.json', 'w', encoding='UTF-8') as data:
             data.write('')
 
+
 def proccessed_data_setup():
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}_main.json'):
             with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'w', encoding='UTF-8') as file_data:
                 file_data.write('[\n')
+
 
 def data_format():
     with open(DEP_DEPENDENCY + 'adsb.json', 'r', encoding='UTF-8') as file:
@@ -50,7 +52,8 @@ def data_format():
     with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as file:
         json_array = database['ac']
         json_array_str = json.dumps(json_array, indent=2)
-        data2 = re.sub(r'^\s*\[\s*|\s*\]\s*$', '', json_array_str, flags=re.DOTALL)
+        data2 = re.sub(r'^\s*\[\s*|\s*\]\s*$', '',
+                       json_array_str, flags=re.DOTALL)
         data3 = re.sub(r'}(?=\s*?({|$))', '},', data2)
         file.write(data3)
         file.write('\n')
@@ -67,7 +70,8 @@ def get_data():
         "X-RapidAPI-Host": API_HOST
     }
     try:
-        response = requests.request("GET", url, headers=headers, timeout=3)  # type: ignore
+        response = requests.request(
+            "GET", url, headers=headers, timeout=3)  # type: ignore
         log_main.info("Data received from API")
         return response.text
     except TypeError as error:
@@ -84,17 +88,20 @@ def auto_req():
             file.write(str(data))
             log_main.info("Data written locally")
             data_format()
-        sleep(DELAY)
+        time.sleep(DELAY)
 
-def interesting_data(data_type):
+
+def interesting_data():
     with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'w', encoding='UTF-8') as inter_data:
         try:
-            json_stats = an.Analytics.inter_ac(day, 't', data_type)
+            json_stats = an.Analytics.inter_ac(day, 't', 'ac_type')
             if json_stats == []:
-                return 'No data exists within the selected criteria'
-            json.dump(json_stats, inter_data, indent=2)
+                json.dump({"hex": "No aircraft found"}, inter_data, indent=2)
+            else:
+                json.dump(json_stats, inter_data, indent=2)
         except FileNotFoundError:
             log_main.critical("File 'final_adsb%s_inter.json' not found", day)
+
 
 def ac_count():
     with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'w', encoding='UTF-8') as roll_data:
@@ -104,29 +111,38 @@ def ac_count():
         except FileNotFoundError:
             log_main.critical("File 'final_adsb%s_stats.json' not found", day)
 
+
 def rollover():
     """Rollover function, runs every 24 hours"""
 
     while True:
-        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:30":
-            with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a', encoding='UTF-8') as rollover_file:
+        if time.strftime("%H:%M:%S", time.localtime()) == "23:59:45":
+            with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'a+', encoding='UTF-8') as rollover_file:
                 try:
-                    final_array_data = json.load(rollover_file)
-                    final_array = re.sub(r',\s*?]', ']', final_array_data)
-                    rollover_file.write(final_array)
+                    rollover_file.seek(0, 2)
+                    pos = rollover_file.tell()
+                    while pos > 0:
+                        pos -= 2
+                        rollover_file.seek(pos)
+                        if rollover_file.read(1) == "}":
+                            break
+                    rollover_file.truncate(pos)
+                    rollover_file.write('}\n]')
                 except FileNotFoundError:
-                    log_main.critical("File 'final_adsb%s.json' not found", day)
+                    log_main.critical(
+                        "File 'final_adsb%s.json' not found", day)
+            interesting_data()
             ac_count()
-            interesting_data(data_type='ac_type')
             an.insert_data()
             try:
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_main.json')
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
                 os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
             except PermissionError:
-                log_main.critical("File 'final_adsb%s.json' is currently in use", day)
+                log_main.critical("File 'final_adsb%s.json' is open", day)
             log_main.info("Data written to database")
             time.sleep(1)
+
 
 def api_check():
     """Checks the API key and host to ensure they are valid and that there is a .env file"""
@@ -141,6 +157,6 @@ def api_check():
     if not os.path.exists(".env"):
         log_main.error('No .env file found')
         return False
-    sleep(3)
+    time.sleep(3)
     log_main.debug('API fetch successful')
     return True
