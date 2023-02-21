@@ -1,16 +1,102 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import '../css/api.css';
 import '../css/dropdown.css';
 
+type InterestingAircraft = {
+  hex: string
+  flight: string
+  r: string
+  t: string
+  squawk: string
+};
+
+type AircraftCount = {
+  type: string
+  value: number
+};
+
+const inter = createColumnHelper<InterestingAircraft>()
+const ac_count = createColumnHelper<AircraftCount>()
+
+const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
+  const columns = [
+    inter.display({
+      id: 'hex',
+      header: 'Hex',
+      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+        <span>{row.original.hex}</span>
+      ),
+    }),
+    inter.display({
+      id: 'flight',
+      header: 'Callsign',
+      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+        <span>{row.original.flight}</span>
+      ),
+    }),
+    inter.display({
+      id: 'r',
+      header: 'Reg',
+      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+        <span>{row.original.r}</span>
+      ),
+    }),
+    inter.display({
+      id: 't',
+      header: 'Aircraft Type',
+      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+        <span>{row.original.t}</span>
+      ),
+    }),
+    inter.display({
+      id: 'squawk',
+      header: 'Squawk',
+      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+        <span>{row.original.squawk}</span>
+      ),
+    })
+  ];
+
+  console.log(columns); // here for debuging will remove for production
+
+  return columns;
+}
+
+
+
+const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
+  const columns = [
+    ac_count.display({
+      id: 'type',
+      header: 'Aircraft Type',
+      cell: ({ row }: { row: Row<AircraftCount> }) => (
+        <span>{row.original.type}</span>
+      ),
+    }),
+    ac_count.display({
+      id: 'value',
+      header: 'Count',
+      cell: ({ row }: { row: Row<AircraftCount> }) => (
+        <span>{row.original.value}</span>
+      ),
+    })
+  ];
+
+  console.log(columns); // here for debuging will remove for production
+
+  return columns;
+}
 
 function Api() {
   const [date, setDate] = useState('');
   const [specified_file, setSpecifiedFile] = useState('');
-  const [output, setOutput] = useState<any[]>([]);
+  const [output, setOutput] = useState<any>({});
+  const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState('gray');
-  const url = `http://api.adsbmilanalytics.com/${date}/${specified_file}`
+  const url = `http://127.0.0.1:5000/${date}/${specified_file}`
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -21,93 +107,40 @@ function Api() {
     }
   };
 
-  const inter = () => {
-    return (
-      <table className="output">
-        <thead>
-          <tr>
-            <th>Hex</th>
-            <th>Flight</th>
-            <th>Reg</th>
-            <th>Aircraft</th>
-            <th>Squawk</th>
-          </tr>
-        </thead>
-        <tbody>
-          {output.map((item, index) => (
-            <tr key={index}>
-              <td>{item.hex}</td>
-              <td>{item.flight}</td>
-              <td>{item.r}</td>
-              <td>{item.t}</td>
-              <td>{item.squawk}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  };
-
-  const ac_count = () => {
-    return (
-      <table className="output">
-        <thead>
-          <tr>
-            <th>Aircraft</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {output.map((item, index) => (
-            <tr key={index}>
-              <td>{item.aircraft}</td>
-              <td>{item.count}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  };
-
-  const tableSelect = () => {
-    if (specified_file === 'inter') {
-      return inter();
-    } else if (specified_file === 'stats') {
-      return ac_count();
-    }
-    else {
-      return null;
-    }
-  };
-
   const fetchData = async () => {
     const result = await axios.get(url);
-    setOutput(
-      result.data.map((item: any) => {
-        return {
-          hex: item.hex,
-          flight: item.flight,
-          r: item.reg,
-          t: item.aircraft,
-          squawk: item.squawk,
-        }
-      })
-    );
+    if (JSON.stringify(result.data) === '{"hex":"No aircraft found"}') {
+      alert('No aircraft found for this date.');
+      setOutput([]);
+    }
+    else {
+      setOutput(result.data);
+    }
   };
 
   const handleClick = () => {
     const currentTime = Date.now();
-    if (currentTime - lastClickedTime < 10000) {
-      alert('Please wait 10 seconds before fetching again.');
+    if (specified_file === 'Select an option...') {
+      alert('Please select an option.');
+      clearTimeout(currentTime);
+      setTableVar([]);
+      if (currentTime - lastClickedTime < 10000) {
+      } else {
+        alert('Please wait 10 seconds before fetching again.');
+      }
     } else {
       setLastClickedTime(currentTime);
-      if (specified_file === 'Select an option...') {
-        alert('Please select an option.');
-      } else {
-        fetchData();
-      }
+      setTableVar(specified_file === 'stats' ? countColumns() : interColumns());
+      fetchData();
     }
   };
+
+
+  const table = useReactTable({
+    columns: tableVar,
+    data: output,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <div className="container">
@@ -121,9 +154,55 @@ function Api() {
         </select>
         <button className="button" onClick={handleClick}>Fetch Data</button>
       </div>
-      {tableSelect()}
+      <div className="output">
+        <table className='table' onChange={handleChange}>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className='td'>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map(footerGroup => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map(header => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+      </div>
     </div>
   );
-};
+}
 
-export default Api
+export default Api;

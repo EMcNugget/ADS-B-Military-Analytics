@@ -5,11 +5,14 @@ import json
 from dataclasses import dataclass
 from pymongo import MongoClient
 import pandas as pd
+from dotenv import load_dotenv
 from flask import Flask, jsonify, Response
 from flask_cors import CORS
 from .logger_config import log_app
 
-MDB_URL = os.environ["MDB_URL"]
+load_dotenv()
+
+MDB_URL = os.getenv("MDB_URL")
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -27,7 +30,8 @@ app = Flask(__name__)
 CORS(app)
 app.config.from_mapping(config)
 
-def load_pd_data(date: str=day):
+
+def load_pd_data(date: str = day):
     """Loads data from the JSON file and returns it as a pandas dataframe for further processing"""
     with open(DEP_DEPENDENCY + f'final_adsb{date}_main.json', 'r', encoding='UTF-8') as data_file:
         ac_df = json.load(data_file)
@@ -60,7 +64,8 @@ def insert_data():
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_stats.json')
     os.remove(DEP_DEPENDENCY + f'final_adsb{day}_inter.json')
 
-@app.route('/<date>/<specifed_file>', methods=['GET']) # type: ignore
+
+@app.route('/<date>/<specifed_file>', methods=['GET'])  # type: ignore
 def get_mdb_data(date: str, specifed_file: str):
     """Date will be in YYYY-MM-DD format, provided by the UI, then
     the file will be pulled from the database or cache, and returned to the UI"""
@@ -77,10 +82,12 @@ def get_mdb_data(date: str, specifed_file: str):
         log_main.critical(error)
         return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')
 
+
 @app.route('/')
 def default():
     """Default route"""
     return jsonify({'message': 'Welcome to the API!'})
+
 
 @dataclass
 class Analytics:
@@ -100,12 +107,17 @@ class Analytics:
 
         try:
             log_main.info("%s data for %s fowarded to UI", info_req, cls.date)
-            return pd.value_counts(t_data_frame[info_req]).to_dict()
+            data = pd.value_counts(t_data_frame[info_req]).to_dict()
+            new_list = []
+            for key, value in data.items():
+                new_dict = {"type": key, "value": value}
+                new_list.append(new_dict)
+            return new_list
         except KeyError:
             pass
 
     @classmethod
-    def inter_ac(cls, date: str, row: str='t', data: str='ac_type'):
+    def inter_ac(cls, date: str, row: str = 't', data: str = 'ac_type'):
         """Used for special aircraft based on logic below"""
 
         t_data_frame = load_pd_data(date)
