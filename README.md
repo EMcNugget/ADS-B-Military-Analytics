@@ -23,9 +23,11 @@ All you need a valid API key for the ADSB Exchange API at the moment while every
 
 The current stack is as follows:
 
-Python(Flask), MongoDB, Google Cloud(WIP)
+Backend: Python(Flask), MongoDB, Google Cloud(WIP)
 
-Typescript, React, Vite, Firebase, vanilla CSS for now, I'm not too sure about using Tailwind or PostCSS, may or may not use it in the future
+Middleware: RapidAPI
+
+Frontend: Typescript, React, Vite, Firebase, vanilla CSS for now, I'm not too sure about using Tailwind or PostCSS, may or may not use it in the future
 
 **Current tasks**
 
