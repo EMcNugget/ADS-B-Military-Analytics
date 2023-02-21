@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table"
+import { FaGithub } from 'react-icons/fa';
 import '../css/api.css';
 import '../css/dropdown.css';
 
@@ -146,7 +147,7 @@ function Api() {
     <div className="container">
       <h1 className="title">ADS-B Military Analytics</h1>
       <div className="form">
-        <input className="input" type="text" placeholder='Enter a date...eg 2023-02-13' value={date} onChange={e => setDate(e.target.value)} />
+        <input className="input" type="text" placeholder='Enter a date...eg 2023-02-20' value={date} onChange={e => setDate(e.target.value)} />
         <select style={{ color: color }} className="dropdown" value={specified_file} onChange={handleChange}>
           <option>Select an option...</option>
           <option value="stats">Aircraft Count</option>
@@ -200,6 +201,13 @@ function Api() {
             ))}
           </tfoot>
         </table>
+      </div>
+      <div className="footer">
+        <a href="https://github.com/EMcNugget/adsb_mil_data" target="_blank" rel="noopener noreferrer">
+          <FaGithub className="icon" />
+          GitHub
+        </a>
+        <p className="copy">&copy;2023 ADSB-Military-Analytics.</p>
       </div>
     </div>
   );
