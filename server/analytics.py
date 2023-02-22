@@ -77,17 +77,17 @@ def get_mdb_data(date: str, specifed_file: str):
             try:
                 datetime.date.fromisoformat(date)
                 log_main.critical("Data for %s not found in database", escape(date))
-                return Response(status=404, response=f'Data for {escape(date)} not found in database')
+                return Response(status=400, response=f'Data for {escape(date)} not found in database')
             except ValueError:
                 log_main.critical(
                     "Invalid date format. Please use YYYY-MM-DD format.")
-                return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')
+                return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
         else:
             log_main.info("Data for %s forwarded to UI", date)
             return Response(json.dumps(results[specifed_file], indent=2), content_type='application/json')
     except TypeError as error:
         log_main.critical(error)
-        return Response(status=404, response='Invalid date format. Please use YYYY-MM-DD format.')
+        return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
 
 
 @app.route('/')

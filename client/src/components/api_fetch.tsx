@@ -110,13 +110,22 @@ function Api() {
   };
 
   const fetchData = async () => {
-    const result = await axios.get(url);
-    if (JSON.stringify(result.data) === '{"hex":"No aircraft found"}') {
-      alert('No aircraft found for this date.');
+    try {
+      const result = await axios.get(url);
+      if (result.status === 500 || result.status === 400) {
+        alert(result.request.response);
+        setOutput([]);
+      }
+      if (JSON.stringify(result.data) === '{"hex":"No aircraft found"}') {
+        alert('No aircraft found for this date.');
+        setOutput([]);
+      }
+      else {
+        setOutput(result.data);
+      }
+    } catch (error) {
+      alert('Connection to API lost, please try again later or check our GitHub for more information.');
       setOutput([]);
-    }
-    else {
-      setOutput(result.data);
     }
   };
 

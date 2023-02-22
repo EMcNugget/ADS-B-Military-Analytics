@@ -4,7 +4,7 @@ import Api from './components/api_fetch';
 import Footer from './components/footer';
 import './css/landing.css';
 import './css/footer.css';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 function Home() {
   const [show, setShow] = useState(false);
@@ -43,4 +43,4 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(<App />);
