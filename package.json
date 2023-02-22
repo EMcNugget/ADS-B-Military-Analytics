@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Analytics for military aircraft over ADSB.",
   "scripts": {
-    "build": "cd client && npm run build"
+    "build": "cd client && npm install && npm run build"
   },
   "author": "",
   "license": "ISC"
