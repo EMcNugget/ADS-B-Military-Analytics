@@ -1,12 +1,15 @@
-import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from "react-router-dom/server";
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link, BrowserRouter } from 'react-router-dom';
+import { useState } from 'react';
 import Api from './components/api_fetch';
 import Footer from './components/footer';
 import './css/landing.css';
 import './css/footer.css';
+import ReactDOM from 'react-dom';
+import React from 'react';
 
 function Home() {
+  const [show, setShow] = useState(false);
+
   return (
     <div className="landing">
       <div className="landing__container">
@@ -19,9 +22,9 @@ function Home() {
           </h6>
         </div>
         <div className="button-container">
-          <a href="/history">
-            <button className="button">Click to get started</button>
-          </a>
+          <Link to="/history">
+            <button className="button" onClick={() => setShow(!show)}>Click to get started</button>
+          </Link>
         </div>
       </div>
       <Footer />
@@ -29,18 +32,16 @@ function Home() {
   );
 }
 
+
 function App() {
   return (
-    <StaticRouter location={''}>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/history" element={<Api />} />
       </Routes>
-    </StaticRouter>
+    </BrowserRouter>
   );
 }
 
-export default function render(req: any, res: any) {
-  const html = ReactDOMServer.renderToString(<App />);
-  res.send(html);
-}
+ReactDOM.render(<App />, document.getElementById('root'));
