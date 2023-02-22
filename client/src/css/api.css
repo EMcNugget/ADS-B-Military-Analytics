@@ -1,5 +1,7 @@
 .container {
   display: flex;
+  background-color: #333;
+  color: #fff;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
@@ -25,6 +27,8 @@
   margin-bottom: 15px;
   width: 100%;
   border: none;
+  background-color: #444;
+  color: #fff;
   border-radius: 5px;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
@@ -34,12 +38,6 @@
 
 .input:focus {
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
-}
-.disclaimer_container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
 }
 
 .button_data {
@@ -54,7 +52,7 @@
   transition: background-color 0.3s ease;
 }
 
-.button:hover {
+.button_data:hover {
   background-color: #2162b2;
 }
 
@@ -80,29 +78,4 @@ td {
 
 .colormode {
   margin-right: 15px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .container_dark {
-    background-color: #333;
-    color: #fff;
-  }
-
-  .input {
-    background-color: #444;
-    color: #fff;
-  }
-
-  .output_dark {
-    background-color: #444;
-    color: #fff;
-  }
-
-  .footer_dark {
-    background-color: #3a3a3a;
-  }
-
-  .footer_dark a {
-    color: #fff;
-  }
 }

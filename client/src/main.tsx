@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Link, BrowserRouter, Route, Routes } from 'react-router-dom';
 import Api from './components/api_fetch';
-import { Footer } from './components/footer';
+import Footer from './components/footer';
 import './css/landing.css';
 import './css/footer.css';
 
@@ -15,8 +15,10 @@ function Home() {
         <div className="landing_title">
           <h1>
             ADS-B Military Analytics
-            <h6>No data before February 20th, 2023</h6>
           </h1>
+          <h6>
+            No data before February 20th, 2023
+          </h6>
         </div>
         <div className="button-container">
           <Link to="/history">

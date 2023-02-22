@@ -1,7 +1,8 @@
 import { FaGithub } from 'react-icons/fa';
 import '../css/footer.css';
 
-export const Footer = () => {
+function Footer() {
+
   return (
     <div className="footer">
       <a href="https://github.com/EMcNugget/adsb_mil_data" target="_blank" rel="noopener noreferrer">
@@ -12,3 +13,5 @@ export const Footer = () => {
     </div>
   );
 };
+
+export default Footer;

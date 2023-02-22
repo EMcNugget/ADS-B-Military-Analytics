@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { Footer } from './footer';
+import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table";
+import Footer from './footer';
 import '../css/api.css';
 import '../css/footer.css';
 import '../css/dropdown.css';
@@ -66,8 +66,6 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
   return columns;
 }
 
-
-
 const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
   const columns = [
     ac_count.display({
@@ -100,10 +98,12 @@ function Api() {
   const [color, setColor] = useState('gray');
   const url = `http://127.0.0.1:5000/${date}/${specified_file}`
 
+
+
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
     if (event.target.value !== 'Select an option...') {
-      setColor('black');
+      setColor('white');
     } else {
       setColor('gray');
     }

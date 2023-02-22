@@ -19,20 +19,17 @@ Windows: Used the same way as linux (Make sure you have Git or a Unix emulator i
 ATTENTION: All information here is public.
 All you need a valid API key for the ADSB Exchange API at the moment while everything is still in early development. When the project gets deployed to the web in the future this will no longer be a requirement.
 
-**FOR DEVELOPERS**
 
-The current stack is as follows:
+**Stack**
 
 Backend: Python(Flask), MongoDB, Google Cloud(WIP)
 
 Middleware: RapidAPI
 
-Frontend: Typescript, React, Vite, Firebase, vanilla CSS for now, I'm not too sure about using Tailwind or PostCSS, may or may not use it in the future
+Frontend: Typescript, React, Vite, Firebase, vanilla CSS
 
 **Current tasks**
 
 Working on deployment and fixing bugs
 
 More features
-
-Creating an Electron app
