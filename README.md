@@ -22,9 +22,7 @@ All you need a valid API key for the ADSB Exchange API at the moment while every
 
 **Stack**
 
-Backend: Python(Flask), MongoDB, Google Cloud(WIP)
-
-Middleware: RapidAPI
+Backend: Python(Flask), MongoDB, Google Cloud App Engine
 
 Frontend: Typescript, React, Vite, Firebase, vanilla CSS
 
