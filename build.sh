@@ -14,6 +14,13 @@ fi
 
 pip install -r requirements.txt
 
+if [ -d "dist" ]; then
+    echo "dist exists"
+    rmdir dist
+else
+    echo "dist does not exist"
+fi
+
 cd client 
 
 if [ -d "node_modules" ]; then

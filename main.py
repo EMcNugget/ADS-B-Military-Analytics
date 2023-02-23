@@ -21,6 +21,7 @@ class MainClass:
             cls.log_main.info('All threads started, app running')
 
 
+# Will remove when ready to deploy
 if __name__ == '__main__':
     Thread(target=MainClass.api_func()).start()
     an.app.run(host='0.0.0.0', port=8080, debug=True)

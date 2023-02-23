@@ -5,6 +5,7 @@ import json
 import time
 import re
 import requests
+from flask import Response
 from . import analytics as an
 from .logger_config import log_app
 
@@ -28,6 +29,7 @@ day = datetime.date.today().strftime('%Y-%m-%d')
 
 def dependencies():
     """Creates the necessary directories and files for the program to run"""
+
     if not os.path.exists(DEP_DEPENDENCY):
         os.makedirs(DEP_DEPENDENCY)
     elif not os.path.exists(DEP_DEPENDENCY + 'adsb.json'):
@@ -36,6 +38,8 @@ def dependencies():
 
 
 def proccessed_data_setup():
+    """Creates the necessary directories and files for the program to run"""
+
     while True:
         if not os.path.exists(DEP_DEPENDENCY + f'final_adsb{day}_main.json'):
             with open(DEP_DEPENDENCY + f'final_adsb{day}_main.json', 'w', encoding='UTF-8') as file_data:
@@ -43,6 +47,8 @@ def proccessed_data_setup():
 
 
 def data_format():
+    """Formats the data from the API to be easier to work with"""
+
     with open(DEP_DEPENDENCY + 'adsb.json', 'r', encoding='UTF-8') as file:
         data = file.read()
         database = json.loads(data)
@@ -73,6 +79,7 @@ def get_data():
         return response.text
     except TypeError as error:
         log_main.critical(error)
+        return Response("The API is currently down, please try again later.", status=500)
 
 
 def auto_req():
@@ -89,6 +96,8 @@ def auto_req():
 
 
 def interesting_data():
+    """Bridge for inter_ac writes it to a JSON file and checks if there are any aircraft"""
+
     with open(DEP_DEPENDENCY + f'final_adsb{day}_inter.json', 'w', encoding='UTF-8') as inter_data:
         try:
             json_stats = an.Analytics.inter_ac(day, 't', 'ac_type')
@@ -101,6 +110,8 @@ def interesting_data():
 
 
 def ac_count():
+    """Bridge for AC count writes it to a JSON file"""
+
     with open(DEP_DEPENDENCY + f'final_adsb{day}_stats.json', 'w', encoding='UTF-8') as roll_data:
         try:
             json_data = an.Analytics.for_data(day, 't')
