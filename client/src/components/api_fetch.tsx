@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useReactTable, createColumnHelper, Row, ColumnDef, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import Footer from './footer';
+import {
+  useReactTable,
+  createColumnHelper,
+  Row,
+  ColumnDef,
+  getCoreRowModel,
+  flexRender,
+} from '@tanstack/react-table';
 import '../css/api.css';
-import '../css/footer.css';
 import '../css/dropdown.css';
 
 type InterestingAircraft = {
@@ -22,72 +28,42 @@ type AircraftCount = {
 const inter = createColumnHelper<InterestingAircraft>()
 const ac_count = createColumnHelper<AircraftCount>()
 
+const createInterColumn = (id: string, header: string, accessor: keyof InterestingAircraft) => {
+  return inter.display({
+    id,
+    header,
+    cell: ({ row }: { row: Row<InterestingAircraft> }) => (
+      <span>{row.original[accessor]}</span>
+    ),
+  });
+}
+
 const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
-  const columns = [
-    inter.display({
-      id: 'hex',
-      header: 'Hex',
-      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-        <span>{row.original.hex}</span>
-      ),
-    }),
-    inter.display({
-      id: 'flight',
-      header: 'Callsign',
-      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-        <span>{row.original.flight}</span>
-      ),
-    }),
-    inter.display({
-      id: 'r',
-      header: 'Reg',
-      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-        <span>{row.original.r}</span>
-      ),
-    }),
-    inter.display({
-      id: 't',
-      header: 'Aircraft Type',
-      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-        <span>{row.original.t}</span>
-      ),
-    }),
-    inter.display({
-      id: 'squawk',
-      header: 'Squawk',
-      cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-        <span>{row.original.squawk}</span>
-      ),
-    })
+  return [
+    createInterColumn('hex', 'Hex', 'hex'),
+    createInterColumn('flight', 'Callsign', 'flight'),
+    createInterColumn('r', 'Reg', 'r'),
+    createInterColumn('t', 'Aircraft Type', 't'),
+    createInterColumn('squawk', 'Squawk', 'squawk'),
   ];
+};
 
-  console.log(columns); // here for debuging will remove for production
-
-  return columns;
+const createCountColumn = (id: string, header: string, accessor: keyof AircraftCount) => {
+  return ac_count.display({
+    id,
+    header,
+    cell: ({ row }: { row: Row<AircraftCount> }) => (
+      <span>{row.original[accessor]}</span>
+    ),
+  });
 }
 
 const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
-  const columns = [
-    ac_count.display({
-      id: 'type',
-      header: 'Aircraft Type',
-      cell: ({ row }: { row: Row<AircraftCount> }) => (
-        <span>{row.original.type}</span>
-      ),
-    }),
-    ac_count.display({
-      id: 'value',
-      header: 'Count',
-      cell: ({ row }: { row: Row<AircraftCount> }) => (
-        <span>{row.original.value}</span>
-      ),
-    })
+  return [
+    createCountColumn('type', 'Aircraft Type', 'type'),
+    createCountColumn('value', 'Aircraft Count', 'value'),
   ];
-
-  console.log(columns); // here for debuging will remove for production
-
-  return columns;
-}
+};
 
 function Api() {
   const [date, setDate] = useState('');
@@ -96,7 +72,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState('gray');
-  const url = `http://127.0.0.1:5000/${date}/${specified_file}`
+  const url = `http://api.adsbmilanalytics.com/${date}/${specified_file}`
 
 
 
@@ -163,7 +139,7 @@ function Api() {
           <option value="stats">Aircraft Count</option>
           <option value="inter">Interesting Aircraft</option>
         </select>
-        <button className="button_data  " onClick={handleClick}>Fetch Data</button>
+        <button className="button_data" onClick={handleClick}>Fetch Data</button>
       </div>
       {output.length > 2 && (
         <div className="output">

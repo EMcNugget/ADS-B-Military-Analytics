@@ -5,7 +5,6 @@ import json
 import time
 import re
 import requests
-from dotenv import load_dotenv
 from . import analytics as an
 from .logger_config import log_app
 
@@ -20,10 +19,8 @@ elif datetime.time(0, 1) < current_time <= datetime.time(3, 59):
 else:
     DELAY = 550
 
-load_dotenv()
-
-API_KEY = os.getenv("API_KEY")
-API_HOST = os.getenv("API_HOST")
+API_KEY = os.environ["API_KEY"]
+API_HOST = os.environ["API_HOST"]
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('api_processor')
 day = datetime.date.today().strftime('%Y-%m-%d')

@@ -23,4 +23,4 @@ class MainClass:
 
 if __name__ == '__main__':
     Thread(target=MainClass.api_func()).start()
-    an.app.run(debug=False, host='0.0.0.0', port=5000)
+    an.app.run(host='127.0.0.1', port=8080, debug=True)

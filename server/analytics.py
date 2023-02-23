@@ -5,15 +5,12 @@ import json
 from dataclasses import dataclass
 from pymongo import MongoClient
 import pandas as pd
-from dotenv import load_dotenv
 from flask import Flask, jsonify, Response
 from markupsafe import escape
 from flask_cors import CORS
 from .logger_config import log_app
 
-load_dotenv()
-
-MDB_URL = os.getenv("MDB_URL")
+MDB_URL = os.environ["MDB_URL"]
 DEP_DEPENDENCY = os.getcwd() + '\\data\\'
 log_main = log_app('analytics')
 day = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -76,7 +73,8 @@ def get_mdb_data(date: str, specifed_file: str):
         if results is None:
             try:
                 datetime.date.fromisoformat(date)
-                log_main.critical("Data for %s not found in database", escape(date))
+                log_main.critical(
+                    "Data for %s not found in database", escape(date))
                 return Response(status=400, response=f'Data for {escape(date)} not found in database')
             except ValueError:
                 log_main.critical(

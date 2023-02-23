@@ -1,7 +1,7 @@
 .footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 99.5%;
   padding: 3px;
   font-size: 0.8rem;
   border-top: 2px solid #ccc;
