@@ -34,3 +34,4 @@ dist-ssr
 *.sw?
 client/node_modules
 .firebase
+app.yaml
