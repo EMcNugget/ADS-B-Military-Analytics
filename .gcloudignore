@@ -14,7 +14,6 @@
 .gitignore
 # Node.js dependencies:
 node_modules/
-.env
 build.sh
 package.json
 package-lock.json

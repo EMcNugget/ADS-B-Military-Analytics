@@ -1,0 +1,5 @@
+.venv
+.github
+.vscode
+app.yaml
+client/node_modules

@@ -1,27 +1,13 @@
 """Main app file for the project."""
 from threading import Thread
-from dataclasses import dataclass
-from server import parse_api as api
-from server import logger_config
-from server import analytics as an
+from server import app
 
-@dataclass
-class MainClass:
-    """Main class for the project."""
-    log_main = logger_config.log_app('main')
+def api_func():
+    """Main function for the project."""
+    if app.api_check():
+        Thread(target=app.Main.auto_req).start()
+        Thread(target=app.rollover).start()
 
-    @classmethod
-    def api_func(cls):
-        """Main function for the project."""
-        api.dependencies()
-        if api.api_check():
-            Thread(target=api.proccessed_data_setup).start()
-            Thread(target=api.rollover).start()
-            Thread(target=api.auto_req).start()
-            cls.log_main.info('All threads started, app running')
-
-
-# Will remove when ready to deploy
 if __name__ == '__main__':
-    Thread(target=MainClass.api_func()).start()
-    an.app.run(host='0.0.0.0', port=8080, debug=True)
+    Thread(target=api_func()).start()
+    app.app.run(host='0.0.0.0', port=8080, debug=True)
