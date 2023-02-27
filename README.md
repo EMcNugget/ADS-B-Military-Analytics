@@ -19,7 +19,7 @@ Analytics for military aircraft over ADSB.
 
 5. Then ```cd ../server``` and run ```python3 main.py```
 
-6. Go to ```localhost:3000``` in your browser
+6. Go to ```localhost:5173``` in your browser
 
 **Notes**
 
