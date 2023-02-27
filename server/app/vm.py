@@ -18,8 +18,6 @@ db = cluster["milData"]
 collection = db["historicalData"]
 current_time = datetime.datetime.now().time()
 
-
-
 def delay_time():
     """Sets the delay time based on the current time of day"""
 

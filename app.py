@@ -4,6 +4,7 @@ from flask import Flask, Response, jsonify
 from flask_cors import CORS
 from markupsafe import escape
 from pymongo import MongoClient
+
 app = Flask(__name__)
 CORS(app)
 
@@ -34,7 +35,6 @@ def get_mdb_data(date: str, specified_file: str):
             return jsonify(response_data)
     except TypeError:
         return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
-
 
 @app.route('/')
 def default():
