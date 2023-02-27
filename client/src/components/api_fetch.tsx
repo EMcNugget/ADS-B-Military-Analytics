@@ -81,7 +81,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `http://adsbmilitaryanalytics.uc.r.appspot.com/${date}/${specified_file}`; // Will change this to the actual URL when deployed
+  const url = `https://adsbmilitaryanalytics.uc.r.appspot.com/${date}/${specified_file}`; // Will change this to the actual URL when deployed
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
