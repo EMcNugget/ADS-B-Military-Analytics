@@ -6,9 +6,7 @@ import time
 from dataclasses import dataclass
 import pandas as pd
 import requests
-from flask import Flask, Response, jsonify, render_template
-from flask_cors import CORS
-from markupsafe import escape
+from flask import jsonify
 from pymongo import MongoClient
 
 API_KEY = os.environ["API_KEY"]
@@ -19,8 +17,7 @@ cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
 current_time = datetime.datetime.now().time()
-app = Flask(__name__)
-CORS(app)
+
 
 
 def delay_time():
@@ -34,19 +31,6 @@ def delay_time():
         return 450
     else:
         return 550
-
-
-def api_check():
-    """Checks the API key and host to ensure they are valid"""
-
-    data = get_data()
-    if API_KEY is None or API_HOST is None:
-        return False
-    if data == '{"message":"You are not subscribed to this API."}':
-        return False
-    time.sleep(3)
-    return True
-
 
 def get_data():
     """Gets data from the API and returns it as a JSON object"""
@@ -140,39 +124,3 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:45':
             Main.mdb_insert()
         time.sleep(1)
-
-
-@app.route('/<date>/<specified_file>', methods=['GET'])
-def get_mdb_data(date: str, specified_file: str):
-    """Date will be in YYYY-MM-DD format, provided by the UI, then
-    the file will be pulled from the database or cache, and returned to the UI"""
-
-    results = collection.find_one({"_id": date})
-    try:
-        if results is None:
-            try:
-                datetime.date.fromisoformat(date)
-                return Response(status=400, response=f'Data for {escape(date)} not found in database')
-            except ValueError:
-                return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
-        else:
-            try:
-                response_data = results[specified_file]
-            except KeyError:
-                return Response(status=400, response=f'File {escape(specified_file)} not found for {escape(date)}')
-            return jsonify(response_data)
-    except TypeError:
-        return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
-
-
-@app.route('/')
-def default():
-    """Default route"""
-    return Response(status=400, response='Please specify a date and file')
-
-
-@app.errorhandler(404)
-def not_found(error_code):
-    """404 error handler"""
-    error_asset = os.path.join(os.path.dirname(__file__), 'templates/404.html')
-    return render_template(error_asset), error_code

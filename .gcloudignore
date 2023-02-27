@@ -20,6 +20,10 @@ package-lock.json
 client/
 test_dataset.jsonc
 readme.md
+backend/
+.venv
+.github/
+.vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
