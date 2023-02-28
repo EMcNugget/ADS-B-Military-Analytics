@@ -7,11 +7,14 @@ from dataclasses import dataclass
 import pandas as pd
 import requests
 from flask import jsonify
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
-API_KEY = os.environ["API_KEY"]
-API_HOST = os.environ["API_HOST"]
-MDB_URL = os.environ["MDB_URL"]
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
+API_HOST = os.getenv("API_HOST")
+MDB_URL = os.getenv("MDB_URL")
 day = datetime.date.today().strftime('%Y-%m-%d')
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]

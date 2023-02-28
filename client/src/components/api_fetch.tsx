@@ -81,7 +81,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `https://adsbmilitaryanalytics.uc.r.appspot.com/${date}/${specified_file}`;
+  const url = `https://unified-dragon-378823.uc.r.appspot.com/${date}/${specified_file}`;
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -105,11 +105,8 @@ function Api() {
       } else {
         setOutput(result.data);
       }
-    } catch (error) {
-      alert(
-        "Connection to API lost, please try again later or check our GitHub for more information."
-      );
-      setOutput([]);
+    } catch (error: any) {
+      alert(error.request.response);
     }
   };
 

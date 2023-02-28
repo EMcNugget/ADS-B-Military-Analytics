@@ -1,6 +1,6 @@
 """Main app file for the project."""
 from threading import Thread
-from .app import vm
+import vm
 
 def api_func():
     """Main function for the project."""

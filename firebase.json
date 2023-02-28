@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "adsbmilitaryanalytics",
     "public": "dist",
     "ignore": [
       "firebase.json",

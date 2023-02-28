@@ -1,6 +1,8 @@
+"""Flask API that returns data from MongoDB"""
+
 import os
 import datetime
-from flask import Flask, Response, jsonify
+from flask import Flask, Response, jsonify, render_template
 from flask_cors import CORS
 from markupsafe import escape
 from pymongo import MongoClient
@@ -9,6 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 MDB_URL = os.environ["MDB_URL"]
+path_404 = os.path.join(os.path.dirname(__file__), 'templates\\')
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
@@ -21,7 +24,11 @@ def get_mdb_data(date: str, specified_file: str):
 
     results = collection.find_one({"_id": date})
     try:
-        if results is None:
+        if date > datetime.date.today().isoformat():
+            return Response(status=400, response='There is no data from the future.', mimetype='text/plain')
+        elif date < '2023-02-27':
+            return Response(status=400, response='There is no data from before 2023-02-27', mimetype='text/plain')
+        elif results is None:
             try:
                 datetime.date.fromisoformat(date)
                 return Response(status=400, response=f'Data for {escape(date)} not found in database')
@@ -36,10 +43,18 @@ def get_mdb_data(date: str, specified_file: str):
     except TypeError:
         return Response(status=500, response='Invalid date format. Please use YYYY-MM-DD format.')
 
+
 @app.route('/')
 def default():
     """Default route"""
     return Response(status=400, response='Please specify a date and file')
 
+@app.errorhandler(404)
+def page_not_found(error):
+    """Error handler for 404"""
+
+    return render_template(os.path.join(path_404, '404.html')), error
+
+
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080)
