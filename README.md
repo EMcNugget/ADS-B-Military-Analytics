@@ -39,6 +39,6 @@ Frontend: Typescript, React, Vite, Firebase, vanilla CSS
 
 **Current tasks**
 
-Working on deployment and fixing bugs
+Working on deployment and fixing bugs: Deployed!
 
 More features
