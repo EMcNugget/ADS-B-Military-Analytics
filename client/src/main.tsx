@@ -15,7 +15,7 @@ function Home() {
         <div className="landing__container">
           <div className="landing_title">
             <h1>ADS-B Military Analytics</h1>
-            <h6>No data before February 20th, 2023</h6>
+            <h6>No data before February 28th, 2023</h6>
           </div>
           <div className="button-container">
             <Link to="/history">
