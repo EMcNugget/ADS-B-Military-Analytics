@@ -6,11 +6,19 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --emptyOutDir --outDir ../dist",
-    "preview": "vite preview"
+    "build:watch": "tsc --watch",
+    "preview": "vite preview",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.7.9",
     "axios": "^1.3.3",
+    "dotenv": "^16.0.3",
+    "firebase-functions": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
@@ -27,6 +35,7 @@
     "@vitejs/plugin-react-swc": "^3.0.0",
     "eslint": "^8.34.0",
     "eslint-plugin-react": "^7.32.2",
+    "firebase-functions-test": "^3.0.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
     "vite-plugin-proxy": "^0.5.0"

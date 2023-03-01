@@ -49,6 +49,7 @@ def default():
     """Default route"""
     return Response(status=400, response='Please specify a date and file')
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     """Error handler for 404"""
