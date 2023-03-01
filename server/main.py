@@ -1,6 +1,6 @@
 """Main app file for the project."""
 from threading import Thread
-import vm
+import vm # pylint: disable=import-error
 
 def api_func():
     """Main function for the project."""
