@@ -99,7 +99,7 @@ function Api() {
         alert(result.request.response);
         setOutput([]);
       }
-      if (JSON.stringify(result.data) === ('{"hex":"No aircraft found"}'|| null)) { // eslint-disable-line
+      if (result.data === null || JSON.stringify(result.data) === '{"hex":"No aircraft found"}') { // eslint-disable-line
         alert("No aircraft found for this date.");
         setOutput([]);
       } else {
