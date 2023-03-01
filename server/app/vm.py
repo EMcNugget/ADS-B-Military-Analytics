@@ -19,16 +19,20 @@ day = datetime.date.today().strftime('%Y-%m-%d')
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
-current_time = datetime.datetime.now(datetime.timezone.utc).time()
+
+def current_time():
+    """Returns time in UTC"""
+
+    return datetime.datetime.now(datetime.timezone.utc).time()
 
 def delay_time():
     """Sets the delay time based on the current time of day"""
 
-    if datetime.time(4, 0) <= current_time <= datetime.time(19, 0):
+    if datetime.time(4, 0) <= current_time() <= datetime.time(19, 0):
         return 350
-    elif datetime.time(19, 0) < current_time <= datetime.time(23, 59):
+    elif datetime.time(19, 0) < current_time() <= datetime.time(23, 59):
         return 750
-    elif datetime.time(0, 1) < current_time <= datetime.time(3, 59):
+    elif datetime.time(0, 1) < current_time() <= datetime.time(3, 59):
         return 450
     else:
         return 550
