@@ -4,7 +4,7 @@ export const API_URL = functions.https.onRequest((request, response) => {
   const allowedOrigins = ["https://adsbmilanalytics.com", "https://www.adsbmilanalytics.com", "https://unified-dragon-378823.web.app", "https://unified-dragon-378823.firebaseapp.com"];
 
   if (allowedOrigins.includes(request.headers.origin as string)) {
-    response.set("Access-Control-Allow-Origin", request.headers.origin);
+    response.set("Access-Control-Allow-Origin", "*");
     response.set("Access-Control-Allow-Methods", "GET, POST");
     response.set("Access-Control-Allow-Headers", "Content-Type");
     response.set("Access-Control-Allow-Credentials", "true");
