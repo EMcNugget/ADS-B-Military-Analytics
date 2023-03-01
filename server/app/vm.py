@@ -19,7 +19,7 @@ day = datetime.date.today().strftime('%Y-%m-%d')
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
-current_time = datetime.datetime.now().time()
+current_time = datetime.datetime.now(datetime.timezone.utc).time()
 
 def delay_time():
     """Sets the delay time based on the current time of day"""
@@ -45,8 +45,12 @@ def get_data():
     response = requests.request(
         "GET", url, headers=headers, timeout=3)  # type: ignore
     data = response.json()
+    if len(data) == 0:
+        print(f"No data collected {current_time}")
+        return get_data()
+    else:
+        print(f"Data collected {current_time}")
     return data
-
 
 @dataclass
 class Main:
@@ -85,7 +89,6 @@ class Main:
         while True:
             cls.main_data.update(get_data())
             cls.pre_proccess()
-            print("Data collected")
             time.sleep(delay_time())
 
     @classmethod
@@ -95,7 +98,7 @@ class Main:
         doc = {"_id": f"{day}", "data": cls.pre_proccess(
         ), "stats": cls.ac_count(), "inter": cls.inter_ac()}
         collection.insert_one(doc)
-        print("Data inserted into MongoDB")
+        print(f"Data inserted into MongoDB {current_time} ")
 
     @classmethod
     def ac_count(cls):
@@ -114,14 +117,16 @@ class Main:
         """Returns objects that contain an aircraft type specified in the ac_type"""
 
         interesting_ac = pd.DataFrame(cls.pre_proccess())
-        if interesting_ac[interesting_ac['t'].isin(cls.ac_type)].to_dict(orient='records') == []:
+        inter_data = interesting_ac[interesting_ac['t'].isin(cls.ac_type)].to_dict(orient='records')
+        if inter_data == []:
             return jsonify({"message": "No interesting aircraft found"})
-
+        else:
+            return inter_data
 
 def rollover():
-    """Checks the time every second and runs the mdb_insert function at 11:59:45pm"""
+    """Checks the time every second and runs the mdb_insert function at 11:59:55pm"""
 
     while True:
-        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:45':
+        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:55':
             Main.mdb_insert()
         time.sleep(1)

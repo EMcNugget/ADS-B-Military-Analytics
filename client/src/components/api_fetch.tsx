@@ -81,7 +81,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `unified-dragon-378823.uc.r.appspot.com /${date}/${specified_file}`;
+  const url = `${process.env.API_URL}/${date}/${specified_file}`;
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -99,7 +99,7 @@ function Api() {
         alert(result.request.response);
         setOutput([]);
       }
-      if (JSON.stringify(result.data) === ('{"hex":"No aircraft found"}' || null)) { // eslint-disable-line
+      if (JSON.stringify(result.data) === '{"hex":"No aircraft found"}') { // eslint-disable-line
         alert("No aircraft found for this date.");
         setOutput([]);
       } else {
@@ -139,7 +139,7 @@ function Api() {
         <input
           className="input"
           type="text"
-          placeholder="Enter a date...eg 2023-02-28"
+          placeholder="Enter a date...eg 2023-02-20"
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />

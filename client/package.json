@@ -1,12 +1,11 @@
 {
   "name": "client",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --emptyOutDir --outDir ../dist",
-    "build:watch": "tsc --watch",
     "preview": "vite preview"
   },
   "dependencies": {
