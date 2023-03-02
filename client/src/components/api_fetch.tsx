@@ -107,6 +107,9 @@ function Api() {
       }
     } catch (error: any) {
       alert(error.request.response);
+      if (error.request.response === "") {
+        alert("There was an error fetching data. Please try again later. If the problem persists, please contact support@adsbmilanalytics.com");
+      }
     }
   };
 

@@ -49,11 +49,5 @@ def default():
     """Default route"""
     return Response(status=400, response='Please specify a date and file')
 
-@app.errorhandler(404)
-def page_not_found(error):
-    """Error handler for 404"""
-
-    return render_template(os.path.join(path_404, '404.html')), error
-
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

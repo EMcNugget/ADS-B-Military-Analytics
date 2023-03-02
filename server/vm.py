@@ -20,10 +20,12 @@ cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
 
+
 def current_time():
     """Returns time in UTC"""
 
     return datetime.datetime.now(datetime.timezone.utc).time()
+
 
 def delay_time():
     """Sets the delay time based on the current time of day"""
@@ -36,6 +38,7 @@ def delay_time():
         return 450
     else:
         return 550
+
 
 def get_data():
     """Gets data from the API and returns it as a JSON object"""
@@ -56,6 +59,7 @@ def get_data():
         print(f"Data collected {current_time}")
     return data
 
+
 @dataclass
 class Main:
     """Class for main, used to return data to the UI"""
@@ -64,7 +68,9 @@ class Main:
     post_data = {}
     date: str = day
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
-                        'F35LTNG', 'S61', 'H64', 'F15', 'AV8B', 'RC135'])
+                        'F35LTNG', 'F35', 'C2', 'E2', 'S61', 
+                        'B742\nBoeing E-4B', 'H64', 'F15', 
+                        'AV8B', 'RC135'])
     df = {'hex': [], 'flight': [], 't': [], 'r': []}
 
     @classmethod
@@ -78,6 +84,7 @@ class Main:
                 cls.df['flight'].append(item.get('flight', 'None').strip())
                 cls.df['t'].append(item.get('t', 'None'))
                 cls.df['r'].append(item.get('r', 'None'))
+                cls.df['squawk'].append(item.get('squawk', 'None'))
         df_data = pd.DataFrame(cls.df)
         df_data.drop(df_data[df_data['r'] == 'TWR'].index, inplace=True)
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
@@ -121,11 +128,13 @@ class Main:
         """Returns objects that contain an aircraft type specified in the ac_type"""
 
         interesting_ac = pd.DataFrame(cls.pre_proccess())
-        inter_data = interesting_ac[interesting_ac['t'].isin(cls.ac_type)].to_dict(orient='records')
+        inter_data = interesting_ac[interesting_ac['t'].isin(
+            cls.ac_type)].to_dict(orient='records')
         if inter_data == []:
             return jsonify({"message": "No interesting aircraft found"})
         else:
             return inter_data
+
 
 def rollover():
     """Checks the time every second and runs the mdb_insert function at 11:59:55pm"""
