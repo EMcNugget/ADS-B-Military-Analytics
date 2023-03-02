@@ -3,6 +3,7 @@ import { Routes, Route, Link, BrowserRouter, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Api from "./components/api_fetch";
 import Footer from "./components/footer";
+import Privacy from "./components/privacy";
 import "./css/landing.css";
 import "./css/footer.css";
 
@@ -37,6 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/history" element={<Api />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
