@@ -39,6 +39,12 @@ Frontend: Typescript, React, Vite, Firebase, vanilla CSS
 
 **Current tasks**
 
-Working on deployment and fixing bugs
+Bug fixes and optimizations
+
+Various admin tasks and security updates. At the moment the site is secure on the surface such as cross site scripting but there are some other vulnerabilities that need to be addressed. Not to mention a privacy policy, and a terms of service need to be written.
 
 More features
+
+**Questions?**
+
+Feel free to contact me at support@adsbmilanalytics.com

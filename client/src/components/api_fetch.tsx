@@ -81,7 +81,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `https://us-central1-unified-dragon-378823.cloudfunctions.net/API_URL/${date}/${specified_file}`;
+  const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
