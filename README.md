@@ -25,16 +25,16 @@ This allows you to view military aircraft from an ever growing database. Find ou
 
 ## Notes
 
-This project is currently in active development and is deployed at <https://adsbmilanalytics.com[https://adsbmilanalytics.com>]
+This project is currently in active development and is deployed at <https://adsbmilanalytics.com>
 
 ## Tech Stack
 
 | Backend | Frontend |
 | ------- | -------- |
-| Flask ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white) | Typescript ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) |
-| MongoDB ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) | React ![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=white) |
-|App Engine ![Google Cloud](https://img.shields.io/badge/-Google%20Cloud-4285F4?style=flat&logo=google-cloud&logoColor=white) | Vite ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white) |
-| | Firebase ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)
+| ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white) | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) |
+| ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) | ![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=white) |
+| ![Google Cloud](https://img.shields.io/badge/-Google%20Cloud-4285F4?style=flat&logo=google-cloud&logoColor=white) | ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white) |
+| | ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)
 
 ## Current Tasks
 
