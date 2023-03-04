@@ -2,7 +2,7 @@
 
 import os
 import datetime
-from flask import Flask, Response, jsonify, render_template
+from flask import Flask, Response, jsonify
 from flask_cors import CORS
 from markupsafe import escape
 from pymongo import MongoClient
@@ -48,6 +48,7 @@ def get_mdb_data(date: str, specified_file: str):
 def default():
     """Default route"""
     return Response(status=400, response='Please specify a date and file')
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080)

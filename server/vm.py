@@ -15,7 +15,6 @@ load_dotenv()
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
 MDB_URL = os.getenv("MDB_URL")
-day = datetime.date.today().strftime('%Y-%m-%d')
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
@@ -25,6 +24,18 @@ def current_time():
     """Returns time in UTC"""
 
     return datetime.datetime.now(datetime.timezone.utc).time()
+
+
+def day():
+    """Returns date in UTC"""
+
+    return datetime.date.today().strftime("%Y-%m-%d")
+
+
+def day_obj():
+    """Returns date in UTC as a datetime object"""
+
+    return datetime.date.today()
 
 
 def delay_time():
@@ -66,12 +77,12 @@ class Main:
 
     main_data = {}
     post_data = {}
-    date: str = day
+    date: str = day()
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
-                        'F35LTNG', 'F35', 'C2', 'E2', 'S61', 
-                        'B742\nBoeing E-4B', 'H64', 'F15', 
-                        'AV8B', 'RC135'])
-    df = {'hex': [], 'flight': [], 't': [], 'r': []}
+                        'F35LTNG', 'F35', 'C2', 'E2', 'S61',
+                         'B742\nBoeing E-4B', 'H64', 'F15',
+                         'AV8B', 'RC135'])
+    df = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
 
     @classmethod
     def pre_proccess(cls):
@@ -88,8 +99,7 @@ class Main:
         df_data = pd.DataFrame(cls.df)
         df_data.drop(df_data[df_data['r'] == 'TWR'].index, inplace=True)
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
-        df_data.drop(df_data[df_data['flight'] ==
-                     'TEST1234'].index, inplace=True)
+        df_data.drop(df_data[df_data['flight'] =='TEST1234'].index, inplace=True) # fmt: off
         return df_data.to_dict(orient='records')
 
     @classmethod
@@ -106,8 +116,8 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": f"{day}", "data": cls.pre_proccess(
-        ), "stats": cls.ac_count(), "inter": cls.inter_ac()}
+        doc = {"_id": f"{day}", "data": cls.pre_proccess(),
+               "stats": cls.ac_count(), "inter": cls.inter_ac()}
         collection.insert_one(doc)
         print(f"Data inserted into MongoDB {current_time} ")
 
@@ -143,3 +153,12 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:55':
             Main.mdb_insert()
         time.sleep(1)
+
+def get_weekly_data(day_amount: int):
+    """Returns a list of dates"""
+    data = []
+
+    for i in range(day_amount):
+        date = day_obj() - datetime.timedelta(days=i)
+        data.append(date.strftime("%Y-%m-%d"))
+    return data
