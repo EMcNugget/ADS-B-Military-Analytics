@@ -2,6 +2,7 @@
 
 [![Deploy to Firebase Hosting](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/firebase-hosting-merge.yml)
 [![CodeQL](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/codeql.yml/badge.svg)](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/codeql.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5caa91f758e54d11b3034743d903a1b8)](https://www.codacy.com/gh/EMcNugget/ADS-B-Military-Analytics/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EMcNugget/ADS-B-Military-Analytics&amp;utm_campaign=Badge_Grade)
 
 ## What is this?
 
@@ -13,7 +14,8 @@ This allows you to view military aircraft from an ever growing database. Find ou
 
 1. Get an API key from ADSB Exchange (<https://www.adsbexchange.com/data/>)
 
-2. Set your environment variables with said key and host with the following names: ```API_KEY``` and ```API_HOST``` respectively.
+2. Set your environment variables with said key and host with the following names: ```API_KEY``` and ```API_HOST```
+respectively. Keep in mind that for the backend a MongoDB instance is needed, you can follow the naming conventions for it in server/vm.py. You maybe will also have to change the url in client/src/components/api.fetch.tsx to the url that your Flask instance is running on.
 
 3. Run the following command in the root directory of the project: ```build.sh``` (This generates the dependencies for the client and server)
 
