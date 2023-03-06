@@ -3,8 +3,9 @@
 import os
 import datetime
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import pandas as pd
+from threading import Thread
 import requests
 from flask import jsonify
 from dotenv import load_dotenv
@@ -27,13 +28,7 @@ def current_time():
 
 
 def day():
-    """Returns date in UTC"""
-
-    return datetime.date.today().strftime("%Y-%m-%d")
-
-
-def day_obj():
-    """Returns date in UTC as a datetime object"""
+    """Returns date as a datetime object"""
 
     return datetime.date.today()
 
@@ -79,16 +74,19 @@ def get_data():
 class Analysis:
     """Analysis of data"""
 
-    data = []
-    final_data = []
+    data: list = field(default_factory=list)
+    final_data: list = field(default_factory=list)
+    dist_data: dict = field(default_factory=dict)
 
-    @classmethod
-    def get_stats(cls, day_amount: int):
+    @staticmethod
+    def get_stats(day_amount: int):
         """Returns a list of stats for the specified amount of days"""
+        cls = Analysis()
+        data = cls.data
 
         for i in range(day_amount):
-            date = day_obj() - datetime.timedelta(days=i)
-            cls.data.append(date.strftime("%Y-%m-%d"))
+            date = day() - datetime.timedelta(days=i)
+            data.append(date.strftime("%Y-%m-%d"))
 
         for date in cls.data:
             analysis = collection.find_one({"_id": date})
@@ -98,37 +96,36 @@ class Analysis:
                 for item in analysis["stats"]:
                     cls.final_data.append(item)
 
-        analysis_df = pd.DataFrame(cls.final_data).set_index('type')
-        analysis_df.dropna(inplace=True)
-        result_df = analysis_df.groupby('type')['value'].sum()
-        result_df.sort_values(ascending=False, inplace=True)
-        return result_df.to_dict()
+        return cls.final_data
 
-    @classmethod
-    def distribution(cls):
-        """Distribution of aircraft types across specified days"""
+    @staticmethod
+    def get_dist_data():
+        """Parses, formats, and returns the distribution data"""
 
-        dist_data = {}
+        cls = Analysis()
+        data = cls.data
+        final_data = cls.final_data
+        dist_data = cls.dist_data
 
-        for index, date in enumerate(cls.data):
-            dist_data.update({date: cls.final_data[index]})
+        index = 0
+        for date in data:
+            dist_data.update({date: final_data[index]})
+            index += 1
 
-        dist_df = pd.DataFrame(dist_data).set_index('type')
-        dist_df.dropna(inplace=True)
+        multi_index = [(date, row['type'])
+                       for date, rows in dist_data.items() for row in rows]  # no touch, works and i don't wanna debug it again
+        df = pd.DataFrame([row['value'] for rows in dist_data.values()
+                          for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
+        df = df.unstack(level=0)
+        df.columns = df.columns.get_level_values(1)
+        return df
 
-        # TODO: Finish, ATM it assigns a date to each dataframe
-        # use data to find the difference between the two dates
+    @staticmethod
+    def distribution():
+        """Calcuates distribution from get_dist_data"""
 
-        # PSUEDO CODE
-
-        # The main columns should be the date and in those are 2 sub
-        # columns, one for the total number of aircraft and the other
-        # for the number of aircraft of that type. Then the difference
-        # between the two can be calculated and the percentage can be
-        # calculated from that. Then the useful data will be sent to MongoDB.
-        # Said useful data will include the most flown aircraft type, total
-        # number of aircraft, and the percentage of aircraft for each type.
-        # Method of finding the rarest aircraft is TBD.
+        for index, row in Analysis.get_dist_data().iterrows():
+            Analysis.dist_data.update({index: row.to_dict()})
 
 
 @dataclass
@@ -137,7 +134,7 @@ class Main:
 
     main_data = {}
     post_data = {}
-    date: str = day()
+    date: str = day().strftime("%Y-%m-%d")
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
                          'B742\nBoeing E-4B', 'H64', 'F15',
@@ -176,12 +173,12 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": f"{day()}", "data": cls.pre_proccess(),
+        doc = {"_id": f"{day().strftime('%Y-%m-%d')}", "data": cls.pre_proccess(),
                "stats": cls.ac_count(), "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
-            doc.update({"analytics": Analysis.get_stats(day_amount=7)})
+            doc.update({"analytics": Analysis.get_stats(day_amount=7)}) # Update this function for when analysis is added
         elif datetime.datetime.today().date() == 1:
-            doc.update({"analytics": Analysis.get_stats(day_amount=30)})
+            doc.update({"analytics": Analysis.get_stats(day_amount=30)}) # look above
         collection.insert_one(doc)
         print(f"Data inserted into MongoDB {current_time()} ")
 
@@ -217,3 +214,12 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:55':
             Main.mdb_insert()
         time.sleep(1)
+
+def api_func():
+    """Main function for the project."""
+
+    Thread(target=Main().auto_req).start()
+    Thread(target=rollover).start()
+
+if __name__ == '__main__':
+    api_func()

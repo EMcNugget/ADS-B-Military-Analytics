@@ -1,4 +1,5 @@
 import "../css/privacy.css";
+import Footer from "./footer";
 
 const returnonclick = () => {
   history.back();
@@ -82,9 +83,15 @@ function Privacy() {
         </p>
         <p>&nbsp;</p>
         <p>ADS-B Military Analytics</p>
-        <p>
-          Email Address: <a href="support@adsbmilanalytics.com"></a>
-        </p>
+        <p>Email Address:</p>
+        <a
+          className="link"
+          href="mailto: support@adsbmilanalytics.com"
+          target="_blank"
+          rel="noreferrer"
+        >
+          support@adsbmilanalytics.com
+        </a>
         <p>Effective as of March 02, 2023</p>
       </div>
       <div className="privacy_container">
@@ -95,6 +102,9 @@ function Privacy() {
           onClick={returnonclick}
         />
       </div>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+      <Footer />
     </div>
   );
 }

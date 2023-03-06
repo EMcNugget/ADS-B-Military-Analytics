@@ -12,7 +12,7 @@ This allows you to view military aircraft from an ever growing database. Find ou
 
 ## How To Run
 
-1. Get an API key from ADSB Exchange (https://www.adsbexchange.com/data)
+1. Get an API key from ADSB Exchange (<https://www.adsbexchange.com/data>)
 
 2. Set your environment variables with said key and host with the following names: ```API_KEY``` and ```API_HOST```
    respectively. Keep in mind that for the backend a MongoDB instance is needed, you can follow the naming conventions for it in server/vm.py. You maybe will also have to change the url in client/src/components/api.fetch.tsx to the url that your Flask instance is running on.
@@ -59,5 +59,5 @@ Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on th
 [MDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
 [GC]: https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white
 [Vite]: https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
-[FB]: https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase<sup></sup>
+[FB]: https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase
 [rm]: https://github.com/users/EMcNugget/projects/6
