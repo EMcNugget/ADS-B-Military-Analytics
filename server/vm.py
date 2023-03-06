@@ -64,11 +64,71 @@ def get_data():
         "GET", url, headers=headers, timeout=3)  # type: ignore
     data = response.json()
     if len(data) == 0:
-        print(f"No data collected {current_time}")
+        print(f"No data collected {current_time()}")
         return get_data()
     else:
-        print(f"Data collected {current_time}")
+        print(f"Data collected {current_time()}")
+    try:
+        data['ac']
+    except KeyError:
+        print(f"Error getting data {current_time()}")
     return data
+
+
+@dataclass
+class Analysis:
+    """Analysis of data"""
+
+    data = []
+    final_data = []
+
+    @classmethod
+    def get_stats(cls, day_amount: int):
+        """Returns a list of stats for the specified amount of days"""
+
+        for i in range(day_amount):
+            date = day_obj() - datetime.timedelta(days=i)
+            cls.data.append(date.strftime("%Y-%m-%d"))
+
+        for date in cls.data:
+            analysis = collection.find_one({"_id": date})
+            if analysis is None:
+                pass
+            else:
+                for item in analysis["stats"]:
+                    cls.final_data.append(item)
+
+        analysis_df = pd.DataFrame(cls.final_data).set_index('type')
+        analysis_df.dropna(inplace=True)
+        result_df = analysis_df.groupby('type')['value'].sum()
+        result_df.sort_values(ascending=False, inplace=True)
+        return result_df.to_dict()
+
+    @classmethod
+    def distribution(cls):
+        """Distribution of aircraft types across specified days"""
+
+        dist_data = {}
+
+        for index, date in enumerate(cls.data):
+            dist_data.update({date: cls.final_data[index]})
+
+        dist_df = pd.DataFrame(dist_data).set_index('type')
+        dist_df.dropna(inplace=True)
+
+        # TODO: Finish, ATM it assigns a date to each dataframe
+        # use data to find the difference between the two dates
+
+        # PSUEDO CODE
+
+        # The main columns should be the date and in those are 2 sub
+        # columns, one for the total number of aircraft and the other
+        # for the number of aircraft of that type. Then the difference
+        # between the two can be calculated and the percentage can be
+        # calculated from that. Then the useful data will be sent to MongoDB.
+        # Said useful data will include the most flown aircraft type, total
+        # number of aircraft, and the percentage of aircraft for each type.
+        # Method of finding the rarest aircraft is TBD.
 
 
 @dataclass
@@ -116,10 +176,14 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": f"{day}", "data": cls.pre_proccess(),
+        doc = {"_id": f"{day()}", "data": cls.pre_proccess(),
                "stats": cls.ac_count(), "inter": cls.inter_ac()}
+        if datetime.datetime.today().strftime('%A') == 'Sunday':
+            doc.update({"analytics": Analysis.get_stats(day_amount=7)})
+        elif datetime.datetime.today().date() == 1:
+            doc.update({"analytics": Analysis.get_stats(day_amount=30)})
         collection.insert_one(doc)
-        print(f"Data inserted into MongoDB {current_time} ")
+        print(f"Data inserted into MongoDB {current_time()} ")
 
     @classmethod
     def ac_count(cls):
@@ -153,12 +217,3 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:55':
             Main.mdb_insert()
         time.sleep(1)
-
-def get_weekly_data(day_amount: int):
-    """Returns a list of dates"""
-    data = []
-
-    for i in range(day_amount):
-        date = day_obj() - datetime.timedelta(days=i)
-        data.append(date.strftime("%Y-%m-%d"))
-    return data

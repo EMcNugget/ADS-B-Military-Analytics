@@ -4,6 +4,7 @@ import vm # pylint: disable=import-error
 
 def api_func():
     """Main function for the project."""
+
     Thread(target=vm.Main.auto_req).start()
     Thread(target=vm.rollover).start()
 
