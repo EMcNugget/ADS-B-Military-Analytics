@@ -82,9 +82,8 @@ function Privacy() {
         </p>
         <p>&nbsp;</p>
         <p>ADS-B Military Analytics</p>
-        <p>Email Address:</p>
         <p>
-          <a href="support@adsbmilanalytics.com"></a>
+          Email Address: <a href="support@adsbmilanalytics.com"></a>
         </p>
         <p>Effective as of March 02, 2023</p>
       </div>

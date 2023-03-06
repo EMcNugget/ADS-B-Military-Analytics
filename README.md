@@ -8,22 +8,23 @@
 
 This allows you to view military aircraft from an ever growing database. Find out how many aircraft flew on a specific day, what type, among other features that are coming soon!
 
-![Screenshot](/assets/demo.png)
+![Screenshot](./assets/demo.png)
 
 ## How To Run
 
-1. Get an API key from ADSB Exchange (<https://www.adsbexchange.com/data/>)
+1. Get an API key from ADSB Exchange (<[adsbx]>)
 
 2. Set your environment variables with said key and host with the following names: ```API_KEY``` and ```API_HOST```
-respectively. Keep in mind that for the backend a MongoDB instance is needed, you can follow the naming conventions for it in server/vm.py. You maybe will also have to change the url in client/src/components/api.fetch.tsx to the url that your Flask instance is running on.
+   respectively. Keep in mind that for the backend a MongoDB instance is needed, you can follow the naming conventions for it in server/vm.py. You maybe will also have to change the url in client/src/components/api.fetch.tsx to the url that your Flask instance is running on.
 
-3. Run the following command in the root directory of the project: ```build.sh``` (This generates the dependencies for the client and server)
+3. Run the following command in the root directory of the project:
 
-4. Then ```cd client``` and run ```npm run dev```
-
-5. Then ```cd ../server``` and run ```python3 main.py```
-
-6. Go to ```localhost:5173``` in your browser
+```bash
+chmod +x ./build.sh && ./build.sh
+cd client && npm run dev
+cd ../client && python3 app.py
+cd ../server && python3 main.py
+```
 
 ## Notes
 
@@ -31,17 +32,33 @@ This project is currently in active development and is deployed at <https://adsb
 
 ## Tech Stack
 
-| Backend | Frontend |
-| ------- | -------- |
-| ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white) | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) |
-| ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) | ![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=white) |
-| ![Google Cloud](https://img.shields.io/badge/-Google%20Cloud-4285F4?style=flat&logo=google-cloud&logoColor=white) | ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white) |
-| | ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)
+| Backend             | Frontend          |
+|:-------------------:|:-----------------:|
+| ![Flask][Flask]     | ![TypeScript][TS] |
+| ![Python][PY]       | ![React][React]   |
+| ![MongoDB][MDB]     | ![Vite][Vite]     |
+| ![Google Cloud][GC] | ![Firebase][FB]   |
+
+## Architecture
+
+![Architecture](./assets/architecture.svg)
 
 ## Current Tasks
 
-See the project board for the current tasks. <https://github.com/users/EMcNugget/projects/6>
+See the project board for the current tasks.
+[Roadmap and Tasks][rm]
 
 ## Questions, Comments, Concerns?
 
 Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on the GitHub repo.
+
+[TS]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
+[Flask]: https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white
+[PY]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[React]: https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB
+[MDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
+[GC]: https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white
+[Vite]: https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
+[FB]: https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase<sup></sup>
+[adsbx]: ttps://www.adsbexchange.com/data
+[rm]: https://github.com/users/EMcNugget/projects/6
