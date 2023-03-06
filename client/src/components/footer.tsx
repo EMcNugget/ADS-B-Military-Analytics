@@ -6,7 +6,7 @@ function Footer() {
     <div className="body">
       <footer className="footer">
         <a
-          href="https://github.com/EMcNugget/ADSB-Military-Analytics"
+          href="https://github.com/EMcNugget/ADS-B-Military-Analytics"
           target="_blank"
           rel="noopener noreferrer"
         >
