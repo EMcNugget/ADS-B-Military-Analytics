@@ -32,24 +32,39 @@ const ac_count = createColumnHelper<AircraftCount>();
 const createInterColumn = (
   id: string,
   header: string,
-  accessor: keyof InterestingAircraft
+  accessor: keyof InterestingAircraft,
+  onClick: (row: Row<InterestingAircraft>) => void
 ) => {
   return inter.display({
     id,
     header,
     cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-      <span>{row.original[accessor]}</span>
+      <span onClick={() => onClick(row)}>{row.original[accessor]}</span>
     ),
   });
 };
 
+const hexHandler = (hex: any) => {
+  window.open(`https://globe.adsbexchange.com/?icao=${hex}`, "_blank");
+};
+
 const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
   return [
-    createInterColumn("hex", "Hex", "hex"),
-    createInterColumn("flight", "Callsign", "flight"),
-    createInterColumn("r", "Reg", "r"),
-    createInterColumn("t", "Aircraft Type", "t"),
-    createInterColumn("squawk", "Squawk", "squawk"),
+    createInterColumn("hex", "Hex", "hex", (row) => {
+      hexHandler(row.original.hex);
+    }),
+    createInterColumn("flight", "Callsign", "flight", () => {
+      null;
+    }),
+    createInterColumn("r", "Reg", "r", () => {
+      null;
+    }),
+    createInterColumn("t", "Aircraft Type", "t", () => {
+      null;
+    }),
+    createInterColumn("squawk", "Squawk", "squawk", () => {
+      null;
+    }),
   ];
 };
 
@@ -108,7 +123,9 @@ function Api() {
     } catch (error: any) {
       alert(error.request.response);
       if (error.request.response === "") {
-        alert("There was an error fetching data. Please try again later. If the problem persists, please contact support@adsbmilanalytics.com");
+        alert(
+          "There was an error fetching data. Please try again later. If the problem persists, please contact support@adsbmilanalytics.com"
+        );
       }
     }
   };
