@@ -4,9 +4,9 @@ import os
 import datetime
 import time
 from dataclasses import dataclass, field
-import pandas as pd
 from threading import Thread
 import requests
+import pandas as pd
 from flask import jsonify
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -98,11 +98,11 @@ class Analysis:
 
         multi_index = [(date, row['type'])
                        for date, rows in dist_data.items() for row in rows]
-        df = pd.DataFrame([row['value'] for rows in dist_data.values()
-                           for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
-        df = df.unstack(level=0)
-        df.columns = df.columns.get_level_values(1)
-        return df
+        analysis_df = pd.DataFrame([row['value'] for rows in dist_data.values()
+                                    for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
+        analysis_df = analysis_df.unstack(level=0)
+        analysis_df.columns = analysis_df.columns.get_level_values(1)
+        return analysis_df
 
 
 @dataclass
@@ -116,7 +116,7 @@ class Main:
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
                          'B742\nBoeing E-4B', 'H64', 'F15',
                          'AV8B', 'RC135'])
-    df = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
+    schema = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
 
     @classmethod
     def pre_proccess(cls):
@@ -124,13 +124,13 @@ class Main:
 
         for item in cls.main_data['ac']:
             hex_val = item['hex']
-            if hex_val not in cls.df['hex']:
-                cls.df['hex'].append(hex_val)
-                cls.df['flight'].append(item.get('flight', 'None').strip())
-                cls.df['t'].append(item.get('t', 'None'))
-                cls.df['r'].append(item.get('r', 'None'))
-                cls.df['squawk'].append(item.get('squawk', 'None'))
-        df_data = pd.DataFrame(cls.df)
+            if hex_val not in cls.schema['hex']:
+                cls.schema['hex'].append(hex_val)
+                cls.schema['flight'].append(item.get('flight', 'None').strip())
+                cls.schema['t'].append(item.get('t', 'None'))
+                cls.schema['r'].append(item.get('r', 'None'))
+                cls.schema['squawk'].append(item.get('squawk', 'None'))
+        df_data = pd.DataFrame(cls.schema)
         df_data.drop(df_data[df_data['r'] == 'TWR'].index, inplace=True)
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
         df_data.drop(df_data[df_data['flight'] =='TEST1234'].index, inplace=True) # fmt: off
@@ -153,9 +153,9 @@ class Main:
         doc = {"_id": f"{day().strftime('%Y-%m-%d')}", "data": cls.pre_proccess(),
                "stats": cls.ac_count(), "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
-            doc.update({"analytics": Analysis.get_stats(day_amount=7)}) # Update this function for when analysis is added
-        elif datetime.datetime.today().date() == 1:
-            doc.update({"analytics": Analysis.get_stats(day_amount=30)}) # look above
+            doc.update({"eow": Analysis.get_stats(day_amount=7)})
+        if datetime.datetime.today().date() == 1:
+            doc.update({"eom": Analysis.get_stats(day_amount=30)})
         collection.insert_one(doc)
         print(f"Data inserted into MongoDB {current_time()} ")
 
