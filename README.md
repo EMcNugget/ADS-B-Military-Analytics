@@ -34,8 +34,8 @@ This project is currently in active development and is deployed at <https://adsb
 
 | Backend             | Frontend          |
 |:-------------------:|:-----------------:|
-| ![Flask][Flask]     | ![TypeScript][TS] |
-| ![Python][PY]       | ![React][React]   |
+| ![Python][PY]       | ![TypeScript][TS] |
+| ![Flask][Flask]     | ![React][React]   |
 | ![MongoDB][MDB]     | ![Vite][Vite]     |
 | ![Google Cloud][GC] | ![Firebase][FB]   |
 

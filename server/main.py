@@ -102,6 +102,8 @@ class Analysis:
                                     for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
         analysis_df = analysis_df.unstack(level=0)
         analysis_df.columns = analysis_df.columns.get_level_values(1)
+        analysis_df.sort_values(
+            by=analysis_df.columns[-1], axis=1, ascending=False, inplace=True)  # type: ignore
         return analysis_df
 
 
@@ -150,7 +152,7 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": f"{day().strftime('%Y-%m-%d')}", "data": cls.pre_proccess(),
+        doc = {"_id": datetime.date.today(), "data": cls.pre_proccess(),
                "stats": cls.ac_count(), "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
             doc.update({"eow": Analysis.get_stats(day_amount=7)})
