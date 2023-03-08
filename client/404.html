@@ -7,6 +7,59 @@
     <link rel="icon" href="../../../favicon.ico" />
     <title>Error 404: Page Not Found</title>
   </head>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      color: #666;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: bold;
+      color: #333;
+      margin: 0 0 20px 0;
+    }
+
+    p {
+      margin: 0 0 20px 0;
+      line-height: 1.5;
+    }
+
+    .link {
+      color: #000000;
+      transition: color 0.3s ease;
+    }
+
+    button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+  </style>
   <body>
     <div class="container">
       <h1>Error 404: Page Not Found</h1>
@@ -17,8 +70,12 @@
       <p>
         Please check the URL for any typos or errors, and try again. If you
         continue to have trouble, please visit our
-        <a href="https://github.com/EMcNugget/ADSB-Military-Analytics">GitHub page</a> for
-        more information.
+        <a
+          class="link"
+          href="https://github.com/EMcNugget/ADSB-Military-Analytics"
+          >GitHub page</a
+        >
+        for more information.
       </p>
       <button onclick="window.location.href='/'">Go back to Home</button>
     </div>
