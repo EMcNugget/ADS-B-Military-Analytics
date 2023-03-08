@@ -31,38 +31,50 @@ const ac_count = createColumnHelper<AircraftCount>();
 
 const createInterColumn = (
   id: string,
-  header: string,
+  header: any,
   accessor: keyof InterestingAircraft,
+  cursor: string,
   onClick: (row: Row<InterestingAircraft>) => void
 ) => {
   return inter.display({
     id,
     header,
     cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-      <span onClick={() => onClick(row)}>{row.original[accessor]}</span>
+      <span style={{cursor: cursor}} onClick={() => onClick(row)}>{row.original[accessor]}</span>
     ),
   });
 };
 
-const hexHandler = (hex: any) => {
+const hexHandler = (hex: string) => {
   window.open(`https://globe.adsbexchange.com/?icao=${hex}`, "_blank");
 };
 
 const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
   return [
-    createInterColumn("hex", "Hex", "hex", (row) => {
-      hexHandler(row.original.hex);
-    }),
-    createInterColumn("flight", "Callsign", "flight", () => {
+    createInterColumn(
+      "hex",
+      <div className="tooltip">
+        Hex
+        <span className="tooltiptext">
+          Click on a hex to view the aircraft on ADS-B Exchange.
+        </span>
+      </div>,
+      "hex",
+      "pointer",
+      (row) => {
+        hexHandler(row.original.hex);
+      }
+    ),
+    createInterColumn("flight", "Flight", "flight", "text", () => {
       null;
     }),
-    createInterColumn("r", "Reg", "r", () => {
+    createInterColumn("r", "Reg", "r", "text", () => {
       null;
     }),
-    createInterColumn("t", "Aircraft Type", "t", () => {
+    createInterColumn("t", "Aircraft Type", "t", "text",() => {
       null;
     }),
-    createInterColumn("squawk", "Squawk", "squawk", () => {
+    createInterColumn("squawk", "Squawk", "squawk", "text", () => {
       null;
     }),
   ];
