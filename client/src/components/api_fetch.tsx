@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Footer from "./footer";
+import { FaRegQuestionCircle } from "react-icons/fa";
 import {
   useReactTable,
   createColumnHelper,
@@ -40,7 +41,9 @@ const createInterColumn = (
     id,
     header,
     cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-      <span style={{cursor: cursor}} onClick={() => onClick(row)}>{row.original[accessor]}</span>
+      <span style={{ cursor: cursor }} onClick={() => onClick(row)}>
+        {row.original[accessor]}
+      </span>
     ),
   });
 };
@@ -54,7 +57,7 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
     createInterColumn(
       "hex",
       <div className="tooltip">
-        Hex
+        Hex <FaRegQuestionCircle />
         <span className="tooltiptext">
           Click on a hex to view the aircraft on ADS-B Exchange.
         </span>
@@ -71,7 +74,7 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
     createInterColumn("r", "Reg", "r", "text", () => {
       null;
     }),
-    createInterColumn("t", "Aircraft Type", "t", "text",() => {
+    createInterColumn("t", "Aircraft Type", "t", "text", () => {
       null;
     }),
     createInterColumn("squawk", "Squawk", "squawk", "text", () => {

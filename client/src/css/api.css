@@ -80,23 +80,25 @@
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 160px;
+  width: 135px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px;
+  padding: 5px 0;
   position: absolute;
   z-index: 1;
   bottom: 125%;
-  left: 50%;
-  margin-left: -80px;
+  left: 38%;
+  margin-left: -60px;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .tooltip:hover .tooltiptext {
   visibility: visible;
+  font-size: 0.8rem;
+  font-weight: 100;
   opacity: 0.95;
 }
 
