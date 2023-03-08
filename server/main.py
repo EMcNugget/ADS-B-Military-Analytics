@@ -82,6 +82,7 @@ class Analysis:
     def get_stats(day_amount: int):
         """Returns a list of stats for the specified amount of days"""
         cls = Analysis()
+        dist_data = cls.dist_data
         data = cls.data
 
         for i in range(day_amount):
@@ -93,39 +94,15 @@ class Analysis:
             if analysis is None:
                 pass
             else:
-                for item in analysis["stats"]:
-                    cls.final_data.append(item)
-
-        return cls.final_data
-
-    @staticmethod
-    def get_dist_data():
-        """Parses, formats, and returns the distribution data"""
-
-        cls = Analysis()
-        data = cls.data
-        final_data = cls.final_data
-        dist_data = cls.dist_data
-
-        index = 0
-        for date in data:
-            dist_data.update({date: final_data[index]})
-            index += 1
+                dist_data.update({analysis['_id']: analysis['stats']})
 
         multi_index = [(date, row['type'])
-                       for date, rows in dist_data.items() for row in rows]  # no touch, works and i don't wanna debug it again
+                       for date, rows in dist_data.items() for row in rows]
         df = pd.DataFrame([row['value'] for rows in dist_data.values()
-                          for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
+                           for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
         df = df.unstack(level=0)
         df.columns = df.columns.get_level_values(1)
         return df
-
-    @staticmethod
-    def distribution():
-        """Calcuates distribution from get_dist_data"""
-
-        for index, row in Analysis.get_dist_data().iterrows():
-            Analysis.dist_data.update({index: row.to_dict()})
 
 
 @dataclass
