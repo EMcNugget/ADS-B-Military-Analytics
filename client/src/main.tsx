@@ -16,7 +16,12 @@ function Home() {
         <div className="landing__container">
           <div className="landing_title">
             <h1>ADS-B Military Analytics</h1>
-            <h6>No data before February 28th, 2023</h6>
+            <h6>
+              ADS-B Military Analytics is a tool to view historical data for
+              military aircraft from our extensive database collected 24/7 made
+              possible by ADS-B Exchange.
+            </h6>
+            <h2>No data before February 28th, 2023</h2>
           </div>
           <div className="button-container">
             <Link to="/history">
