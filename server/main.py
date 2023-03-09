@@ -1,17 +1,22 @@
 """Main function contains functionality for the API and the UI, as well as the MongoDB queries and data processing"""
 
 import os
+import sys
 import datetime
 import time
+import logging
 from dataclasses import dataclass, field
 from threading import Thread
 import requests
 import pandas as pd
 from flask import jsonify
 from dotenv import load_dotenv
+from google.cloud import logging as gcloud_logging
 from pymongo import MongoClient
 
 load_dotenv()
+client = gcloud_logging.Client()
+client.setup_logging()
 
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
@@ -19,6 +24,9 @@ MDB_URL = os.getenv("MDB_URL")
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def current_time():
@@ -38,12 +46,11 @@ def delay_time():
 
     if datetime.time(4, 0) <= current_time() <= datetime.time(19, 0):
         return 350
-    elif datetime.time(19, 0) < current_time() <= datetime.time(23, 59):
+    if datetime.time(19, 0) < current_time() <= datetime.time(23, 59):
         return 750
-    elif datetime.time(0, 1) < current_time() <= datetime.time(3, 59):
+    if datetime.time(0, 1) < current_time() <= datetime.time(3, 59):
         return 450
-    else:
-        return 550
+    return 550
 
 
 def get_data():
@@ -59,14 +66,13 @@ def get_data():
         "GET", url, headers=headers, timeout=3)  # type: ignore
     data = response.json()
     if len(data) == 0:
-        print(f"No data collected {current_time()}")
+        logging.error("No data collected %s", current_time())
         return get_data()
-    else:
-        print(f"Data collected {current_time()}")
+    logging.info("Data collected %s", current_time())
     try:
         data['ac']
     except KeyError:
-        print(f"Error getting data {current_time()}")
+        logging.error("Error getting data %s", current_time())
     return data
 
 
@@ -152,15 +158,19 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": datetime.date.today().strftime("%Y-%m-%d"), 
+        doc = {"_id": datetime.date.today().strftime("%Y-%m-%d"),
                "data": cls.pre_proccess(),"stats": cls.ac_count(), 
                "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
             doc.update({"eow": Analysis.get_stats(day_amount=7)})
+        else:
+            pass
         if datetime.datetime.today().date() == 1:
             doc.update({"eom": Analysis.get_stats(day_amount=30)})
+        else:
+            pass
         collection.insert_one(doc)
-        print(f"Data inserted into MongoDB {current_time()} ")
+        logging.info("Data inserted into MongoDB %s", current_time())
 
     @classmethod
     def ac_count(cls):
@@ -183,15 +193,14 @@ class Main:
             cls.ac_type)].to_dict(orient='records')
         if inter_data == []:
             return jsonify({"message": "No interesting aircraft found"})
-        else:
-            return inter_data
+        return inter_data
 
 
 def rollover():
     """Checks the time every second and runs the mdb_insert function at 11:59:55pm"""
 
     while True:
-        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:55':
+        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
         time.sleep(1)
 
@@ -202,4 +211,8 @@ def api_func():
     Thread(target=rollover).start()
 
 if __name__ == '__main__':
-    api_func()
+    try:
+        api_func()
+    except KeyboardInterrupt as error:
+        print(error)
+        sys.exit(0)
