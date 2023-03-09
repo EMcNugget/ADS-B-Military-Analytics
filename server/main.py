@@ -152,8 +152,9 @@ class Main:
     def mdb_insert(cls):
         """Inserts data into MongoDB"""
 
-        doc = {"_id": datetime.date.today(), "data": cls.pre_proccess(),
-               "stats": cls.ac_count(), "inter": cls.inter_ac()}
+        doc = {"_id": datetime.date.today().strftime("%Y-%m-%d"), 
+               "data": cls.pre_proccess(),"stats": cls.ac_count(), 
+               "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
             doc.update({"eow": Analysis.get_stats(day_amount=7)})
         if datetime.datetime.today().date() == 1:
