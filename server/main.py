@@ -15,8 +15,6 @@ from google.cloud import logging as gcloud_logging
 from pymongo import MongoClient
 
 load_dotenv()
-client = gcloud_logging.Client()
-client.setup_logging()
 
 API_KEY = os.getenv("API_KEY")
 API_HOST = os.getenv("API_HOST")
@@ -25,8 +23,12 @@ cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
 
+client = gcloud_logging.Client()
+client.setup_logging()
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 
 def current_time():
@@ -63,7 +65,7 @@ def get_data():
         "X-RapidAPI-Host": API_HOST
     }
     response = requests.request(
-        "GET", url, headers=headers, timeout=3)  # type: ignore
+        "GET", url, headers=headers, timeout=5)  # type: ignore
     data = response.json()
     if len(data) == 0:
         logging.error("No data collected %s", current_time())
