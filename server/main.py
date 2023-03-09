@@ -142,7 +142,9 @@ class Main:
         df_data.drop(df_data[df_data['r'] == 'TWR'].index, inplace=True)
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
         df_data.drop(df_data[df_data['flight'] =='TEST1234'].index, inplace=True) # fmt: off
-        return df_data.to_dict(orient='records')
+        final_data = df_data.to_dict('records')
+        logging.debug("Data pre-proccessing complete %s", current_time())
+        return final_data
 
     @classmethod
     def auto_req(cls):
@@ -163,14 +165,15 @@ class Main:
                "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
             doc.update({"eow": Analysis.get_stats(day_amount=7)})
+            logging.debug("Weekly analysis complete %s", current_time())
         else:
             pass
         if datetime.datetime.today().date() == 1:
             doc.update({"eom": Analysis.get_stats(day_amount=30)})
+            logging.debug("Monthly analysis complete %s", current_time())
         else:
             pass
         collection.insert_one(doc)
-        logging.info("Data inserted into MongoDB %s", current_time())
 
     @classmethod
     def ac_count(cls):
@@ -202,6 +205,7 @@ def rollover():
     while True:
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
+            logging.info("Data inserted into MongoDB %s", current_time())
         time.sleep(1)
 
 def api_func():
@@ -213,6 +217,7 @@ def api_func():
 if __name__ == '__main__':
     try:
         api_func()
+        logging.info("Instance started %s", current_time())
     except KeyboardInterrupt as error:
         print(error)
         sys.exit(0)
