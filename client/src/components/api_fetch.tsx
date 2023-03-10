@@ -125,14 +125,13 @@ function Api() {
   const fetchData = async () => {
     try {
       const result = await axios.get(url);
-      if (result.status === 500 || result.status === 400) {
+      if (
+        result.status === 500 ||
+        result.status === 400 ||
+        result.status === 406
+      ) {
         alert(result.request.response);
         setOutput([]);
-      }
-      if (result.status === 406) {
-        alert(
-          `While your request for ${date} was valid that specific information is not available, try another date`
-        );
       }
       if (
         result.data === null ||
