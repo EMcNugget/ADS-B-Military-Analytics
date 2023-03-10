@@ -125,7 +125,11 @@ function Api() {
   const fetchData = async () => {
     try {
       const result = await axios.get(url);
-      if (result.status === 500 || result.status === 400) {
+      if (
+        result.status === 500 ||
+        result.status === 400 ||
+        result.status === 406
+      ) {
         alert(result.request.response);
         setOutput([]);
       }
