@@ -68,13 +68,11 @@ def get_data():
         "GET", url, headers=headers, timeout=5)  # type: ignore
     data = response.json()
     if len(data) == 0:
-        logging.error("No data collected %s", current_time())
+        logging.warning("No data collected %s", current_time())
         return get_data()
+    if response.status_code in [404, 400, 500]:
+        logging.error("Error collecting data %s", current_time())
     logging.info("Data collected %s", current_time())
-    try:
-        data['ac']
-    except KeyError:
-        logging.error("Error getting data %s", current_time())
     return data
 
 

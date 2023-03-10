@@ -129,6 +129,11 @@ function Api() {
         alert(result.request.response);
         setOutput([]);
       }
+      if (result.status === 406) {
+        alert(
+          `While your request for ${date} was valid that specific information is not available, try another date`
+        );
+      }
       if (
         result.data === null ||
         JSON.stringify(result.data) === '{"hex":"No aircraft found"}' // eslint-disable-line
