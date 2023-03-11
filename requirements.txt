@@ -1,4 +1,5 @@
 Flask==2.2.2
+Flask_Caching==2.0.2
 Flask_Cors==3.0.10
 MarkupSafe==2.1.2
 pandas==1.5.3
