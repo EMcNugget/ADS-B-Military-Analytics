@@ -9,6 +9,7 @@ import {
   Row,
   ColumnDef,
   getCoreRowModel,
+  getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
 import "../css/api.css";
@@ -131,6 +132,10 @@ function Api() {
         result.status === 406
       ) {
         alert(result.request.response);
+        setOutput([]);
+      }
+      if (result.status === 404) {
+        alert(`No data found for ${date}.`);
         setOutput([]);
       }
       if (

@@ -21,7 +21,7 @@ function Home() {
               military aircraft from our extensive database collected 24/7 made
               possible by ADS-B Exchange.
             </h6>
-            <h2>No data before February 28th, 2023</h2>
+            <h2>No data before March 9th, 2023</h2>
           </div>
           <div className="button-container">
             <Link to="/history">

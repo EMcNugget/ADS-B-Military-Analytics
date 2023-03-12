@@ -37,7 +37,7 @@ def get_mdb_data(date: str, specified_file: str):
     if date_val > datetime.date.today().isoformat():
         return Response(status=400, response='There is no data from the future.', mimetype='text/plain')
     if date_val < '2023-03-09':
-        return Response(status=400, response='There is no data from before 2023-02-27', mimetype='text/plain')
+        return Response(status=400, response='There is no data from before 2023-03-09', mimetype='text/plain')
     if results is None:
         return Response(status=404, response=f'Data for {date_val} not found in database')
     try:
