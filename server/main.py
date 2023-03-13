@@ -81,21 +81,24 @@ class Analysis:
     """Analysis of data"""
 
     data: list = field(default_factory=list)
-    final_data: list = field(default_factory=list)
+    final_data: dict = field(default_factory=dict)
     dist_data: dict = field(default_factory=dict)
+
+    # All type ignore are due to false positives from Pandas and don't affect functionality
 
     @staticmethod
     def get_stats(day_amount: int):
         """Returns a list of stats for the specified amount of days"""
-        cls = Analysis()
-        dist_data = cls.dist_data
-        data = cls.data
+        analysis_class = Analysis()
+        dist_data = analysis_class.dist_data
+        data = analysis_class.data
+        final_data = analysis_class.final_data
 
         for i in range(day_amount):
             date = day() - datetime.timedelta(days=i)
             data.append(date.strftime("%Y-%m-%d"))
 
-        for date in cls.data:
+        for date in data:
             analysis = collection.find_one({"_id": date})
             if analysis is None:
                 pass
@@ -108,17 +111,30 @@ class Analysis:
                                     for row in rows], index=pd.MultiIndex.from_tuples(multi_index))
         analysis_df = analysis_df.unstack(level=0)
         analysis_df.columns = analysis_df.columns.get_level_values(1)
+        analysis_df.fillna(0, inplace=True)
         analysis_df.sort_values(
-            by=analysis_df.columns[-1], axis=1, ascending=False, inplace=True)  # type: ignore
-        return analysis_df
+            by=analysis_df.columns[-1], axis=0, ascending=False, inplace=True)  # type: ignore
+        logging.info("Sorted data for %d at %s", day_amount, current_time())
+        max_data = analysis_df.sum(axis=1).sort_values(  # type: ignore
+            ascending=False)
+        final_data.update(
+            {"max": {"type": max_data.index[0], "value": int(max_data[0])}})
+        sum_dict = analysis_df.sum(axis=0).to_dict()
+        sum_dict_int = {key: int(value) for key, value in sum_dict.items()}
+        final_data.update({"sum": sum_dict_int})
+        mean_data = analysis_df.values.sum(axis=0)  # type: ignore
+        mean_data = sum(mean_data) / len(mean_data)
+        final_data.update({"mean": int(mean_data)})
+        logging.info("Calculated stats for %d at %s",
+                     day_amount, current_time())
+        return final_data
 
 
 @dataclass
 class Main:
     """Class for main, used to return data to the UI"""
 
-    main_data = {}
-    post_data = {}
+    main_data: dict = field(default_factory=dict)
     date: str = day().strftime("%Y-%m-%d")
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
@@ -129,8 +145,10 @@ class Main:
     @classmethod
     def pre_proccess(cls):
         """Removes duplicates and extraneous data"""
+        main = Main()
+        main_data = main.main_data
 
-        for item in cls.main_data['ac']:
+        for item in main_data['ac']:
             hex_val = item['hex']
             if hex_val not in cls.schema['hex']:
                 cls.schema['hex'].append(hex_val)
@@ -151,10 +169,29 @@ class Main:
         """Automatically requests data from the API and writes it to a JSON file
         at a specified interval as defined by the DELAY variable"""
 
+        main = Main()
+        main_data = main.main_data
+
         while True:
-            cls.main_data.update(get_data())
+            main_data.update(get_data())
             cls.pre_proccess()
             time.sleep(delay_time())
+
+    @staticmethod
+    def get_days_in_month():
+        """Returns the number of days in the current month"""
+
+        month=datetime.datetime.now()
+
+        if month.month in (1,3,5,7,8,10,12):
+            return 31
+        elif month.month in(4,6,9,11):
+            return 30
+        else:
+            if month.year%4==0:
+                return 29
+            return 28
+
 
     @classmethod
     def mdb_insert(cls):
@@ -164,12 +201,12 @@ class Main:
                "data": cls.pre_proccess(),"stats": cls.ac_count(), 
                "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
-            doc.update({"eow": Analysis.get_stats(day_amount=7)})
+            doc.update({"eow": Analysis.get_stats(7)})
             logging.debug("Weekly analysis complete %s", current_time())
         else:
             pass
         if datetime.datetime.today().date() == 1:
-            doc.update({"eom": Analysis.get_stats(day_amount=30)})
+            doc.update({"eom": Analysis.get_stats(cls.get_days_in_month())})
             logging.debug("Monthly analysis complete %s", current_time())
         else:
             pass

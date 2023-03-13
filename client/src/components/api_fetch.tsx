@@ -12,8 +12,8 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import "../css/api.css";
-import "../css/dropdown.css";
+import "../scss/api.scss";
+import "../scss/dropdown.scss";
 
 type InterestingAircraft = {
   hex: string;
@@ -146,6 +146,7 @@ function Api() {
         setOutput([]);
       } else {
         setOutput(result.data);
+        localStorage.setItem("output", JSON.stringify(result.data));
       }
     } catch (error: any) {
       alert(error.request.response);
@@ -167,9 +168,11 @@ function Api() {
         alert("Please wait 10 seconds before fetching again.");
       }
     } else {
-      setLastClickedTime(currentTime);
       setTableVar(specified_file === "stats" ? countColumns() : interColumns());
       fetchData();
+      setLastClickedTime(currentTime);
+      table.setPageIndex(0);
+      table.setPageSize(13);
     }
   };
 
@@ -177,6 +180,7 @@ function Api() {
     columns: tableVar,
     data: output,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -184,9 +188,10 @@ function Api() {
       <h1 className="title">ADS-B Military Analytics</h1>
       <div className="form">
         <input
-          className="input"
-          type="text"
-          placeholder="Enter a date...eg 2023-02-28"
+          className="input-date"
+          type="date"
+          min="2023-03-09"
+          max={new Date().toISOString().split("T")[0]}
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
@@ -197,7 +202,7 @@ function Api() {
           onChange={handleChange}
         >
           <option>Select an option...</option>
-          <option value="stats">Aircraft Count</option>
+          <option value="stats">Amount of Aircraft</option>
           <option value="inter">Interesting Aircraft</option>
         </select>
         <button className="button_data" onClick={handleClick}>
@@ -254,6 +259,30 @@ function Api() {
               ))}
             </tfoot>
           </table>
+          {output.length > 2 && (
+            <div className="pagination">
+              <button
+                className="page-button"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                Previous
+              </button>
+              <span>
+                <strong>
+                  {table.getState().pagination.pageIndex + 1} of{" "}
+                  {table.getPageCount()}
+                </strong>
+              </span>
+              <button
+                className="page-button"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
       <Footer />

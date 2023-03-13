@@ -4,8 +4,8 @@ import { useState } from "react";
 import Api from "./components/api_fetch";
 import Footer from "./components/footer";
 import Privacy from "./components/privacy";
-import "./css/landing.css";
-import "./css/footer.css";
+import "./scss/landing.scss";
+import "./scss/footer.scss";
 
 function Home() {
   const [show, setShow] = useState(false);

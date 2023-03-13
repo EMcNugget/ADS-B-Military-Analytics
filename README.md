@@ -38,6 +38,7 @@ This project is currently in active development and is deployed at <https://adsb
 | ![Flask][Flask]     | ![React][React]   |
 | ![MongoDB][MDB]     | ![Vite][Vite]     |
 | ![Google Cloud][GC] | ![Firebase][FB]   |
+|                     | ![SASS][SASS]     |
 
 ## Architecture
 
@@ -59,5 +60,6 @@ Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on th
 [MDB]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
 [GC]: https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white
 [Vite]: https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white
+[SASS]: https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white
 [FB]: https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase
 [rm]: https://github.com/users/EMcNugget/projects/6
