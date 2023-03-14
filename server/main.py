@@ -83,6 +83,7 @@ class Analysis:
     data: list = field(default_factory=list)
     final_data: dict = field(default_factory=dict)
     dist_data: dict = field(default_factory=dict)
+    new_data: dict = field(default_factory=dict)
 
     # All type ignore are due to false positives from Pandas and don't affect functionality
 
@@ -93,6 +94,7 @@ class Analysis:
         dist_data = analysis_class.dist_data
         data = analysis_class.data
         final_data = analysis_class.final_data
+        new_data = analysis_class.new_data
 
         for i in range(day_amount):
             date = day() - datetime.timedelta(days=i)
@@ -127,7 +129,15 @@ class Analysis:
         final_data.update({"mean": int(mean_data)})
         logging.info("Calculated stats for %d at %s",
                      day_amount, current_time())
-        return final_data
+        for key, value in final_data.items():
+            if key == "sum":
+                new_data[key] = [{"type": t, "value": v}
+                                 for t, v in value.items()]
+            else:
+                new_data[key] = {"type": None, "value": value} if isinstance(
+                    value, int) else value
+        logging.info("Formatted data for %d at %s", day_amount, current_time())
+        return new_data
 
 
 @dataclass

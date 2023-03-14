@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Footer from "./footer";
 import { FaRegQuestionCircle } from "react-icons/fa";
+import { getSunday, getMonth } from "../util/date";
 import {
   useReactTable,
   createColumnHelper,
@@ -105,6 +106,7 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
   ];
 };
 
+
 function Api() {
   const [date, setDate] = useState("");
   const [specified_file, setSpecifiedFile] = useState("");
@@ -116,6 +118,12 @@ function Api() {
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
+    if (event.target.value === "eow") {
+      setDate(getSunday(date));
+    }
+    if (event.target.value === "eom") {
+      setDate(getMonth(date));
+    }
     if (event.target.value !== "Select an option...") {
       setColor("white");
     } else {
@@ -204,6 +212,8 @@ function Api() {
           <option>Select an option...</option>
           <option value="stats">Amount of Aircraft</option>
           <option value="inter">Interesting Aircraft</option>
+          <option value="eow">Weekly Stats</option>
+          <option value="eom">Monthly Stats</option>
         </select>
         <button className="button_data" onClick={handleClick}>
           Fetch Data

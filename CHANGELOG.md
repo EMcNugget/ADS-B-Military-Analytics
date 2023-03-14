@@ -26,3 +26,15 @@
 #### Misc
 
 - Added stats.jsonc
+
+## V1.3.1.2
+
+**2023-03-13**
+
+#### Frontend
+
+-Finished support for EOW and EOM
+
+#### Backend
+
+-Updated formatting of EOM and EOW to allow for easier frontend intergration
