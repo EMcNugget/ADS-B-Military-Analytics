@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Footer from "./footer";
-import { FaRegQuestionCircle } from "react-icons/fa";
+import { FaRegQuestionCircle, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { getSunday, getMonth } from "../util/date";
 import {
   useReactTable,
@@ -14,7 +14,6 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import "../scss/api.scss";
-import "../scss/dropdown.scss";
 
 type InterestingAircraft = {
   hex: string;
@@ -70,7 +69,7 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
         hexHandler(row.original.hex);
       }
     ),
-    createInterColumn("flight", "Flight", "flight", "text", () => {
+    createInterColumn("flight", "Callsign", "flight", "text", () => {
       null;
     }),
     createInterColumn("r", "Reg", "r", "text", () => {
@@ -105,7 +104,6 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
     createCountColumn("value", "Aircraft Count", "value"),
   ];
 };
-
 
 function Api() {
   const [date, setDate] = useState("");
@@ -154,7 +152,6 @@ function Api() {
         setOutput([]);
       } else {
         setOutput(result.data);
-        localStorage.setItem("output", JSON.stringify(result.data));
       }
     } catch (error: any) {
       alert(error.request.response);
@@ -180,7 +177,7 @@ function Api() {
       fetchData();
       setLastClickedTime(currentTime);
       table.setPageIndex(0);
-      table.setPageSize(13);
+      table.setPageSize(12);
     }
   };
 
@@ -193,10 +190,10 @@ function Api() {
 
   return (
     <div className="container">
-      <h1 className="title">ADS-B Military Analytics</h1>
-      <div className="form">
+      <h1>ADS-B Military Analytics</h1>
+      <div className="input">
         <input
-          className="input-date"
+          className="inputdate"
           type="date"
           min="2023-03-09"
           max={new Date().toISOString().split("T")[0]}
@@ -205,7 +202,7 @@ function Api() {
         />
         <select
           style={{ color: color }}
-          className="dropdown"
+          className="inputdropdown"
           value={specified_file}
           onChange={handleChange}
         >
@@ -219,9 +216,9 @@ function Api() {
           Fetch Data
         </button>
       </div>
-      {output.length > 2 && (
-        <div className="output">
-          <table className="table" onChange={handleChange}>
+      <div className="output">
+        {output.length > 2 && (
+          <table className="outputtable" onChange={handleChange}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -238,7 +235,7 @@ function Api() {
                 </tr>
               ))}
             </thead>
-            <tbody className="td">
+            <tbody>
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -269,32 +266,34 @@ function Api() {
               ))}
             </tfoot>
           </table>
-          {output.length > 2 && (
-            <div className="pagination">
-              <button
-                className="page-button"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                Previous
-              </button>
-              <span>
-                <strong>
-                  {table.getState().pagination.pageIndex + 1} of{" "}
-                  {table.getPageCount()}
-                </strong>
-              </span>
-              <button
-                className="page-button"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
+      <div>
+        {output.length > 2 && (
+          <div className="page">
+            <button
+              className="pagebutton"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage}
+            >
+              <FaArrowLeft />
+            </button>
+            <span className="pagebutton">
+              <strong>
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </strong>
+            </span>
+            <button
+              className="pagebutton"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <FaArrowRight />
+            </button>
+          </div>
+        )}
+      </div>
       <Footer />
     </div>
   );

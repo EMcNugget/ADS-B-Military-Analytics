@@ -1,17 +1,5 @@
 @use "./main.scss" as *;
 
-.container {
-  display: flex;
-  background-color: #333;
-  color: #fff;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow: auto;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-}
-
 .cursor_hex {
   cursor: pointer;
 }
@@ -20,125 +8,124 @@
   cursor: text;
 }
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.form {
+.input {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 1rem;
-}
 
-.input {
-  @extend .input_class;
-  padding: 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: 15px;
-  width: 100%;
-  background-color: #444;
-  color: #fff;
-  transition: box-shadow 0.3s ease;
-}
+  &:focus {
+    box-shadow: $shadow;
+    outline: none;
+  }
 
-.input-date {
-  @extend .input;
-  color: #fff;
-}
+  &date {
+    @extend .input_class;
+    @include color_class(#fff, #444);
+    padding: 0.5rem;
+    width: 100%;
+    transition: box-shadow 0.3s ease;
+  }
 
-.input:focus {
-  box-shadow: $shadow;
+  &date:focus {
+    box-shadow: $shadow;
+    outline: none;
+  }
+
+  &dropdown {
+    @extend .input_class;
+    @include color_class(#fff, #444);
+    padding: 0.5rem;
+    margin: 1.3rem;
+    transition: box-shadow 0.3s ease;
+
+    &:focus {
+      box-shadow: $shadow;
+      outline: none;
+    }
+
+    & option {
+      color: #999;
+    }
+
+    & option:not(:first-child) {
+      color: #fff;
+    }
+  }
 }
 
 .button_data {
   @extend .input_class;
+  @include color_class(#fff, #2178b2);
   padding: 0.5rem 1rem;
-  background-color: #2178b2;
-  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
 
-.button_data:hover {
-  background-color: #2162b2;
+  &:hover {
+    background-color: #2162b2;
+  }
 }
 
 .output {
-  font-size: 1rem;
-  width: 98%;
-  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0.5rem;
+  height: 100;
+
+  &table {
+    font-size: 1rem;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0.3rem 0;
+    height: 100%;
+
+    & td {
+      padding: 0.625rem;
+      border: 1px solid black;
+    }
+  }
+}
+
+.page {
+  left: 0;
+  margin: 0.8rem;
+
+  &button {
+    cursor: pointer;
+    margin-right: 0.4rem;
+    transition: background-color 0.3s ease;
+    outline: none;
+  }
 }
 
 .tooltip {
   position: relative;
   display: inline-block;
   cursor: help;
-}
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 135px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 38%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+  .tooltiptext {
+    @include color_class(#fff, #555);
+    width: 120px;
+    visibility: hidden;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 45%;
+    margin-left: -40px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    font-weight: 100;
+  }
 
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  font-size: 0.8rem;
-  font-weight: 100;
-  opacity: 0.95;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-  table-layout: fixed;
-}
-
-td {
-  padding: 10px;
-  border: 1px solid black;
-}
-
-.colormode {
-  margin-right: 15px;
-}
-
-.pagination {
-  position: absolute;
-  bottom: 6.4%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.page-button {
-  @extend .input_class;
-  font-size: 0.94rem;
-  background-color: #2178b2;
-  color: #fff;
-  display: flex;
-  font-family: sans-serif;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 15px;
-  margin-left: 15px;
-}
-
-.page-button:hover {
-  background-color: #2162b2;
+  &:hover .tooltiptext {
+    visibility: visible;
+    opacity: 0.95;
+  }
 }

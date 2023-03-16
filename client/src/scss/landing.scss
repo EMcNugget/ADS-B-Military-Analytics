@@ -1,67 +1,57 @@
- :root {
-   --bg-color: #333;
-   --text-color: #fff;
-   --button-bg-color: #fff;
-   --button-text-color: #333;
- }
+@use "./main.scss" as *;
 
+.landing {
+  @include color_class(#fff, #333);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 3rem);
+  width: 100vw;
 
- .landing {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   height: 100vh;
-   background-color: var(--bg-color);
-   color: var(--text-color);
- }
+  .landing__container {
+    max-width: 95%;
+    width: 100%;
+    padding: 0 20px;
 
- .landing__container {
-   max-width: 95%;
-   width: 100%;
-   padding: 0 20px;
- }
+    .landing_title {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 2rem;
 
- .landing__button-container {
-   justify-content: center;
- }
+      h1 {
+        font-size: 5rem;
+      }
 
- .landing_title {
-   text-align: center;
-   margin-bottom: 2rem;
- }
+      h2 {
+        font-size: 1.5rem;
+      }
 
- .landing_title h1 {
-   font-size: 5rem;
- }
+      h6 {
+        font-size: 1rem;
+        margin-top: auto;
+      }
+    }
 
- .landing_title h2 {
-   font-size: 1.5rem;
-   margin-top: 0.5rem;
- }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
 
- .landing_title h6 {
-   font-size: 1rem;
-   margin-top: auto;
- }
+      .button {
+        @include color_class(#fff, #2178b2);
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+        font-size: 2rem;
+        font-weight: 500;
+        cursor: pointer;
 
- .button-container {
-   display: flex;
-   justify-content: center;
-   margin-top: 2rem;
- }
-
- .button {
-   padding: 0.5rem 1rem;
-   border: none;
-   background: #2178b2;
-   border-radius: 5px;
-   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-   font-size: 2rem;
-   color: var(--button-bg-color);
-   font-weight: 500;
-   cursor: pointer;
- }
-
- .button:hover {
-    background: #2162b2;
- }
+        &:hover {
+          background: #2162b2;
+        }
+      }
+    }
+  }
+}

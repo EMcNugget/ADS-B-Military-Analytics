@@ -1,32 +1,29 @@
+@use "./main.scss" as *;
+
 .body {
-  position: relative;
-  margin-top: auto;
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
+  margin-top: auto;
   width: 100%;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  height: 2.5rem;
-  padding: 3px;
-  font-size: 0.8rem;
+  @include color_class(#fff, #282c34);
+  align-items: center;
   border-top: 2px solid #ccc;
+  bottom: 0;
   display: flex;
+  font-size: 0.8rem;
+  height: 2.5rem;
   justify-content: center;
-  align-items: center;
-  background-color: #282c34;
-  color: white;
-  left: 0%;
-  right: 0%;
-}
+  padding: 3px;
 
-.footer a {
-  display: flex;
-  align-items: center;
-  color: white;
-  text-decoration: none;
+  a {
+    align-items: center;
+    color: white;
+    display: flex;
+    text-decoration: none;
+  }
 }
 
 .icon {

@@ -1,6 +1,6 @@
 # Changelog
 
-## V1.3.1
+## V1.3.1.0
 
 **2023-03-13**
 
@@ -38,3 +38,19 @@
 #### Backend
 
 -Updated formatting of EOM and EOW to allow for easier frontend intergration
+
+## V1.3.2.0
+
+#### Frontend
+
+**2023-03-16**
+
+-Completely refactored frontend to allow for better mobile support as well as a better maintainablity.
+
+-Redid pagination.
+
+#### Misc
+
+-Updated package.json to depreciate the need to cd into client.
+
+-Updated docs.
