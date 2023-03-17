@@ -57,6 +57,16 @@
 
 ## V1.3.2.1
 
-## Misc
+**2023-03-17**
+
+#### Misc
 
 -Updated install proccess
+
+## V1.3.2.2
+
+**2023-03-17**
+
+#### Misc
+
+-Updated docs to reflect new install process
