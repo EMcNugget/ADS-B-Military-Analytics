@@ -54,3 +54,9 @@
 -Updated package.json to depreciate the need to cd into client.
 
 -Updated docs.
+
+## V1.3.2.1
+
+## Misc
+
+-Updated install proccess

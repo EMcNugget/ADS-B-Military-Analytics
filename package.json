@@ -4,6 +4,7 @@
   "description": "Analytics for military aircraft over ADSB.",
   "scripts": {
     "build": "cd client && npm install && npm run build",
-    "dev": "cd client && npm run dev"
+    "start": "python3 app.py && cd server && python3 main.py && cd .. && cd client && npm run dev && cd ..",
+    "install": "sh ./build.sh"
   }
 }

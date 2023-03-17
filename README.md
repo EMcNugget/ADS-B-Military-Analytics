@@ -20,10 +20,8 @@ This allows you to view military aircraft from an ever growing database. Find ou
 3. Run the following command in the root directory of the project:
 
 ```bash
-./build.sh
-npm run dev
-python3 app.py
-cd server && python3 main.py
+npm install
+npm start
 ```
 
 ## Notes
