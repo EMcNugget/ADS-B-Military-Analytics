@@ -70,3 +70,16 @@
 #### Misc
 
 - Updated docs to reflect new install process
+
+## V1.3.3.0
+
+**2023-03-17**
+
+#### Backend
+
+- Added a variety of security enhancements to Flask server.
+
+#### Misc
+
+- Updated docs
+- Added install proccess for win and bash (mac, linux)

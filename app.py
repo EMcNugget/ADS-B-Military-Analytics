@@ -1,8 +1,8 @@
-"""Flask API that returns data from MongoDB"""
-
+from flask import Flask, Response, request, jsonify, abort
 import os
+import google.cloud.logging_v2 as gcloud_logging
+import logging
 import datetime
-from flask import Flask, Response, jsonify
 from flask_cors import CORS
 from flask_caching import Cache
 from markupsafe import escape
@@ -12,11 +12,35 @@ app = Flask(__name__)
 CORS(app)
 cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
 
+client = gcloud_logging.Client()
+client.setup_logging()
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 MDB_URL = os.environ['MDB_URL']
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
+accepted_url = 'https://adsbmilanalytics.com/'
+
+
+@app.after_request
+def after_request(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
+
+
+@app.before_request
+def before_request():
+    """Check if the request is coming from the UI"""
+    if request.base_url.startswith(accepted_url):
+        pass
+    else:
+        logging.warning("Request from %s denied", request.base_url)
+        abort(403)
 
 
 @app.route('/<date>/<specified_file>', methods=['GET'])
@@ -27,11 +51,13 @@ def get_mdb_data(date: str, specified_file: str):
     try:
         date_val = escape(datetime.date.fromisoformat(date))
     except ValueError:
+        logging.warning("Invalid date format %s", date)
         return Response(status=400, response='Invalid date format. Please use YYYY-MM-DD format.')
-
+    specified_file = escape(specified_file)
     cached_data = cache.get(f"{date_val}{specified_file}")
     if cached_data is not None:
         return jsonify(cached_data)
+
     results = collection.find_one({"_id": date_val})
 
     if date_val > datetime.date.today().isoformat():
@@ -40,18 +66,19 @@ def get_mdb_data(date: str, specified_file: str):
         return Response(status=400, response='There is no data from before 2023-03-09', mimetype='text/plain')
     if results is None:
         return Response(status=404, response=f'Data for {date_val} not found in database')
+
     try:
         final_results = results[specified_file]
         cache.set(f"{date_val}{specified_file}", final_results, timeout=120)
         return jsonify(final_results)
     except KeyError:
-        return Response(status=406, response=f'File {escape(specified_file)} not found for {date_val}')
+        return Response(status=406, response=f'File {specified_file} not found for {date_val}')
 
 
 @app.route('/')
 def default():
     """Default route"""
-    return Response(status=400, response='Please specify a date and file')
+    return Response(status=400, response='Please specify a date and file to retrieve data from.', mimetype='text/plain')
 
 
 if __name__ == '__main__':
