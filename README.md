@@ -23,11 +23,18 @@ This allows you to view military aircraft from an ever growing database. Find ou
 2.  To configure the system, you need to define two environment variables named `API_KEY` and `API_HOST` using the provided key and host values. Additionally, you will require a MongoDB instance for the backend, and you can use the naming conventions specified in the [main.py](./server/main.py)
     file. Moreover, you might have to modify the URL in the api_fetch.tsx file located in client/src/components to match the URL of your Flask instance.
 
-3.  Run the following command in the root directory of the project:
+3.  Create a python virtual environment and then run the following commands in the root directory of the project:
 
 ```bash
-npm install
+npm run init
 npm start
+```
+
+###### Note: If you are using Windows, you might have to run the following command instead:
+
+```batch
+npm run wininit
+npm run winrun
 ```
 
 4.  View the development server at <http://localhost:5173>
