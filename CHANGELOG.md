@@ -83,3 +83,12 @@
 
 - Updated docs
 - Added install proccess for win and bash (mac, linux)
+
+
+## V1.3.3.1
+
+**2023-03-17**
+
+#### Backend
+
+- Corrected bug giving false 403 errors.

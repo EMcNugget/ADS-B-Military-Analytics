@@ -1,8 +1,10 @@
-from flask import Flask, Response, request, jsonify, abort
+"""Flask API running on Google App Engine to retrieve data from MongoDB"""
+
 import os
-import google.cloud.logging_v2 as gcloud_logging
 import logging
 import datetime
+import google.cloud.logging_v2 as gcloud_logging
+from flask import Flask, request, Response, jsonify, abort
 from flask_cors import CORS
 from flask_caching import Cache
 from markupsafe import escape
@@ -21,11 +23,11 @@ MDB_URL = os.environ['MDB_URL']
 cluster = MongoClient(MDB_URL)
 db = cluster["milData"]
 collection = db["historicalData"]
-accepted_url = 'https://adsbmilanalytics.com/'
 
 
 @app.after_request
 def after_request(response):
+    """Set headers for security"""
     response.headers['Content-Security-Policy'] = "default-src 'self'"
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -36,7 +38,7 @@ def after_request(response):
 @app.before_request
 def before_request():
     """Check if the request is coming from the UI"""
-    if request.base_url.startswith(accepted_url):
+    if request.headers.get('referer') == 'https://adsbmilanalytics.com/':
         pass
     else:
         logging.warning("Request from %s denied", request.base_url)
