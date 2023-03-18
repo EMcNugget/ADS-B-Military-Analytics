@@ -138,8 +138,8 @@ const createStatsColumn = (
 
 const statsColumns = (): ColumnDef<Stats, unknown>[] => {
   return [
-    createStatsColumn("date", "Date", "date"),
-    createStatsColumn("total", "Total Aircraft", "total"),
+    createStatsColumn("type", "Date", "date"),
+    createStatsColumn("value", "Total Aircraft", "total"),
   ];
 };
 

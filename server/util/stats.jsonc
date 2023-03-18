@@ -1,11 +1,10 @@
 // Format for EOW and EOM stats
 {
-  "max": { "type": "None", "value": 1344 },
-  "sum": {
-    "2023-03-08": 291,
-    "2023-03-09": 2469,
-    "2023-03-10": 4151,
-    "2023-03-11": 4529
-  },
-  "mean": 2860
+  "max": { "type": "None", "value": 2583 },
+  "sum": [
+    { "type": "2023-03-15", "value": 5894 },
+    { "type": "2023-03-16", "value": 6724 },
+    { "type": "2023-03-17", "value": 7177 }
+  ],
+  "mean": { "type": null, "value": 6598 }
 }
