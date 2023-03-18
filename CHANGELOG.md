@@ -101,3 +101,11 @@
 
 - Updated documentation and readablity of code.
 - Continued work on EOM and EOW support.
+
+#### V1.3.4.1
+
+**2023-03-17**
+
+#### Frontend
+
+- Fixed broken link on privacy policy page.
