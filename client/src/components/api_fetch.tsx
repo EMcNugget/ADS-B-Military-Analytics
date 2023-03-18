@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import axios from "axios";
 import Footer from "./footer";
@@ -15,7 +14,9 @@ import {
 } from "@tanstack/react-table";
 import "../scss/api.scss";
 
-type InterestingAircraft = {
+// Main data type
+
+type MainData = {
   hex: string;
   flight: string;
   r: string;
@@ -23,17 +24,15 @@ type InterestingAircraft = {
   squawk: string;
 };
 
-type AircraftCount = {
-  type: string;
-  value: number;
-};
+// ---Interesting Aircraft---
+
+type InterestingAircraft = MainData; // Uses the same data. It's setup for clarity and future expansion
 
 const inter = createColumnHelper<InterestingAircraft>();
-const ac_count = createColumnHelper<AircraftCount>();
 
 const createInterColumn = (
   id: string,
-  header: any,
+  header: any, // eslint-disable-line
   accessor: keyof InterestingAircraft,
   cursor: string,
   onClick: (row: Row<InterestingAircraft>) => void
@@ -47,10 +46,6 @@ const createInterColumn = (
       </span>
     ),
   });
-};
-
-const hexHandler = (hex: string) => {
-  window.open(`https://globe.adsbexchange.com/?icao=${hex}`, "_blank");
 };
 
 const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
@@ -84,6 +79,19 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
   ];
 };
 
+const hexHandler = (hex: string) => {
+  window.open(`https://globe.adsbexchange.com/?icao=${hex}`, "_blank");
+};
+
+// ---Aircraft Count---
+
+type AircraftCount = {
+  type: string;
+  value: number;
+};
+
+const ac_count = createColumnHelper<AircraftCount>();
+
 const createCountColumn = (
   id: string,
   header: string,
@@ -105,15 +113,59 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
   ];
 };
 
+// ---Stats---
+
+type Stats = {
+  date: string;
+  total: number;
+};
+
+const stats = createColumnHelper<Stats>();
+
+const createStatsColumn = (
+  id: string,
+  header: string,
+  accessor: keyof Stats
+) => {
+  return stats.display({
+    id,
+    header,
+    cell: ({ row }: { row: Row<Stats> }) => (
+      <span>{row.original[accessor]}</span>
+    ),
+  });
+};
+
+const statsColumns = (): ColumnDef<Stats, unknown>[] => {
+  return [
+    createStatsColumn("date", "Date", "date"),
+    createStatsColumn("total", "Total Aircraft", "total"),
+  ];
+};
+
+// Hashmap for selecting the correct table
+
+interface TableMap {
+  [key: string]: ColumnDef<any, unknown>[]; // eslint-disable-line
+}
+
+const tableMap: TableMap = {
+  inter: interColumns(),
+  stats: countColumns(),
+  eow: statsColumns(),
+  eom: statsColumns(),
+};
+
 function Api() {
   const [date, setDate] = useState("");
   const [specified_file, setSpecifiedFile] = useState("");
-  const [output, setOutput] = useState<any>({});
-  const [tableVar, setTableVar] = useState<any[]>([]);
+  const [output, setOutput] = useState<MainData[]>([]); // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [tableVar, setTableVar] = useState<any[]>([]); // Accepts both InterestingAircraft and Stats will update to be more specific later
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
     if (event.target.value === "eow") {
@@ -151,8 +203,13 @@ function Api() {
         alert("No aircraft found for this date.");
         setOutput([]);
       } else {
-        setOutput(result.data);
+        if (specified_file === "eow" || specified_file === "eom") {
+          setOutput(result.data["sum"]);
+        } else {
+          setOutput(result.data);
+        }
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       alert(error.request.response);
       if (error.request.response === "") {
@@ -173,7 +230,7 @@ function Api() {
         alert("Please wait 10 seconds before fetching again.");
       }
     } else {
-      setTableVar(specified_file === "stats" ? countColumns() : interColumns());
+      setTableVar(tableMap[specified_file]);
       fetchData();
       setLastClickedTime(currentTime);
       table.setPageIndex(0);
@@ -267,8 +324,17 @@ function Api() {
             </tfoot>
           </table>
         )}
-      </div>
-      <div>
+        {(output.length < 2 && specified_file === "eow") ||
+        specified_file === "eom" ? (
+          <div>
+            <h3>Weekly/Monthly Stats</h3>
+            <p>
+              Comming soon! Please check back later for this feature. If you
+              would like to be notified when this feature is available, please
+              watch the repo on GitHub.
+            </p>
+          </div>
+        ) : null}
         {output.length > 2 && (
           <div className="page">
             <button

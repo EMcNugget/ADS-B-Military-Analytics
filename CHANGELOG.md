@@ -92,3 +92,12 @@
 #### Backend
 
 - Corrected bug giving false 403 errors.
+
+## V1.3.4.0
+
+**2023-03-17**
+
+#### Frontend
+
+- Updated documentation and readablity of code.
+- Continued work on EOM and EOW support.
