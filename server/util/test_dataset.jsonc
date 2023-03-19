@@ -1,6 +1,6 @@
 // Sample dataset for testing analysis functions
 
-{"mil_data":[
+{"ac":[
     {"hex": "ae5a05","type": "adsb_icao","flight": "CARGO66 ","r": "16-08470","t": "H47","dbFlags": 1,"alt_baro": 9450,"alt_geom": 9950,"gs": 145.9,"track": 123.25,"baro_rate": 0,"geom_rate": -64,"squawk": "0214","emergency": "none","category": "A7","lat": 20.062339,"lon": -156.103138,"nic": 7,"rc": 371,"seen_pos": 0.244,"version": 2,"nic_baro": 1,"nac_p": 9,"nac_v": 4,"sil": 3,"sil_type": "perhour","gva": 2,"sda": 2,"alert": 0,"spi": 0,"mlat": [],"tisb": [],"messages": 553217,"seen": 0.2,"rssi": -9.7},
     {"hex": "ae07b0","type": "mlat","flight": "COPPER1 ","r": "61-0284","t": "K35R","dbFlags": 1,"alt_baro": 15400,"gs": 371.0,"track": 81.0,"baro_rate": 3296,"geom_rate": 3008,"squawk": "2636","category": "A0","lat": 33.480813,"lon": -111.576588,"nic": 0,"rc": 0,"seen_pos": 1.89,"alert": 0,"spi": 0,"mlat": ["gs","track","baro_rate","lat","lon","nic","rc"],"tisb": ["geom_rate"],"messages": 1821199,"seen": 0.9,"rssi": -9.1},
     {"hex": "ae6a23","type": "adsb_icao","flight": "G21113  ","r": "20-21113","t": "H60","dbFlags": 1,"alt_baro": "ground","gs": 0.0,"track": 306.56,"squawk": "1200","emergency": "none","category": "A7","lat": 32.523205,"lon": -111.335092,"nic": 0,"rc": 0,"seen_pos": 10.005,"version": 0,"nac_p": 8,"sil": 2,"sil_type": "perhour","alert": 0,"spi": 0,"mlat": [],"tisb": [],"messages": 595374,"seen": 10.0,"rssi": -22.3},

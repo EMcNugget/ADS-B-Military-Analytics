@@ -144,7 +144,7 @@ class Analysis:
 class Main:
     """Class for main, used to return data to the UI"""
 
-    main_data: dict = field(default_factory=dict)
+    main_data = {}
     date: str = day().strftime("%Y-%m-%d")
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
@@ -155,8 +155,8 @@ class Main:
     @classmethod
     def pre_proccess(cls):
         """Removes duplicates and extraneous data"""
-        main = Main()
-        main_data = main.main_data
+
+        main_data = cls.main_data
 
         for item in main_data['ac']:
             hex_val = item['hex']
@@ -179,8 +179,7 @@ class Main:
         """Automatically requests data from the API and writes it to a JSON file
         at a specified interval as defined by the DELAY variable"""
 
-        main = Main()
-        main_data = main.main_data
+        main_data = cls.main_data
 
         while True:
             main_data.update(get_data())
@@ -253,6 +252,8 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
+            del Main.main_data
+            del Analysis.new_data
         time.sleep(1)
 
 def api_func():
