@@ -83,18 +83,18 @@ class Analysis:
     data: list = field(default_factory=list)
     final_data: dict = field(default_factory=dict)
     dist_data: dict = field(default_factory=dict)
-    new_data: dict = field(default_factory=dict)
+    new_data = {}
 
     # All type ignore are due to false positives from Pandas and don't affect functionality
 
-    @staticmethod
-    def get_stats(day_amount: int):
+    @classmethod
+    def get_stats(cls, day_amount: int):
         """Returns a list of stats for the specified amount of days"""
         analysis_class = Analysis()
         dist_data = analysis_class.dist_data
         data = analysis_class.data
         final_data = analysis_class.final_data
-        new_data = analysis_class.new_data
+        new_data = cls.new_data
 
         for i in range(day_amount):
             date = day() - datetime.timedelta(days=i)
@@ -252,8 +252,8 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
-            del Main.main_data
-            del Analysis.new_data
+            Main.main_data.clear()
+            Analysis.new_data.clear()
         time.sleep(1)
 
 def api_func():
