@@ -116,10 +116,8 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
 // ---Stats---
 
 type Stats = {
-  sum: {
-    type: string;
-    value: number;
-  };
+  type: string;
+  value: number;
 };
 
 const stats = createColumnHelper<Stats>();
@@ -127,13 +125,13 @@ const stats = createColumnHelper<Stats>();
 const createStatsColumn = (
   id: string,
   header: string,
-  accessor: keyof Stats["sum"]
+  accessor: keyof Stats
 ) => {
   return stats.display({
     id,
     header,
     cell: ({ row }: { row: Row<Stats> }) => (
-      <span>{row.original.sum[accessor]}</span>
+      <span>{row.original[accessor]}</span>
     ),
   });
 };
@@ -189,7 +187,8 @@ function Api() {
       if (
         result.status === 500 ||
         result.status === 400 ||
-        result.status === 406
+        result.status === 406 ||
+        result.status === 403
       ) {
         alert(result.request.response);
         setOutput([]);
@@ -205,7 +204,11 @@ function Api() {
         alert("No aircraft found for this date.");
         setOutput([]);
       }
-      setOutput(result.data);
+      if (specified_file === "eow") {
+        setOutput(result.data.sum);
+      } else {
+        setOutput(result.data);
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       alert(error.request.response);
