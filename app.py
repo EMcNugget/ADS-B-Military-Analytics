@@ -3,7 +3,6 @@
 import os
 import logging
 import datetime
-import google.cloud.logging_v2 as gcloud_logging
 from flask import Flask, request, Response, jsonify, abort
 from flask_cors import CORS
 from flask_caching import Cache
@@ -13,11 +12,6 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app)
 cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
-
-client = gcloud_logging.Client()
-client.setup_logging()
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 MDB_URL = os.environ['MDB_URL']
 cluster = MongoClient(MDB_URL)
@@ -38,6 +32,7 @@ def after_request(response):
 @app.before_request
 def before_request():
     """Check if the request is coming from the UI"""
+    # if request.headers.get('referer') == 'http://localhost:5173/': dev
     if request.headers.get('referer') == 'https://adsbmilanalytics.com/':
         pass
     else:

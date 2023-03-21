@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import axios from "axios";
 import Footer from "./footer";
@@ -115,10 +116,7 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
 
 // ---Stats---
 
-type Stats = {
-  type: string;
-  value: number;
-};
+type Stats = AircraftCount;
 
 const stats = createColumnHelper<Stats>();
 
@@ -159,13 +157,12 @@ const tableMap: TableMap = {
 function Api() {
   const [date, setDate] = useState("");
   const [specified_file, setSpecifiedFile] = useState("");
-  const [output, setOutput] = useState<MainData[]>([]); // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [output, setOutput] = useState<any[]>([]);
   const [tableVar, setTableVar] = useState<any[]>([]); // Accepts both InterestingAircraft and Stats will update to be more specific later
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
+  const url = `http://127.0.0.1:8080/${date}/${specified_file}`;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
     if (event.target.value === "eow") {
@@ -209,7 +206,6 @@ function Api() {
       } else {
         setOutput(result.data);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       alert(error.request.response);
       if (error.request.response === "") {
@@ -306,35 +302,8 @@ function Api() {
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              {table.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </tfoot>
           </table>
         )}
-        {(output.length < 2 && specified_file === "eow") ||
-        specified_file === "eom" ? (
-          <div>
-            <h3>Weekly/Monthly Stats</h3>
-            <p>
-              Comming soon! Please check back later for this feature. If you
-              would like to be notified when this feature is available, please
-              watch the repo on GitHub.
-            </p>
-          </div>
-        ) : null}
         {output.length > 2 && (
           <div className="page">
             <button

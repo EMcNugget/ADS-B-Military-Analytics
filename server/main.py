@@ -252,8 +252,12 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
-            Main.main_data.clear()
-            Analysis.new_data.clear()
+            try:
+                Main.main_data.clear()
+                Analysis.new_data.clear()
+                logging.info("Data cleared %s", current_time())
+            except AttributeError:
+                logging.error("Error clearing data %s", current_time())
         time.sleep(1)
 
 def api_func():
