@@ -161,7 +161,7 @@ function Api() {
   const [tableVar, setTableVar] = useState<any[]>([]); // Accepts both InterestingAircraft and Stats will update to be more specific later
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const url = `http://127.0.0.1:8080/${date}/${specified_file}`;
+  const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
