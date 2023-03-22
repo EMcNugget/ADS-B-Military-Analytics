@@ -75,7 +75,7 @@ def get_mdb_data(date: str, specified_file: str):
 @app.route('/')
 def default():
     """Default route"""
-    return Response(status=400, response='Please specify a date and file to retrieve data from.', mimetype='text/plain')
+    return Response(status=204, response='Please specify a date and file to retrieve data from.', mimetype='text/plain')
 
 
 if __name__ == '__main__':
