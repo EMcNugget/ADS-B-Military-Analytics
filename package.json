@@ -5,9 +5,9 @@
   "scripts": {
     "build": "cd client && npm install && npm run build",
     "dev": "cd client && npm run dev",
-    "start": "cd util && cd linux && ./run.sh",
-    "init": "cd util && cd linux && ./build.sh",
-    "winrun": "util\\windows\\run.bat",
-    "wininit": "util\\windows\\build.bat"
+    "start": "cd cli && cd linux && ./run.sh",
+    "init": "cd cli && cd linux && ./build.sh",
+    "winrun": "cli\\windows\\run.bat",
+    "wininit": "cli\\windows\\build.bat"
   }
 }

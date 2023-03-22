@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import axios from "axios";
-import Footer from "./footer";
+import Footer from "../libs/footer";
 import { FaRegQuestionCircle, FaArrowRight, FaArrowLeft } from "react-icons/fa";
-import { getSunday, getMonth } from "../util/date";
+import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
   createColumnHelper,

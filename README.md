@@ -8,7 +8,7 @@
 
 This allows you to view military aircraft from an ever growing database. Find out how many aircraft flew on a specific day, what type, among other features that are coming soon!
 
-![Screenshot](./util/demo.png)
+![Screenshot](./assets/demo.png)
 
 ## Requirements
 
@@ -51,16 +51,12 @@ npm run winrun
 
 ## Architecture
 
-![Architecture](./util/architecture.svg)
+![Architecture](./assets/architecture.svg)
 
 ## Current Tasks
 
 See the project board for the current tasks.
 [Roadmap and Tasks][rm]
-
-## Change Log
-
-See [CHANGELOG.md](./CHANGELOG.md)
 
 ## Questions, Comments, Concerns?
 

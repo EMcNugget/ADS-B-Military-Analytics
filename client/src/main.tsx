@@ -1,41 +1,8 @@
 import ReactDOM from "react-dom/client";
-import { Routes, Route, Link, BrowserRouter, Navigate } from "react-router-dom";
-import { useState } from "react";
-import Api from "./components/api_fetch";
-import Footer from "./components/footer";
-import Privacy from "./components/privacy";
-import "./scss/landing.scss";
-import "./scss/footer.scss";
-
-function Home() {
-  const [show, setShow] = useState(false);
-
-  return (
-    <div>
-      <div className="landing">
-        <div className="landing__container">
-          <div className="landing_title">
-            <h1>ADS-B Military Analytics</h1>
-            <h6>
-              ADS-B Military Analytics is a tool to view historical data for
-              military aircraft from our extensive database collected 24/7 made
-              possible by ADS-B Exchange.
-            </h6>
-            <h2>No data before March 9th, 2023</h2>
-          </div>
-          <div className="button-container">
-            <Link to="/history">
-              <button className="button" onClick={() => setShow(!show)}>
-                Click to get started
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-}
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import Api from "./components/pages/ApiPage";
+import Privacy from "./components/pages/PrivacyPolicy";
+import Home from "./components/pages/HomePage";
 
 function App() {
   return (

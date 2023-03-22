@@ -1,5 +1,5 @@
 import "../scss/privacy.scss";
-import Footer from "./footer";
+import Footer from "../libs/footer";
 
 const returnonclick = () => {
   history.back();
