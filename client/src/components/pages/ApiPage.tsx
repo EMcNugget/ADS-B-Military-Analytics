@@ -13,7 +13,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import "../scss/api.scss";
+import "../../scss/api.scss";
 
 // Main data type
 

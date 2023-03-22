@@ -1,4 +1,4 @@
-import "../scss/privacy.scss";
+import "../../scss/privacy.scss";
 import Footer from "../libs/footer";
 
 const returnonclick = () => {
