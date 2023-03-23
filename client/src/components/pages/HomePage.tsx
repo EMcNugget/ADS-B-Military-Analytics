@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../libs/footer";
-import "../../scss/landing.scss";
+import "../../scss/home.scss";
 
 function Home() {
   const [show, setShow] = useState(false);
