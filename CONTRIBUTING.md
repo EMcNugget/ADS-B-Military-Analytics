@@ -1,4 +1,4 @@
-# Contributing Guidel
+# Contributing Guide
 
 We appreciate your interest in contributing and making this project better. Before you get started, please read the following guidelines:
 
