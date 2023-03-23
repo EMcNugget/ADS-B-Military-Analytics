@@ -33,6 +33,10 @@ See CONTRIBUTING.md for more information on how to contribute to this project. A
 See the project board for the current tasks.
 [Roadmap and Tasks][rm]
 
+## Team
+
+Owner & Lead Dev: [Ethan Seys](https://github.com/EMcNugget)
+
 ## Questions, Comments, Concerns?
 
 Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on this repository.
