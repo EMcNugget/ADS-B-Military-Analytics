@@ -253,7 +253,7 @@ def rollover():
             logging.info("Data inserted into MongoDB %s", current_time())
             Main.main_data.clear()
             if len(Main.main_data) > 0:
-                raise ValueError("Error Clearing Data")
+                raise ValueError("Error Clearing Data at %s", current_time())
             logging.info("Data cleared %s", current_time())
         time.sleep(1)
 
