@@ -28,6 +28,10 @@ See CONTRIBUTING.md for more information on how to contribute to this project. A
 
 ![Architecture](./assets/architecture.svg)
 
+## Installation
+
+See CONTRIBUTING.md for install instructions.
+
 ## Current Tasks
 
 See the project board for the current tasks.
