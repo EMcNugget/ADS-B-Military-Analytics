@@ -8,11 +8,15 @@
 
 This allows you to view military aircraft from an ever growing database. Find out how many aircraft flew on a specific day, what type, among other features that are coming soon!
 
+## Where can I find this?
+
+You can find the production version at www.adsbmilanalytics.com
+
 ![Screenshot](./assets/demo.png)
 
-## For Developers
+## How To Install
 
-See CONTRIBUTING.md for more information on how to contribute to this project. As well as information on how to set up the project locally.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information on how to contribute to this project. As well as information on how to set up the project locally.
 
 ## Tech Stack
 
@@ -27,10 +31,6 @@ See CONTRIBUTING.md for more information on how to contribute to this project. A
 ## Architecture
 
 ![Architecture](./assets/architecture.svg)
-
-## Installation
-
-See CONTRIBUTING.md for install instructions.
 
 ## Current Tasks
 
