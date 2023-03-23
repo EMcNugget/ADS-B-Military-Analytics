@@ -5,7 +5,7 @@ import sys
 import datetime
 import time
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from threading import Thread
 import requests
 import pandas as pd
@@ -80,9 +80,9 @@ def get_data():
 class Analysis:
     """Analysis of data"""
 
-    data: list = field(default_factory=list)
-    final_data: dict = field(default_factory=dict)
-    dist_data: dict = field(default_factory=dict)
+    data = []
+    final_data = {}
+    dist_data = {}
     new_data = {}
 
     # All type ignore are due to false positives from Pandas and don't affect functionality
@@ -90,10 +90,9 @@ class Analysis:
     @classmethod
     def get_stats(cls, day_amount: int):
         """Returns a list of stats for the specified amount of days"""
-        analysis_class = Analysis()
-        dist_data = analysis_class.dist_data
-        data = analysis_class.data
-        final_data = analysis_class.final_data
+        dist_data = cls.dist_data
+        data = cls.data
+        final_data = cls.final_data
         new_data = cls.new_data
 
         for i in range(day_amount):
@@ -252,12 +251,10 @@ def rollover():
         if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
-            try:
-                Main.main_data.clear()
-                Analysis.new_data.clear()
-                logging.info("Data cleared %s", current_time())
-            except AttributeError:
-                logging.error("Error clearing data %s", current_time())
+            Main.main_data.clear()
+            if len(Main.main_data) > 0:
+                raise ValueError("Error Clearing Data")
+            logging.info("Data cleared %s", current_time())
         time.sleep(1)
 
 def api_func():
