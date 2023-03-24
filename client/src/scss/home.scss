@@ -6,17 +6,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 3rem);
-  width: 100vw;
+  height: 100vh;
+  width: 100%;
 
   .home_container {
-    max-width: 95%;
-    width: 100%;
     padding: 0 20px;
 
     .home_title {
       text-align: center;
-      margin-top: 0;
       margin-bottom: 2rem;
 
       h1 {

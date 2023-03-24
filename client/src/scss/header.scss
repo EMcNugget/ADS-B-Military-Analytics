@@ -1,0 +1,38 @@
+@use "./main.scss" as *;
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2b2b2b;
+  border-bottom: #fff solid 1px;
+  color: #fff;
+
+  &__title {
+    font-size: 1.5rem;
+    padding-left: 0.5rem;
+    margin: 0;
+  }
+
+  &__nav {
+    padding-right: 0.5rem;
+    ul {
+      list-style: none;
+      display: flex;
+
+      li {
+        margin-left: 1rem;
+
+        a {
+          color: #fff;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

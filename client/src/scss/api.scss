@@ -8,11 +8,16 @@
   cursor: text;
 }
 
+h2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0rem;
+}
+
 .input {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
+  margin: 0.5rem;
 
   &:focus {
     box-shadow: $shadow;
@@ -23,8 +28,13 @@
     @extend .input_class;
     @include color_class(#fff, #444);
     padding: 0.5rem;
-    width: 100%;
+    margin-left: 1.2rem;
     transition: box-shadow 0.3s ease;
+    width: 6.2rem;
+  }
+
+  &date::-webkit-calendar-picker-indicator {
+    cursor: pointer;
   }
 
   &date:focus {
@@ -36,7 +46,7 @@
     @extend .input_class;
     @include color_class(#fff, #444);
     padding: 0.5rem;
-    margin: 1.3rem;
+    margin-left: 0.5rem;
     transition: box-shadow 0.3s ease;
 
     &:focus {

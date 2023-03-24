@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import Header from "../libs/header";
 import "../../scss/api.scss";
 
 // Main data type
@@ -243,7 +244,8 @@ function Api() {
 
   return (
     <div className="container">
-      <h1>ADS-B Military Analytics</h1>
+      <Header />
+      <h2>Historical Data</h2>
       <div className="input">
         <input
           className="inputdate"
@@ -265,10 +267,10 @@ function Api() {
           <option value="eow">Weekly Stats</option>
           <option value="eom">Monthly Stats</option>
         </select>
-        <button className="button_data" onClick={handleClick}>
-          Fetch Data
-        </button>
       </div>
+      <button className="button_data" onClick={handleClick}>
+        Fetch Data
+      </button>
       <div className="output">
         {output.length > 2 && (
           <table className="outputtable" onChange={handleChange}>
@@ -327,7 +329,7 @@ function Api() {
               <FaArrowRight />
             </button>
           </div>
-        )}
+          )}
       </div>
       <Footer />
     </div>

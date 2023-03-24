@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../libs/footer";
+import Header from "../libs/header";
 import "../../scss/home.scss";
 
 function Home() {
@@ -8,6 +9,7 @@ function Home() {
 
   return (
     <div>
+      <Header />
       <div className="home">
         <div className="home_container">
           <div className="home_title">
