@@ -80,30 +80,23 @@ def get_data():
 class Analysis:
     """Analysis of data"""
 
-    data = []
     final_data = {}
     dist_data = {}
     new_data = {}
 
-    # All type ignore are due to false positives from Pandas and don't affect functionality
-
     @classmethod
     def get_stats(cls, day_amount: int):
         """Returns a list of stats for the specified amount of days"""
-        dist_data = cls.dist_data
-        data = cls.data
-        final_data = cls.final_data
-        new_data = cls.new_data
+        dist_data, final_data, new_data = cls.dist_data, cls.final_data, cls.new_data
+
+        dist_data.clear()
+        final_data.clear()
+        new_data.clear()
 
         for i in range(day_amount):
             date = day() - datetime.timedelta(days=i)
-            data.append(date.strftime("%Y-%m-%d"))
-
-        for date in data:
-            analysis = collection.find_one({"_id": date})
-            if analysis is None:
-                pass
-            else:
+            analysis = collection.find_one({"_id": date.strftime("%Y-%m-%d")})
+            if analysis:
                 dist_data.update({analysis['_id']: analysis['stats']})
 
         multi_index = [(date, row['type'])
@@ -114,27 +107,23 @@ class Analysis:
         analysis_df.columns = analysis_df.columns.get_level_values(1)
         analysis_df.fillna(0, inplace=True)
         analysis_df.sort_values(
-            by=analysis_df.columns[-1], axis=0, ascending=False, inplace=True)  # type: ignore
+            by=analysis_df.columns[-1], axis=0, ascending=False, inplace=True)
         logging.info("Sorted data for %d at %s", day_amount, current_time())
-        max_data = analysis_df.sum(axis=1).sort_values(  # type: ignore
-            ascending=False)
+        max_data = analysis_df.sum(axis=1).sort_values(ascending=False)
         final_data.update(
             {"max": {"type": max_data.index[0], "value": int(max_data[0])}})
         sum_dict = analysis_df.sum(axis=0).to_dict()
         sum_dict_int = {key: int(value) for key, value in sum_dict.items()}
-        final_data.update({"sum": sum_dict_int})
-        mean_data = analysis_df.values.sum(axis=0)  # type: ignore
+        final_data.update({"sum": [{"type": t, "value": v}
+                                   for t, v in sum_dict_int.items()]})
+        mean_data = analysis_df.values.sum(axis=0)
         mean_data = sum(mean_data) / len(mean_data)
         final_data.update({"mean": int(mean_data)})
         logging.info("Calculated stats for %d at %s",
                      day_amount, current_time())
         for key, value in final_data.items():
-            if key == "sum":
-                new_data[key] = [{"type": t, "value": v}
-                                 for t, v in value.items()]
-            else:
-                new_data[key] = {"type": None, "value": value} if isinstance(
-                    value, int) else value
+            new_data[key] = {"type": None, "value": value} if isinstance(
+                value, int) else value
         logging.info("Formatted data for %d at %s", day_amount, current_time())
         return new_data
 
@@ -147,7 +136,7 @@ class Main:
     date: str = day().strftime("%Y-%m-%d")
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
-                         'B742\nBoeing E-4B', 'H64', 'F15',
+                         'B742', 'H64', 'F15',
                          'AV8B', 'RC135'])
     schema = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
 
@@ -253,7 +242,7 @@ def rollover():
             logging.info("Data inserted into MongoDB %s", current_time())
             Main.main_data.clear()
             if len(Main.main_data) > 0:
-                raise ValueError("Error Clearing Data at %s", current_time())
+                raise ValueError("Error Clearing Data")
             logging.info("Data cleared %s", current_time())
         time.sleep(1)
 
