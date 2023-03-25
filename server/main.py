@@ -25,7 +25,7 @@ collection = db["historicalData"]
 
 client = gcloud_logging.Client()
 client.setup_logging()
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.info,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
@@ -133,6 +133,7 @@ class Main:
     """Class for main, used to return data to the UI"""
 
     main_data = {}
+    data = {}
     date: str = day().strftime("%Y-%m-%d")
     ac_type = pd.Series(['EUFI', 'F16', 'V22', 'F18S', 'A10',
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
@@ -144,9 +145,7 @@ class Main:
     def pre_proccess(cls):
         """Removes duplicates and extraneous data"""
 
-        main_data = cls.main_data
-
-        for item in main_data['ac']:
+        for item in cls.main_data['ac']:
             hex_val = item['hex']
             if hex_val not in cls.schema['hex']:
                 cls.schema['hex'].append(hex_val)
@@ -159,18 +158,16 @@ class Main:
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
         df_data.drop(df_data[df_data['flight'] =='TEST1234'].index, inplace=True) # fmt: off
         final_data = df_data.to_dict('records')
-        logging.debug("Data pre-proccessing complete %s", current_time())
-        return final_data
+        logging.info("Data pre-proccessing complete %s", current_time())
+        cls.data.update({"ac": final_data})
 
     @classmethod
     def auto_req(cls):
         """Automatically requests data from the API and writes it to a JSON file
         at a specified interval as defined by the DELAY variable"""
 
-        main_data = cls.main_data
-
         while True:
-            main_data.update(get_data())
+            cls.main_data.update(get_data())
             cls.pre_proccess()
             time.sleep(delay_time())
 
@@ -195,16 +192,16 @@ class Main:
         """Inserts data into MongoDB"""
 
         doc = {"_id": datetime.date.today().strftime("%Y-%m-%d"),
-               "data": cls.pre_proccess(),"stats": cls.ac_count(), 
+               "data": cls.data['ac'],"stats": cls.ac_count(), 
                "inter": cls.inter_ac()}
         if datetime.datetime.today().strftime('%A') == 'Sunday':
             doc.update({"eow": Analysis.get_stats(7)})
-            logging.debug("Weekly analysis complete %s", current_time())
+            logging.info("Weekly analysis complete %s", current_time())
         else:
             pass
         if datetime.datetime.today().date() == 1:
             doc.update({"eom": Analysis.get_stats(cls.get_days_in_month())})
-            logging.debug("Monthly analysis complete %s", current_time())
+            logging.info("Monthly analysis complete %s", current_time())
         else:
             pass
         collection.insert_one(doc)
@@ -213,7 +210,7 @@ class Main:
     def ac_count(cls):
         """Returns the total number of aircraft in the data"""
 
-        ac_data = pd.DataFrame(cls.pre_proccess())
+        ac_data = pd.DataFrame(cls.data['ac'])
         count = pd.value_counts(ac_data['t']).to_dict()
         new_list = []
         for key, value in count.items():
@@ -225,7 +222,7 @@ class Main:
     def inter_ac(cls):
         """Returns objects that contain an aircraft type specified in the ac_type"""
 
-        interesting_ac = pd.DataFrame(cls.pre_proccess())
+        interesting_ac = pd.DataFrame(cls.data['ac'])
         inter_data = interesting_ac[interesting_ac['t'].isin(
             cls.ac_type)].to_dict(orient='records')
         if inter_data == []:
@@ -237,11 +234,11 @@ def rollover():
     """Checks the time every second and runs the mdb_insert function at 11:59:55pm"""
 
     while True:
-        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:50':
+        if datetime.datetime.now().strftime('%H:%M:%S') == '11:50:50':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
-            Main.main_data.clear()
-            if len(Main.main_data) > 0:
+            Main.data.clear()
+            if Main.data:
                 raise ValueError("Error Clearing Data")
             logging.info("Data cleared %s", current_time())
         time.sleep(1)
