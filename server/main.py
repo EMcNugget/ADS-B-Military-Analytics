@@ -110,22 +110,18 @@ class Analysis:
             by=analysis_df.columns[-1], axis=0, ascending=False, inplace=True)
         logging.info("Sorted data for %d at %s", day_amount, current_time())
         max_data = analysis_df.sum(axis=1).sort_values(ascending=False)
-        final_data.update(
-            {"max": {"type": max_data.index[0], "value": int(max_data[0])}})
+        max_data = max_data[:1].to_dict()
+        final_data.update({"max": max_data})
         sum_dict = analysis_df.sum(axis=0).to_dict()
-        sum_dict_int = {key: int(value) for key, value in sum_dict.items()}
-        final_data.update({"sum": [{"type": t, "value": v}
-                                   for t, v in sum_dict_int.items()]})
+        for key, value in sum_dict.items():
+            sum_dict[key] = int(value)
+        final_data.update({"sum": sum_dict})
         mean_data = analysis_df.values.sum(axis=0)
         mean_data = sum(mean_data) / len(mean_data)
         final_data.update({"mean": int(mean_data)})
         logging.info("Calculated stats for %d at %s",
                      day_amount, current_time())
-        for key, value in final_data.items():
-            new_data[key] = {"type": None, "value": value} if isinstance(
-                value, int) else value
-        logging.info("Formatted data for %d at %s", day_amount, current_time())
-        return new_data
+        return final_data
 
 
 @dataclass
@@ -146,9 +142,8 @@ class Main:
         """Removes duplicates and extraneous data"""
 
         for item in cls.main_data['ac']:
-            hex_val = item['hex']
-            if hex_val not in cls.schema['hex']:
-                cls.schema['hex'].append(hex_val)
+            if item['hex'] not in cls.schema['hex']:
+                cls.schema['hex'].append(item['hex'])
                 cls.schema['flight'].append(item.get('flight', 'None').strip())
                 cls.schema['t'].append(item.get('t', 'None'))
                 cls.schema['r'].append(item.get('r', 'None'))
@@ -212,11 +207,7 @@ class Main:
 
         ac_data = pd.DataFrame(cls.data['ac'])
         count = pd.value_counts(ac_data['t']).to_dict()
-        new_list = []
-        for key, value in count.items():
-            new_dict = {"type": key, "value": value}
-            new_list.append(new_dict)
-        return new_list
+        return count
 
     @classmethod
     def inter_ac(cls):
@@ -234,10 +225,11 @@ def rollover():
     """Checks the time every second and runs the mdb_insert function at 11:59:55pm"""
 
     while True:
-        if datetime.datetime.now().strftime('%H:%M:%S') == '11:50:50':
+        if datetime.datetime.now().strftime('%H:%M:%S') == '23:59:45':
             Main.mdb_insert()
             logging.info("Data inserted into MongoDB %s", current_time())
             Main.data.clear()
+            Main.schema = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
             if Main.data:
                 raise ValueError("Error Clearing Data")
             logging.info("Data cleared %s", current_time())
