@@ -117,28 +117,87 @@ const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
 
 // ---Stats---
 
-type Stats = AircraftCount;
+type Stats = {
+  max: {
+    type: string;
+    value: number;
+  };
+  sum: {
+    date: string;
+    value: number;
+  }[];
+  mean: number;
+};
+
+type orginalData = {
+  max: {
+    [key: string]: number;
+  };
+  sum: {
+    [key: string]: number;
+  };
+  mean: number;
+};
 
 const stats = createColumnHelper<Stats>();
 
-const createStatsColumn = (
-  id: string,
-  header: string,
-  accessor: keyof Stats
-) => {
-  return stats.display({
-    id,
-    header,
-    cell: ({ row }: { row: Row<Stats> }) => (
-      <span>{row.original[accessor]}</span>
-    ),
-  });
-};
-
 const statsColumns = (): ColumnDef<Stats, unknown>[] => {
   return [
-    createStatsColumn("type", "Date", "type"),
-    createStatsColumn("value", "Total Aircraft", "value"),
+    stats.group({
+      id: "max",
+      header: "Max",
+      columns: [
+        stats.display({
+          id: "type",
+          header: "Aircraft Type",
+          cell: ({ row }: { row: Row<Stats> }) => (
+            <span>{row.original.max.type}</span>
+          ),
+        }),
+        stats.display({
+          id: "value",
+          header: "Aircraft Count",
+          cell: ({ row }: { row: Row<Stats> }) => (
+            <span>{row.original.max.value}</span>
+          ),
+        }),
+      ],
+    }),
+    stats.group({
+      id: "stats",
+      header: "Stats",
+      columns: [
+        stats.display({
+          id: "type",
+          header: () => <span>Date</span>,
+          cell: ({ row }: { row: Row<Stats> }) => (
+            <span>
+              {row.original.sum.map((item) => (
+                <div>{item.date}</div> // eslint-disable-line
+              ))}
+            </span>
+          ),
+        }),
+        stats.display({
+          id: "value",
+          header: "Total Aircraft",
+          cell: ({ row }: { row: Row<Stats> }) => (
+            <span>
+              {row.original.sum.map((item) => (
+                <div>{item.value}</div> // eslint-disable-line
+              ))}
+            </span>
+          ),
+        }),
+        stats.display({
+          id: "mean",
+          header: "Mean",
+          cell: ({ row }: { row: Row<Stats> }) => (
+            <span>{row.original.mean}</span>
+          ),
+        }),
+      ],
+    }),
   ];
 };
 
@@ -158,11 +217,29 @@ const tableMap: TableMap = {
 function Api() {
   const [date, setDate] = useState("");
   const [specified_file, setSpecifiedFile] = useState("");
-  const [output, setOutput] = useState<any[]>([]);
+  const [output, setOutput] = useState<any>([]);
   const [tableVar, setTableVar] = useState<any[]>([]); // Accepts both InterestingAircraft and Stats will update to be more specific later
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
+
+  function convertData(originalData: orginalData): Stats {
+    const maxKey = Object.keys(originalData.max)[0];
+    const maxValue = originalData.max[maxKey];
+    const maxObj = { type: maxKey, value: maxValue };
+
+    const sumData = Object.keys(originalData.sum).map((key) => ({
+      date: key,
+      value: originalData.sum[key],
+    }));
+
+    const mainData: Stats = {
+      max: maxObj,
+      sum: sumData,
+      mean: originalData.mean,
+    };
+    return mainData;
+  }
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -202,8 +279,8 @@ function Api() {
         alert("No aircraft found for this date.");
         setOutput([]);
       }
-      if (specified_file === "eow") {
-        setOutput(result.data.sum);
+      if (specified_file === "eow" || specified_file === "eom") {
+        setOutput(convertData(result.data));
       } else {
         setOutput(result.data);
       }
@@ -278,7 +355,7 @@ function Api() {
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
+                    <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -329,7 +406,7 @@ function Api() {
               <FaArrowRight />
             </button>
           </div>
-          )}
+        )}
       </div>
       <Footer />
     </div>
