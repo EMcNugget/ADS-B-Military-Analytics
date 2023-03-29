@@ -113,9 +113,9 @@ class Analysis:
         max_data = max_data[:1].to_dict()
         final_data.update({"max": max_data})
         sum_dict = analysis_df.sum(axis=0).to_dict()
-        for key, value in sum_dict.items():
-            sum_dict[key] = int(value)
-        final_data.update({"sum": sum_dict})
+        sum_dict_int = {key: int(value) for key, value in sum_dict.items()}
+        final_data.update({"sum": [{"type": t, "value": v}
+                                   for t, v in sum_dict_int.items()]})
         mean_data = analysis_df.values.sum(axis=0)
         mean_data = sum(mean_data) / len(mean_data)
         final_data.update({"mean": int(mean_data)})

@@ -14,9 +14,6 @@ plugins:
   - react
   - '@typescript-eslint'
 rules:
-  quotes:
-    - error
-    - double
   semi:
     - error
     - always

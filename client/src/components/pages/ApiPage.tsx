@@ -34,16 +34,16 @@ const inter = createColumnHelper<InterestingAircraft>();
 
 const createInterColumn = (
   id: string,
-  header: any, // eslint-disable-line
+  header: any,
   accessor: keyof InterestingAircraft,
-  cursor: string,
-  onClick: (row: Row<InterestingAircraft>) => void
+  cursor = "text",
+  onClick?: (row: Row<InterestingAircraft>) => void
 ) => {
   return inter.display({
     id,
     header,
     cell: ({ row }: { row: Row<InterestingAircraft> }) => (
-      <span style={{ cursor: cursor }} onClick={() => onClick(row)}>
+      <span style={{ cursor: cursor }} onClick={() => onClick?.(row)}>
         {row.original[accessor]}
       </span>
     ),
@@ -66,18 +66,10 @@ const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
         hexHandler(row.original.hex);
       }
     ),
-    createInterColumn("flight", "Callsign", "flight", "text", () => {
-      null;
-    }),
-    createInterColumn("r", "Reg", "r", "text", () => {
-      null;
-    }),
-    createInterColumn("t", "Aircraft Type", "t", "text", () => {
-      null;
-    }),
-    createInterColumn("squawk", "Squawk", "squawk", "text", () => {
-      null;
-    }),
+    createInterColumn("flight", "Callsign", "flight"),
+    createInterColumn("r", "Reg", "r"),
+    createInterColumn("t", "Aircraft Type", "t"),
+    createInterColumn("squawk", "Squawk", "squawk"),
   ];
 };
 
@@ -125,16 +117,6 @@ type Stats = {
   sum: {
     date: string;
     value: number;
-  }[];
-  mean: number;
-};
-
-type orginalData = {
-  max: {
-    [key: string]: number;
-  };
-  sum: {
-    [key: string]: number;
   };
   mean: number;
 };
@@ -164,39 +146,29 @@ const statsColumns = (): ColumnDef<Stats, unknown>[] => {
       ],
     }),
     stats.group({
-      id: "stats",
-      header: "Stats",
+      id: "sum",
+      header: "Sum",
       columns: [
         stats.display({
           id: "type",
-          header: () => <span>Date</span>,
+          header: "Date",
           cell: ({ row }: { row: Row<Stats> }) => (
-            <span>
-              {row.original.sum.map((item) => (
-                <div>{item.date}</div> // eslint-disable-line
-              ))}
-            </span>
+            <span>{row.original.sum.date}</span>
           ),
         }),
         stats.display({
           id: "value",
           header: "Total Aircraft",
           cell: ({ row }: { row: Row<Stats> }) => (
-            <span>
-              {row.original.sum.map((item) => (
-                <div>{item.value}</div> // eslint-disable-line
-              ))}
-            </span>
-          ),
-        }),
-        stats.display({
-          id: "mean",
-          header: "Mean",
-          cell: ({ row }: { row: Row<Stats> }) => (
-            <span>{row.original.mean}</span>
+            <span>{row.original.sum.value}</span>
           ),
         }),
       ],
+    }),
+    stats.display({
+      id: "mean",
+      header: "Mean",
+      cell: ({ row }: { row: Row<Stats> }) => <span>{row.original.mean}</span>,
     }),
   ];
 };
@@ -204,7 +176,7 @@ const statsColumns = (): ColumnDef<Stats, unknown>[] => {
 // Hashmap for selecting the correct table
 
 interface TableMap {
-  [key: string]: ColumnDef<any, unknown>[]; // eslint-disable-line
+  [key: string]: ColumnDef<any, unknown>[];
 }
 
 const tableMap: TableMap = {
@@ -215,31 +187,13 @@ const tableMap: TableMap = {
 };
 
 function Api() {
-  const [date, setDate] = useState("");
-  const [specified_file, setSpecifiedFile] = useState("");
-  const [output, setOutput] = useState<any>([]);
-  const [tableVar, setTableVar] = useState<any[]>([]); // Accepts both InterestingAircraft and Stats will update to be more specific later
+  const [date, setDate] = useState("2023-03-09");
+  const [specified_file, setSpecifiedFile] = useState("Select an option...");
+  const [output, setOutput] = useState<any[]>([]);
+  const [tableVar, setTableVar] = useState<ColumnDef<any, unknown>[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
-
-  function convertData(originalData: orginalData): Stats {
-    const maxKey = Object.keys(originalData.max)[0];
-    const maxValue = originalData.max[maxKey];
-    const maxObj = { type: maxKey, value: maxValue };
-
-    const sumData = Object.keys(originalData.sum).map((key) => ({
-      date: key,
-      value: originalData.sum[key],
-    }));
-
-    const mainData: Stats = {
-      max: maxObj,
-      sum: sumData,
-      mean: originalData.mean,
-    };
-    return mainData;
-  }
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -274,14 +228,12 @@ function Api() {
       }
       if (
         result.data === null ||
-        JSON.stringify(result.data) === '{"hex":"No aircraft found"}' // eslint-disable-line
+        JSON.stringify(result.data) === '{"hex":"No aircraft found"}'
       ) {
         alert("No aircraft found for this date.");
         setOutput([]);
       }
-      if (specified_file === "eow" || specified_file === "eom") {
-        setOutput(convertData(result.data));
-      } else {
+      if (result.status === 200) {
         setOutput(result.data);
       }
     } catch (error: any) {
