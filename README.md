@@ -16,7 +16,7 @@ You can find the production version at www.adsbmilanalytics.com
 
 ## How To Install
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information on how to contribute to this project. As well as information on how to set up the project locally.
+See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for more information on how to contribute to this project. As well as information on how to set up the project locally.
 
 ## Tech Stack
 
@@ -43,7 +43,7 @@ Owner & Lead Dev: [Ethan Seys](https://github.com/EMcNugget)
 
 ## Questions, Comments, Concerns?
 
-See the docs folder for more information on the project.
+See the [docs][docs] folder for more information on the project.
 
 Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on this repository.
 
@@ -59,3 +59,4 @@ Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on th
 [rm]: https://github.com/users/EMcNugget/projects/6
 [pyreq]: https://img.shields.io/badge/Python-3.11.2-blue?style=flat&logo=python
 [node.js]: https://img.shields.io/badge/Node.js-v18.15.0-green?logo=node.js&style=flat
+[docs]: https://github.com/ADS-B-Military-Analytics/ADS-B-Military-Analytics/tree/main/docs
