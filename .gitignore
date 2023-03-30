@@ -1,12 +1,10 @@
 __pycache__/
 .pytest_cache/
-*.log
 __pypackages__/
 .env
 .venv
 dist
 test.py
-npm-debug.log*
 node_modules
 client/node_modules
 .firebase

@@ -1,19 +1,19 @@
 @use "./main.scss" as *;
 
 .foot {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
-    font-size: 5rem;
-    margin-bottom: 0.5rem;
+  font-size: 5rem;
+  margin-bottom: 0.5rem;
 }

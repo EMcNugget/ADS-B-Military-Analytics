@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Footer from "../libs/footer";
 import { FaRegQuestionCircle, FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { Tooltip } from "@mui/material";
 import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
@@ -32,7 +33,7 @@ type InterestingAircraft = MainData; // Uses the same data. It's setup for clari
 
 const inter = createColumnHelper<InterestingAircraft>();
 
-const createInterColumn = (
+const CreateInterestingAircraftColumns = (
   id: string,
   header: any,
   accessor: keyof InterestingAircraft,
@@ -50,26 +51,28 @@ const createInterColumn = (
   });
 };
 
-const interColumns = (): ColumnDef<InterestingAircraft, unknown>[] => {
+const InterestingAircraftColumns = (): ColumnDef<
+  InterestingAircraft,
+  unknown
+>[] => {
   return [
-    createInterColumn(
+    CreateInterestingAircraftColumns(
       "hex",
-      <div className="tooltip">
-        Hex <FaRegQuestionCircle />
-        <span className="tooltiptext">
-          Click on a hex to view the aircraft on ADS-B Exchange.
+      <Tooltip title="Click to view on ADSB Exchange" placement="top-start">
+        <span>
+          Hex <FaRegQuestionCircle />
         </span>
-      </div>,
+      </Tooltip>,
       "hex",
       "pointer",
       (row) => {
         hexHandler(row.original.hex);
       }
     ),
-    createInterColumn("flight", "Callsign", "flight"),
-    createInterColumn("r", "Reg", "r"),
-    createInterColumn("t", "Aircraft Type", "t"),
-    createInterColumn("squawk", "Squawk", "squawk"),
+    CreateInterestingAircraftColumns("flight", "Callsign", "flight"),
+    CreateInterestingAircraftColumns("r", "Reg", "r"),
+    CreateInterestingAircraftColumns("t", "Aircraft Type", "t"),
+    CreateInterestingAircraftColumns("squawk", "Squawk", "squawk"),
   ];
 };
 
@@ -84,14 +87,14 @@ type AircraftCount = {
   value: number;
 };
 
-const ac_count = createColumnHelper<AircraftCount>();
+const AircraftCountHelper = createColumnHelper<AircraftCount>();
 
-const createCountColumn = (
+const CreateAircraftCountColumn = (
   id: string,
   header: string,
   accessor: keyof AircraftCount
 ) => {
-  return ac_count.display({
+  return AircraftCountHelper.display({
     id,
     header,
     cell: ({ row }: { row: Row<AircraftCount> }) => (
@@ -100,10 +103,10 @@ const createCountColumn = (
   });
 };
 
-const countColumns = (): ColumnDef<AircraftCount, unknown>[] => {
+const AircraftCountColumns = (): ColumnDef<AircraftCount, unknown>[] => {
   return [
-    createCountColumn("type", "Aircraft Type", "type"),
-    createCountColumn("value", "Aircraft Count", "value"),
+    CreateAircraftCountColumn("type", "Aircraft Type", "type"),
+    CreateAircraftCountColumn("value", "Aircraft Count", "value"),
   ];
 };
 
@@ -121,22 +124,22 @@ type Stats = {
   mean: number;
 };
 
-const stats = createColumnHelper<Stats>();
+const StatisticsHelper = createColumnHelper<Stats>();
 
-const statsColumns = (): ColumnDef<Stats, unknown>[] => {
+const StatisticsColumns = (): ColumnDef<Stats, unknown>[] => {
   return [
-    stats.group({
+    StatisticsHelper.group({
       id: "max",
       header: "Max",
       columns: [
-        stats.display({
+        StatisticsHelper.display({
           id: "type",
           header: "Aircraft Type",
           cell: ({ row }: { row: Row<Stats> }) => (
             <span>{row.original.max.type}</span>
           ),
         }),
-        stats.display({
+        StatisticsHelper.display({
           id: "value",
           header: "Aircraft Count",
           cell: ({ row }: { row: Row<Stats> }) => (
@@ -145,18 +148,18 @@ const statsColumns = (): ColumnDef<Stats, unknown>[] => {
         }),
       ],
     }),
-    stats.group({
+    StatisticsHelper.group({
       id: "sum",
       header: "Sum",
       columns: [
-        stats.display({
+        StatisticsHelper.display({
           id: "type",
           header: "Date",
           cell: ({ row }: { row: Row<Stats> }) => (
             <span>{row.original.sum.date}</span>
           ),
         }),
-        stats.display({
+        StatisticsHelper.display({
           id: "value",
           header: "Total Aircraft",
           cell: ({ row }: { row: Row<Stats> }) => (
@@ -165,7 +168,7 @@ const statsColumns = (): ColumnDef<Stats, unknown>[] => {
         }),
       ],
     }),
-    stats.display({
+    StatisticsHelper.display({
       id: "mean",
       header: "Mean",
       cell: ({ row }: { row: Row<Stats> }) => <span>{row.original.mean}</span>,
@@ -180,17 +183,17 @@ interface TableMap {
 }
 
 const tableMap: TableMap = {
-  inter: interColumns(),
-  stats: countColumns(),
-  eow: statsColumns(),
-  eom: statsColumns(),
+  inter: InterestingAircraftColumns(),
+  stats: AircraftCountColumns(),
+  eow: StatisticsColumns(),
+  eom: StatisticsColumns(),
 };
 
 function Api() {
   const [date, setDate] = useState("2023-03-09");
   const [specified_file, setSpecifiedFile] = useState("Select an option...");
   const [output, setOutput] = useState<any[]>([]);
-  const [tableVar, setTableVar] = useState<ColumnDef<any, unknown>[]>([]);
+  const [tableDef, settableDef] = useState<ColumnDef<any, unknown>[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
@@ -251,12 +254,12 @@ function Api() {
     if (specified_file === "Select an option...") {
       alert("Please select an option.");
       clearTimeout(currentTime);
-      setTableVar([]);
+      settableDef([]);
       if (currentTime - lastClickedTime < 10000) {
         alert("Please wait 10 seconds before fetching again.");
       }
     } else {
-      setTableVar(tableMap[specified_file]);
+      settableDef(tableMap[specified_file]);
       fetchData();
       setLastClickedTime(currentTime);
       table.setPageIndex(0);
@@ -265,7 +268,7 @@ function Api() {
   };
 
   const table = useReactTable({
-    columns: tableVar,
+    columns: tableDef,
     data: output,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -277,6 +280,7 @@ function Api() {
       <h2>Historical Data</h2>
       <div className="input">
         <input
+          aria-label="Date"
           className="inputdate"
           type="date"
           min="2023-03-09"
@@ -285,6 +289,7 @@ function Api() {
           onChange={(e) => setDate(e.target.value)}
         />
         <select
+          aria-label="Select an option"
           style={{ color: color }}
           className="inputdropdown"
           value={specified_file}
@@ -338,6 +343,7 @@ function Api() {
         {output.length > 2 && (
           <div className="page">
             <button
+              aria-label="Previous Page"
               className="pagebutton"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage}
@@ -351,6 +357,7 @@ function Api() {
               </strong>
             </span>
             <button
+              aria-label="Next Page"
               className="pagebutton"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}

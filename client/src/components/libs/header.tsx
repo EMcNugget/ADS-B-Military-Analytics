@@ -3,8 +3,8 @@ import "../../scss/header.scss";
 const Header = () => {
   return (
     <header className="header">
-      <h1 className="header__title">ADS-B Military Analytics</h1>
-      <nav className="header__nav">
+      <h1 className="header_title">ADS-B Military Analytics</h1>
+      <nav className="header_nav">
         <ul>
           <li>
             <a href="/">Home</a>

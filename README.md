@@ -43,6 +43,8 @@ Owner & Lead Dev: [Ethan Seys](https://github.com/EMcNugget)
 
 ## Questions, Comments, Concerns?
 
+See the docs folder for more information on the project.
+
 Feel free to contact me at <support@adsbmilanalytics.com> or open an issue on this repository.
 
 [ts]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
