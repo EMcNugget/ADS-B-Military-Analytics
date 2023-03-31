@@ -2,9 +2,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Footer from "../libs/footer";
-import { FaRegQuestionCircle, FaArrowRight, FaArrowLeft } from "react-icons/fa";
-import { Alert, Tooltip } from "@mui/material";
+import { FaRegQuestionCircle } from "react-icons/fa";
+import {
+  KeyboardArrowRightOutlined,
+  KeyboardArrowLeftOutlined,
+} from "@mui/icons-material";
+import { Alert, Tooltip, IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import { Close } from "@mui/icons-material";
 import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
@@ -17,7 +22,6 @@ import {
 } from "@tanstack/react-table";
 import Header from "../libs/header";
 import "../../scss/api.scss";
-
 // Main data type
 
 type MainData = {
@@ -302,11 +306,24 @@ function Api() {
         <Alert
           severity="error"
           style={{
+            width: "45%",
             position: "absolute",
             top: 0,
-            width: "40%",
+            zIndex: 1000,
             marginTop: "0.45rem",
           }}
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setErrors("");
+              }}
+            >
+              <Close fontSize="inherit" />
+            </IconButton>
+          }
         >
           {errors}
         </Alert>
@@ -380,7 +397,7 @@ function Api() {
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage}
             >
-              <FaArrowLeft />
+              <KeyboardArrowLeftOutlined />
             </button>
             <span className="pagebutton">
               <strong>
@@ -394,7 +411,7 @@ function Api() {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              <FaArrowRight />
+              <KeyboardArrowRightOutlined />
             </button>
           </div>
         )}
