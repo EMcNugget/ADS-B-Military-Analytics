@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Footer from "../libs/footer";
 import { FaRegQuestionCircle, FaArrowRight, FaArrowLeft } from "react-icons/fa";
-import { Tooltip } from "@mui/material";
+import { Alert, Tooltip } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
@@ -190,13 +191,37 @@ const tableMap: TableMap = {
 };
 
 function Api() {
-  const [date, setDate] = useState("2023-03-09");
+  const [date, setDate] = useState("");
   const [specified_file, setSpecifiedFile] = useState("Select an option...");
+  const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState<any[]>([]);
+  const [errors, setErrors] = useState<any>([]);
   const [tableDef, settableDef] = useState<ColumnDef<any, unknown>[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
+
+  useEffect(() => {
+    if (output.length === 0) {
+      setLoading(false);
+    }
+  }, [output]);
+
+  const ApiButton = () => {
+    const isDisabled = specified_file === "Select an option..." || date === "";
+
+    return (
+      <LoadingButton
+        variant="contained"
+        className="button_data"
+        onClick={handleClick}
+        loading={loading}
+        disabled={isDisabled}
+      >
+        <span>Fetch Data</span>
+      </LoadingButton>
+    );
+  };
 
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
@@ -222,45 +247,42 @@ function Api() {
         result.status === 406 ||
         result.status === 403
       ) {
-        alert(result.request.response);
+        setErrors(`Oops there was an error: ${result.status}`);
         setOutput([]);
       }
       if (result.status === 404) {
-        alert(`No data found for ${date}.`);
+        setErrors(`Oops there was an error: ${result.status}`);
         setOutput([]);
       }
       if (
         result.data === null ||
         JSON.stringify(result.data) === '{"hex":"No aircraft found"}'
       ) {
-        alert("No aircraft found for this date.");
+        setErrors(`No aircraft found for ${date}.`);
         setOutput([]);
       }
       if (result.status === 200) {
         setOutput(result.data);
       }
     } catch (error: any) {
-      alert(error.request.response);
+      setErrors(`Oops there was an error: ${error}`);
+      setOutput([]);
       if (error.request.response === "") {
-        alert(
-          "There was an error fetching data. Please try again later. If the problem persists, please contact support@adsbmilanalytics.com"
-        );
+        setErrors(`There was an error fetching data. Please try again later. If the
+        problem persists, please contact support@adsbmilanalytics.com`);
+        setOutput([]);
       }
     }
   };
 
   const handleClick = () => {
     const currentTime = Date.now();
-    if (specified_file === "Select an option...") {
-      alert("Please select an option.");
-      clearTimeout(currentTime);
-      settableDef([]);
-      if (currentTime - lastClickedTime < 10000) {
-        alert("Please wait 10 seconds before fetching again.");
-      }
+    if (currentTime - lastClickedTime < 10000) {
+      setErrors("Please wait 10 seconds before fetching data again.");
     } else {
       settableDef(tableMap[specified_file]);
       fetchData();
+      setLoading(true);
       setLastClickedTime(currentTime);
       table.setPageIndex(0);
       table.setPageSize(12);
@@ -276,6 +298,19 @@ function Api() {
 
   return (
     <div className="container">
+      {errors.length > 0 && (
+        <Alert
+          severity="error"
+          style={{
+            position: "absolute",
+            top: 0,
+            width: "40%",
+            marginTop: "0.45rem",
+          }}
+        >
+          {errors}
+        </Alert>
+      )}
       <Header />
       <h2>Historical Data</h2>
       <div className="input">
@@ -285,7 +320,6 @@ function Api() {
           type="date"
           min="2023-03-09"
           max={new Date().toISOString().split("T")[0]}
-          value={date}
           onChange={(e) => setDate(e.target.value)}
         />
         <select
@@ -302,11 +336,9 @@ function Api() {
           <option value="eom">Monthly Stats</option>
         </select>
       </div>
-      <button className="button_data" onClick={handleClick}>
-        Fetch Data
-      </button>
+      <ApiButton />
       <div className="output">
-        {output.length > 2 && (
+        {output.length > 0 && (
           <table className="outputtable" onChange={handleChange}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

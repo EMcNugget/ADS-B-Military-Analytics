@@ -10,6 +10,11 @@
   width: 100%;
 
   .home_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     padding: 0 20px;
 
     .home_title {
@@ -27,27 +32,6 @@
       h6 {
         font-size: 1rem;
         margin-top: auto;
-      }
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 2rem;
-
-      .button {
-        @include color_class(#fff, #2178b2);
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-        font-size: 2rem;
-        font-weight: 500;
-        cursor: pointer;
-
-        &:hover {
-          background: #2162b2;
-        }
       }
     }
   }
