@@ -202,7 +202,7 @@ function Api() {
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
   useEffect(() => {
-    if (output.length === 0) {
+    if (output.length === 0 || output.length > 0) {
       setLoading(false);
     }
   }, [output]);
