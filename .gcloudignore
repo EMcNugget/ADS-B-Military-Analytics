@@ -1,4 +1,6 @@
 *
-!server/
-server/*
-!server/app.py
+!gcp/
+gcp/*
+!gcp/AppEngine/
+gcp/AppEngine/*
+!gcp/AppEngine/app.py
