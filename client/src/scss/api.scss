@@ -64,18 +64,6 @@ h2 {
   }
 }
 
-.button_data {
-  @extend .input_class;
-  @include color_class(#fff, #2178b2);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #2162b2;
-  }
-}
-
 .output {
   display: flex;
   flex-direction: column;

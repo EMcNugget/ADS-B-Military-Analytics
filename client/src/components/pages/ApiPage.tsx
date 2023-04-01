@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Footer from "../libs/footer";
-import { FaRegQuestionCircle } from "react-icons/fa";
-import {
-  KeyboardArrowRightOutlined,
-  KeyboardArrowLeftOutlined,
-} from "@mui/icons-material";
 import { Alert, Tooltip, IconButton } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Close } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Close from "@mui/icons-material/Close";
+import HelpOutline from "@mui/icons-material/HelpOutline";
+import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
+import KeyboardArrowRightOutlined from "@mui/icons-material/KeyboardArrowRightOutlined";
 import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
@@ -20,6 +17,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import Footer from "../libs/footer";
 import Header from "../libs/header";
 import "../../scss/api.scss";
 // Main data type
@@ -65,7 +63,7 @@ const InterestingAircraftColumns = (): ColumnDef<
       "hex",
       <Tooltip title="Click to view on ADSB Exchange" placement="top-start">
         <span>
-          Hex <FaRegQuestionCircle />
+          Hex <HelpOutline />
         </span>
       </Tooltip>,
       "hex",
@@ -217,7 +215,6 @@ function Api() {
     return (
       <LoadingButton
         variant="contained"
-        className="button_data"
         onClick={handleClick}
         loading={loading}
         disabled={isDisabled}
@@ -389,7 +386,7 @@ function Api() {
             </tbody>
           </table>
         )}
-        {output.length > 2 && (
+        {output.length > 0 && (
           <div className="page">
             <button
               aria-label="Previous Page"
@@ -397,7 +394,7 @@ function Api() {
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage}
             >
-              <KeyboardArrowLeftOutlined />
+              <KeyboardArrowLeftOutlined fontSize="small" />
             </button>
             <span className="pagebutton">
               <strong>
@@ -411,7 +408,7 @@ function Api() {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              <KeyboardArrowRightOutlined />
+              <KeyboardArrowRightOutlined fontSize="small" />
             </button>
           </div>
         )}
