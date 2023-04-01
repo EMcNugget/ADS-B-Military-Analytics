@@ -1,5 +1,6 @@
 import { Box, Link, Typography } from "@mui/material";
 import { FaMailBulk, FaGithub } from "react-icons/fa";
+import PolicyIcon from "@mui/icons-material/Policy";
 import "../../scss/footer.scss";
 
 export default function Footer() {
@@ -7,6 +8,7 @@ export default function Footer() {
     copy: "© 2023 ADS-B Military Analytics. All rights reserved.",
     git: "Github",
     contact: "Contact",
+    privacy: "Privacy Policy",
   };
 
   return (
@@ -45,6 +47,17 @@ export default function Footer() {
             <FaMailBulk />
             &nbsp;
             {content["contact"]}
+          </Link>
+          <Link
+            underline="hover"
+            color={"inherit"}
+            href="/privacy"
+            variant="body2"
+            className="link"
+          >
+            <PolicyIcon />
+            &nbsp;
+            {content["privacy"]}
           </Link>
         </Box>
 
