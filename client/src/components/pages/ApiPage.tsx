@@ -4,8 +4,6 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { Close } from "@mui/icons-material";
@@ -214,7 +212,6 @@ function Api() {
   const [tableDef, settableDef] = useState<ColumnDef<any, unknown>[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
-  const theme = useTheme();
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
   useEffect(() => {
@@ -236,19 +233,6 @@ function Api() {
         <span>Fetch Data</span>
       </LoadingButton>
     );
-  };
-
-  const buttonStyle = {
-    container: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 2,
-      marginTop: 2,
-    },
-    containerMobile: {
-      marginBottom: 4,
-    },
   };
 
   const handleChange = (event: any) => {
@@ -417,9 +401,11 @@ function Api() {
         {output.length > 0 && (
           <Box
             style={{
-              ...buttonStyle.container,
-              ...(useMediaQuery(theme.breakpoints.down("sm")) &&
-                buttonStyle.containerMobile),
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 2,
+              marginTop: 2,
             }}
           >
             <button
