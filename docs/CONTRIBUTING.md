@@ -31,10 +31,22 @@ API_HOST= # Your API Host here
 npm run init
 ```
 
+Yarn
+
+```bash
+yarn run init
+```
+
 **Note:** Windows Users:
 
 ```batch
 npm run wininit
+```
+
+Yarn
+
+```batch
+yarn run wininit
 ```
 
 ##### Run the Application
@@ -45,15 +57,27 @@ npm run wininit
 npm start
 ```
 
+Yarn
+
+```bash
+yarn start
+```
+
 Windows Users:
 
 ```batch
 npm run winstart
 ```
 
+Yarn
+
+```batch
+yarn run winstart
+```
+
 8. Open your browser and go to `http://localhost:5173/` to view the application.
 
-**Note:** You can run the frontend dev server by running `npm run dev`.
+**Note:** You can run the frontend dev server by running `npm run dev` or `yarn run dev` in the root directory. This will allow you to make changes to the frontend and see them in real time.
 
 [bash]: https://www.twilio.com/blog/2017/01/how-to-set-environment-variables.html
 [win]: https://www.architectryan.com/2018/08/31/how-to-change-environment-variables-on-windows-10/
