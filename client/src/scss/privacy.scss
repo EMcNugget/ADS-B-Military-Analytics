@@ -10,6 +10,8 @@ body {
 h1,
 h3,
 p {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
   text-align: center;
   justify-content: center;
 }
@@ -31,21 +33,4 @@ p {
   color: #fff;
   justify-content: center;
   align-items: center;
-}
-
-.privacy_button {
-  @extend .input_class;
-  @include color_class(#fff, #2178b2);
-  display: flex;
-  justify-content: center;
-  margin: 0.5rem auto;
-  width: 25%;
-  font: 400;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #2162b2;
-  }
 }

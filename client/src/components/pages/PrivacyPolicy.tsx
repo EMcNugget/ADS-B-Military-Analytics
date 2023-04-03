@@ -1,4 +1,5 @@
 import "../../scss/privacy.scss";
+import Button from "@mui/material/Button";
 import Footer from "../libs/footer";
 
 const returnonclick = () => {
@@ -95,12 +96,19 @@ function Privacy() {
         <p>Effective as of March 02, 2023</p>
       </div>
       <div className="privacy_container">
-        <input
-          className="privacy_button"
-          type="button"
-          value="Return"
+        <Button
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "0.5rem auto",
+            width: "25%",
+            padding: "0.5rem",
+          }}
+          variant="contained"
           onClick={returnonclick}
-        />
+        >
+          Return
+        </Button>
       </div>
       <p>&nbsp;</p>
       <p>&nbsp;</p>
