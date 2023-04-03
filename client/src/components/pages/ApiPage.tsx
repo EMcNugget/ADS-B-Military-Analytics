@@ -2,22 +2,23 @@
 
 // Imports are done individually to reduce bundle size
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box } from "@mui/material";
-import { Alert } from "@mui/material";
-import { Tooltip } from "@mui/material";
-import { IconButton } from "@mui/material";
-import { InputLabel } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
+import { Close } from "@mui/icons-material";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Close from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlined from "@mui/icons-material/KeyboardArrowRightOutlined";
-import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
   createColumnHelper,
@@ -27,9 +28,11 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { getSunday, getMonth } from "../libs/date";
 import Footer from "../libs/footer";
 import Header from "../libs/header";
 import "../../scss/api.scss";
+
 // Main data type
 
 type MainData = {
@@ -211,6 +214,7 @@ function Api() {
   const [tableDef, settableDef] = useState<ColumnDef<any, unknown>[]>([]);
   const [lastClickedTime, setLastClickedTime] = useState<number>(0);
   const [color, setColor] = useState("gray");
+  const theme = useTheme();
   const url = `https://unified-dragon-378823.uc.r.appspot.com//${date}/${specified_file}`;
 
   useEffect(() => {
@@ -232,6 +236,19 @@ function Api() {
         <span>Fetch Data</span>
       </LoadingButton>
     );
+  };
+
+  const buttonStyle = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 2,
+      marginTop: 2,
+    },
+    containerMobile: {
+      marginBottom: 4,
+    },
   };
 
   const handleChange = (event: any) => {
@@ -399,11 +416,11 @@ function Api() {
         )}
         {output.length > 0 && (
           <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            marginBottom={2}
-            marginTop={2}
+            style={{
+              ...buttonStyle.container,
+              ...(useMediaQuery(theme.breakpoints.down("sm")) &&
+                buttonStyle.containerMobile),
+            }}
           >
             <button
               aria-label="Previous Page"
