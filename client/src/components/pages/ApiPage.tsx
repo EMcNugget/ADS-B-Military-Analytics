@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Imports are done individually to reduce bundle size
+
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Alert, Tooltip, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
+import { Alert } from "@mui/material";
+import { Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { InputLabel } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Close from "@mui/icons-material/Close";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlined from "@mui/icons-material/KeyboardArrowRightOutlined";
@@ -286,7 +296,7 @@ function Api() {
       setLoading(true);
       setLastClickedTime(currentTime);
       table.setPageIndex(0);
-      table.setPageSize(12);
+      table.setPageSize(10);
     }
   };
 
@@ -327,6 +337,7 @@ function Api() {
       )}
       <Header />
       <h2>Historical Data</h2>
+      {/* These are inputs are next up for refactoring to MUI components */}
       <div className="input">
         <input
           aria-label="Date"
@@ -387,14 +398,27 @@ function Api() {
           </table>
         )}
         {output.length > 0 && (
-          <div className="page">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            marginBottom={2}
+            marginTop={2}
+          >
             <button
               aria-label="Previous Page"
               className="pagebutton"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage}
+              disabled={!table.getCanPreviousPage()}
             >
-              <KeyboardArrowLeftOutlined fontSize="small" />
+              <KeyboardArrowLeftOutlined
+                fontSize="inherit"
+                sx={
+                  table.getCanPreviousPage()
+                    ? { color: "black", cursor: "pointer" }
+                    : { color: "gray", cursor: "not-allowed" }
+                }
+              />
             </button>
             <span className="pagebutton">
               <strong>
@@ -408,9 +432,56 @@ function Api() {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              <KeyboardArrowRightOutlined fontSize="small" />
+              <KeyboardArrowRightOutlined
+                fontSize="inherit"
+                sx={
+                  table.getCanNextPage()
+                    ? { color: "black", cursor: "pointer" }
+                    : { color: "gray", cursor: "not-allowed" }
+                }
+              />
             </button>
-          </div>
+            <FormControl
+              style={{ marginLeft: "0.8rem", borderColor: "white" }}
+              size="small"
+            >
+              <InputLabel
+                id="show-page"
+                style={{ fontSize: "14px", color: "white", fontWeight: "bold" }}
+              >
+                Pages
+              </InputLabel>
+              <Select
+                style={{
+                  width: "8rem",
+                  fontSize: "14px",
+                  color: "white",
+                  borderColor: "white",
+                }}
+                labelId="show-page"
+                id="show-page"
+                value={table.getState().pagination.pageSize}
+                label="Show"
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value));
+                }}
+                inputProps={{
+                  sx: {
+                    borderColor: "white",
+                    borderWidth: "2px",
+                    borderRadius: "4px",
+                    fontWeight: "bold",
+                  },
+                }}
+              >
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <MenuItem key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
         )}
       </div>
       <Footer />
