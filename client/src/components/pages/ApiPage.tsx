@@ -2,21 +2,22 @@
 
 // Imports are done individually to reduce bundle size
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import { Close } from "@mui/icons-material";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import InputLabel from "@mui/material/InputLabel";
+import { Box } from "@mui/material";
+import { Alert } from "@mui/material";
+import { Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { InputLabel } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Close from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlined from "@mui/icons-material/KeyboardArrowRightOutlined";
+import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
   createColumnHelper,
@@ -26,11 +27,9 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { getSunday, getMonth } from "../libs/date";
 import Footer from "../libs/footer";
 import Header from "../libs/header";
 import "../../scss/api.scss";
-
 // Main data type
 
 type MainData = {
@@ -400,13 +399,11 @@ function Api() {
         )}
         {output.length > 0 && (
           <Box
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 2,
-              marginTop: 2,
-            }}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            marginBottom={2}
+            marginTop={2}
           >
             <button
               aria-label="Previous Page"
