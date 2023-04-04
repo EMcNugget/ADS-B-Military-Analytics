@@ -135,7 +135,8 @@ class Main:
                         'F35LTNG', 'F35', 'C2', 'E2', 'S61',
                          'B742', 'H64', 'F15',
                          'AV8B', 'RC135'])
-    schema = {'hex': [], 'flight': [], 't': [], 'r': [], 'squawk': []}
+    schema = {'hex': [], 'flight': [], 't': [],
+              'r': [], 'squawk': [], 'lat': [], 'lon': []}
 
     @classmethod
     def pre_proccess(cls):
@@ -148,6 +149,8 @@ class Main:
                 cls.schema['t'].append(item.get('t', 'None'))
                 cls.schema['r'].append(item.get('r', 'None'))
                 cls.schema['squawk'].append(item.get('squawk', 'None'))
+                cls.schema['lat'].append(item.get('lat', 'None'))
+                cls.schema['lon'].append(item.get('lon', 'None'))
         df_data = pd.DataFrame(cls.schema)
         df_data.drop(df_data[df_data['r'] == 'TWR'].index, inplace=True)
         df_data.drop(df_data[df_data['t'] == 'GND'].index, inplace=True)
