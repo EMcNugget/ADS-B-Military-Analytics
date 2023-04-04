@@ -9,6 +9,7 @@ import { Alert } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { InputLabel } from "@mui/material";
+import dayjs from "dayjs";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Close from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,7 +18,6 @@ import Select from "@mui/material/Select";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlined from "@mui/icons-material/KeyboardArrowRightOutlined";
-import { getSunday, getMonth } from "../libs/date";
 import {
   useReactTable,
   createColumnHelper,
@@ -237,10 +237,10 @@ function Api() {
   const handleChange = (event: any) => {
     setSpecifiedFile(event.target.value);
     if (event.target.value === "eow") {
-      setDate(getSunday(date));
+      setDate(dayjs().startOf("week").format("YYYY-MM-DD"));
     }
     if (event.target.value === "eom") {
-      setDate(getMonth(date));
+      setDate(dayjs().startOf("month").format("YYYY-MM-DD"));
     }
     if (event.target.value !== "Select an option...") {
       setColor("white");
