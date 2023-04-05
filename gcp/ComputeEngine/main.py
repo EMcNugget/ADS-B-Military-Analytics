@@ -208,9 +208,13 @@ class Main:
     def ac_count(cls):
         """Returns the total number of aircraft in the data"""
 
-        ac_data = pd.DataFrame(cls.data['ac'])
+        ac_data = pd.DataFrame(cls.pre_proccess())
         count = pd.value_counts(ac_data['t']).to_dict()
-        return count
+        new_list = []
+        for key, value in count.items():
+            new_dict = {"type": key, "value": value}
+            new_list.append(new_dict)
+        return new_list
 
     @classmethod
     def inter_ac(cls):
