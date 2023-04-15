@@ -6,7 +6,7 @@
 
 ## What is this?
 
-# ATTENTION This project will now be updated less frequently. Instead of nightly updates expect weekly or bi-weekly.
+# ATTENTION This project will now be updated less frequently, and most likely archived at the end of 2023. Due to financial reasons no more data will be collected, and the remainder of site features will cease to operate December 31st 2023.
 
 This allows you to view military aircraft from an ever growing database. Find out how many aircraft flew on a specific day, what type, among other features that are coming soon!
 
