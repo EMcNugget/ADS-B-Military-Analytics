@@ -1,12 +1,10 @@
 # ADS-B Military Analytics
 
-[![Deploy to Firebase Hosting](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/firebase-hosting-merge.yml)
 [![CodeQL](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/codeql.yml/badge.svg)](https://github.com/EMcNugget/adsb_mil_data/actions/workflows/codeql.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5caa91f758e54d11b3034743d903a1b8)](https://www.codacy.com/gh/EMcNugget/ADS-B-Military-Analytics/dashboard?utm_source=github.com&utm_medium=referral&utm_content=EMcNugget/ADS-B-Military-Analytics&utm_campaign=Badge_Grade)
 
 ## What is this?
 
-# ATTENTION This project will now be updated less frequently, and most likely archived at the end of 2023. Due to financial reasons no more data will be collected, and the remainder of site features will cease to operate December 31st 2023.
+## ATTENTION This project is currently being rewritten in Go to replace Python and the [T3 stack](https://create.t3.gg/)
 
 This allows you to view military aircraft from an ever growing database. Find out how many aircraft flew on a specific day, what type, among other features that are coming soon!
 
@@ -21,14 +19,14 @@ You can find the production version at www.adsbmilanalytics.com
 See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for more information on how to contribute to this project. As well as information on how to set up the project locally.
 
 ## Tech Stack
-
+<!-- 
 |       Backend       |     Frontend      |
 | :-----------------: | :---------------: |
 |    ![Python][py]    | ![TypeScript][ts] |
 |   ![Flask][flask]   |  ![React][react]  |
 |   ![MongoDB][mdb]   |   ![Vite][vite]   |
 | ![Google Cloud][gc] |  ![Firebase][fb]  |
-|                     |   ![SCSS][scss]   |
+|                     |   ![SCSS][scss]   | -->
 
 ## Architecture
 
