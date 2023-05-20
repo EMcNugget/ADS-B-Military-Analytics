@@ -1,6 +1,0 @@
-*
-!gcp/
-gcp/*
-!gcp/AppEngine/
-gcp/AppEngine/*
-!gcp/AppEngine/app.py
